@@ -1,0 +1,40 @@
+:root {
+  --clr-background: #1f1f21;
+  --clr-accent: #71e694;
+  --clr-font-primary: rgba(255, 255, 255, 0.95);
+  --clr-font-secondary: #9a9a9a;
+  --clr-border: rgba(255, 255, 255, 0.2);
+
+  --bp-hide-aside: 900px;
+}
+
+.background-colored {
+  background-color: var(--clr-background);
+}
+
+.font-color-accent {
+  color: var(--clr-accent);
+}
+
+.font-color-primary {
+  color: var(--clr-font-primary);
+}
+
+.font-color-secondary {
+  color: var(--clr-font-secondary);
+}
+
+.font-size-tiny {
+  font-size: 15px;
+}
+
+::-moz-selection {
+  /* Code for Firefox */
+  color: red;
+  background: yellow;
+}
+
+::selection {
+  color: black;
+  background: var(--clr-accent);
+}
