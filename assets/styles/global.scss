@@ -14,6 +14,8 @@
     --popover: 0 0% 100%;
     --popover-foreground: 240 10% 3.9%;
     --primary: 142.1 76.2% 36.3%;
+    --primary-400: 142.1 76.2% 70%;
+    --primary-200: 142.1 76.2% 90%;
     --primary-foreground: 355.7 100% 97.3%;
     --secondary: 240 4.8% 95.9%;
     --secondary-foreground: 240 5.9% 10%;
@@ -59,4 +61,10 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+.contained {
+  max-width: 1460px;
+  padding-inline: 0.5rem;
+  margin-inline: auto;
 }

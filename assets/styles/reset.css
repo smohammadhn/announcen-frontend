@@ -1,3 +1,10 @@
+html {
+  min-height: 100vh;
+  min-height: 100dvh;
+  transition: 500ms;
+  scroll-behavior: smooth;
+}
+
 /* Box sizing rules */
 *,
 *::before,
