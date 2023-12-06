@@ -17,17 +17,19 @@ import {
 import { Input } from '@/components/ui/input'
 
 const formSchema = z.object({
-  email: z.string().min(4).max(30),
-  password: z.string().min(6).max(30),
+  email: z.string().min(4).max(50).email(),
+  password: z.string().min(6).max(255),
+  confirmation: z.string().min(6).max(255),
 })
 
-export default function LoginForm() {
+export default function RegisterForm() {
   // 1. Define form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
       email: '',
       password: '',
+      confirmation: '',
     },
   })
 
@@ -81,6 +83,28 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
+
+        {/* password */}
+        <FormField
+          control={form.control}
+          name="confirmation"
+          render={({ field }) => (
+            <FormItem>
+              <FormLabel>Confirmation</FormLabel>
+              <FormControl>
+                <Input
+                  type="password"
+                  className="rounded-full page-login--field"
+                  placeholder="Re-enter Your Password"
+                  {...field}
+                />
+              </FormControl>
+              <FormMessage />
+            </FormItem>
+          )}
+        />
+
+        {/* submit button */}
         <Button type="submit" className="page-login--submit-btn">
           Login
         </Button>

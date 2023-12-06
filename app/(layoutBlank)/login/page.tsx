@@ -1,3 +1,5 @@
+'use client'
+
 import './styles.scss'
 
 import Image from 'next/image'
@@ -5,8 +7,13 @@ import Link from 'next/link'
 
 import { Button } from '@/components/ui/button'
 import LoginForm from '@/components/forms/LoginForm'
+import RegisterForm from '@/components/forms/RegisterForm'
 
-export default function Home() {
+import { usePathname } from 'next/navigation'
+
+export default function LoginPage() {
+  const onRegisterPage = usePathname() === '/register'
+
   return (
     <div className="page-login contained">
       <section className="page-login__filler">
@@ -26,14 +33,18 @@ export default function Home() {
         <h2 className="page-login__welcome">Welcome to Announcen</h2>
 
         <div className="page-login__tab-bar">
-          <Button asChild className="rounded-full">
+          <Button
+            asChild
+            variant={!onRegisterPage ? 'default' : 'ghost'}
+            className={['rounded-full', onRegisterPage && 'ghost'].join(' ')}
+          >
             <Link href="/login">Login</Link>
           </Button>
 
           <Button
             asChild
-            variant="ghost"
-            className="rounded-full login-tabbar-btn"
+            variant={onRegisterPage ? 'default' : 'ghost'}
+            className={['rounded-full', !onRegisterPage && 'ghost'].join(' ')}
           >
             <Link href="/register">Register</Link>
           </Button>
@@ -44,7 +55,7 @@ export default function Home() {
           industry.
         </p>
 
-        <LoginForm />
+        {onRegisterPage ? <RegisterForm /> : <LoginForm />}
       </section>
     </div>
   )
