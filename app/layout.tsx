@@ -2,6 +2,7 @@ import '@/assets/styles/global.scss'
 import { Inter as FontSans } from 'next/font/google'
 
 import { cn } from '@/lib/utils'
+import Providers from '@/app/providers'
 
 export const fontSans = FontSans({
   subsets: ['latin'],
@@ -22,7 +23,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
           fontSans.variable
         )}
       >
-        {children}
+        <Providers>{children}</Providers>
       </body>
     </html>
   )
