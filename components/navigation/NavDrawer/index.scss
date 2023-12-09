@@ -1,4 +1,50 @@
 .nav-drawer {
   grid-area: navbar;
-  background-color: blue;
+  padding-inline: 0.5rem;
+  padding-block: 1rem;
+
+  ul {
+    li {
+      cursor: pointer;
+    }
+
+    li:not(.accordion) {
+      display: flex;
+      gap: 0.5rem;
+      padding-block: 0.6rem;
+      padding-inline-start: 0.5rem;
+      border-radius: 0.5rem;
+
+      &:hover {
+        background-color: hsl(var(--primary-100));
+        color: hsl(var(--primary));
+      }
+    }
+
+    .accordion-trigger {
+      justify-content: flex-start;
+      gap: 0.5rem;
+      text-decoration: none;
+      border-radius: 0.5rem;
+      padding-inline: 0.5rem;
+      padding-block: 0.6rem;
+
+      &:hover {
+        background-color: hsl(var(--primary-100));
+        color: hsl(var(--primary));
+      }
+    }
+
+    .accordion-list {
+      margin-inline-start: 2rem;
+    }
+  }
+
+  &__seperator {
+    padding-inline-start: 0.5rem;
+    opacity: 0.7;
+    font-size: 0.875rem;
+    margin-top: 2rem;
+    margin-bottom: 0.75rem;
+  }
 }

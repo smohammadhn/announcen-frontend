@@ -5,12 +5,14 @@
   grid-template-areas:
     'appbar appbar'
     'navbar main';
-  grid-template-columns: 300px 1fr;
+  grid-template-columns: var(--nav-drawer-width) 1fr;
   height: 100vh;
   height: 100dvh;
   grid-template-rows: auto 1fr;
 
   &-main {
     grid-area: main;
+    background-color: var(--clr-background-main);
+    padding: 1rem;
   }
 }

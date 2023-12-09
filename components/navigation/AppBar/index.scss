@@ -1,6 +1,6 @@
 .app-bar {
   grid-area: appbar;
-  border-bottom: 1px solid rgba($color: #000, $alpha: 0.2);
+  border-bottom: 1px solid var(--clr-background-main);
   display: flex;
   align-items: center;
   gap: 0.5rem;
