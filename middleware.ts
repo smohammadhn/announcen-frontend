@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server'
 import authService from './services/authService'
 
 export async function middleware(req: NextRequest) {
-  console.log('middleware run')
+  return NextResponse.next()
 
   const url = req.nextUrl.pathname
 

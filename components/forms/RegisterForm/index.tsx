@@ -15,6 +15,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import authService from '@/services/authService'
 
 const formSchema = z.object({
   email: z.string().min(4).max(50).email(),
@@ -23,7 +24,11 @@ const formSchema = z.object({
 })
 
 export default function RegisterForm() {
-  // 1. Define form
+  const register = authService.register((savedUser) => {
+    console.log('result :>> ', savedUser)
+  })
+
+  // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -35,7 +40,15 @@ export default function RegisterForm() {
 
   // submit handler
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    if (values.confirmation !== values.password)
+      return alert('password and confirmation do not match!')
+
+    const payload = {
+      email: values.email,
+      password: values.password,
+    }
+
+    register.mutate(payload)
   }
 
   return (
@@ -104,9 +117,15 @@ export default function RegisterForm() {
           )}
         />
 
+        {register.error && <p>{register.error.response?.data.message}</p>}
+
         {/* submit button */}
-        <Button type="submit" className="page-login--submit-btn">
-          Login
+        <Button
+          loading={register.isPending}
+          type="submit"
+          className="page-login--submit-btn"
+        >
+          Register
         </Button>
       </form>
     </Form>

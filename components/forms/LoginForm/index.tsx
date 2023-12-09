@@ -1,6 +1,7 @@
 'use client'
 import './index.scss'
 
+import authService from '@/services/authService'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -15,6 +16,7 @@ import {
   FormMessage,
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   email: z.string().min(4).max(30),
@@ -22,7 +24,13 @@ const formSchema = z.object({
 })
 
 export default function LoginForm() {
-  // 1. Define form
+  const router = useRouter()
+
+  const login = authService.login(() => {
+    router.push('/dashboard')
+  })
+
+  // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
     defaultValues: {
@@ -33,7 +41,7 @@ export default function LoginForm() {
 
   // submit handler
   function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
+    login.mutate(values)
   }
 
   return (
@@ -81,7 +89,11 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <Button type="submit" className="page-login--submit-btn">
+        <Button
+          loading={login.isPending}
+          type="submit"
+          className="page-login--submit-btn"
+        >
           Login
         </Button>
       </form>

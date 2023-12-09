@@ -1,0 +1,36 @@
+.app-bar {
+  grid-area: appbar;
+  border-bottom: 1px solid rgba($color: #000, $alpha: 0.2);
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding-block: 0.5rem;
+
+  &__logo {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.25rem;
+    width: var(--nav-drawer-width);
+    margin-inline-end: auto;
+
+    h1 {
+      font-weight: 700;
+      font-size: 1.1rem;
+    }
+  }
+
+  &__actions {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+  }
+
+  &__profile {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding-inline: 0.75rem;
+    font-weight: 500;
+  }
+}

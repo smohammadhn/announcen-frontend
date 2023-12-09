@@ -1,3 +1,5 @@
+// root layout
+
 import '@/assets/styles/global.scss'
 import { Inter as FontSans } from 'next/font/google'
 
@@ -15,7 +17,7 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   return (
-    <html lang="en" suppressHydrationWarning>
+    <html lang="en" dir="ltr" suppressHydrationWarning>
       <head />
       <body
         className={cn(
