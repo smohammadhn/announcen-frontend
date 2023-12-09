@@ -1,0 +1,11 @@
+$breakpoint-hide-actions: 700px;
+
+.dashboard-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
+  gap: 1rem;
+
+  @media screen and (max-width: $breakpoint-hide-actions) {
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  }
+}

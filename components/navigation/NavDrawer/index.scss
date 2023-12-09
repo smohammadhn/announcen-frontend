@@ -5,10 +5,16 @@ $breakpoint-hide-nav: 700px;
   height: 100%;
   width: 100%;
   transition: 500ms;
+  position: relative;
+  z-index: 2;
 
   @media screen and (max-width: $breakpoint-hide-nav) {
     position: fixed;
     transform: translateX(-100%);
+
+    .nav-container {
+      height: 100%;
+    }
 
     &.expand {
       transform: translateX(0);
@@ -23,9 +29,10 @@ $breakpoint-hide-nav: 700px;
     padding-inline: 0.5rem;
     padding-block: 1rem;
     background-color: white;
-    height: 100%;
     width: fit-content;
     transition: 500ms;
+    position: sticky;
+    top: 0;
   }
 
   ul {

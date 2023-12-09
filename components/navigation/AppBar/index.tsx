@@ -20,7 +20,7 @@ export default function AppBar({
   return (
     <header className="app-bar">
       <Button
-        className="ms-2"
+        className="ms-2 app-bar__chevron"
         size="icon"
         variant="ghost"
         onClick={() => setIsNavExpanded(!isNavExpanded)}

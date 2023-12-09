@@ -36,6 +36,12 @@ $breakpoint-hide-actions: 700px;
     }
   }
 
+  &__chevron {
+    @media screen and (min-width: $breakpoint-hide-actions) {
+      display: none;
+    }
+  }
+
   &__actions {
     display: flex;
     align-items: center;
