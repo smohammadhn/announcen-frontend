@@ -7,6 +7,10 @@ $breakpoint-hide-actions: 700px;
   align-items: center;
   gap: 0.5rem;
   padding-block: 0.5rem;
+  position: sticky;
+  top: 0;
+  background-color: white;
+  z-index: 2;
 
   &__logo {
     display: flex;

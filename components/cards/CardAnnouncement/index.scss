@@ -53,7 +53,7 @@ $breakpoint-hide-actions: 700px;
 
     &__title {
       font-weight: 700;
-      font-size: 5vw;
+      font-size: min(5vw, 1.25rem);
       padding-block: 0.25rem;
     }
 
