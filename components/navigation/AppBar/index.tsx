@@ -1,5 +1,6 @@
-import { Button } from '@/components/ui/button'
 import './index.scss'
+
+import { Button } from '@/components/ui/button'
 import Image from 'next/image'
 
 import {
