@@ -4,20 +4,30 @@
   padding-block: 1rem;
 
   ul {
-    li {
-      cursor: pointer;
-    }
-
     li:not(.accordion) {
-      display: flex;
-      gap: 0.5rem;
-      padding-block: 0.6rem;
-      padding-inline-start: 0.5rem;
-      border-radius: 0.5rem;
+      a,
+      button {
+        display: flex;
+        gap: 0.5rem;
+        padding-block: 0.6rem;
+        padding-inline-start: 0.5rem;
+        border-radius: 0.5rem;
+        width: 100%;
+        cursor: pointer;
+        transition: 100ms;
 
-      &:hover {
-        background-color: hsl(var(--primary-100));
-        color: hsl(var(--primary));
+        &:hover {
+          background-color: hsl(var(--primary-100));
+          color: hsl(var(--primary));
+        }
+      }
+
+      &.selected {
+        a,
+        button {
+          background-color: hsl(var(--primary-100));
+          color: hsl(var(--primary));
+        }
       }
     }
 
