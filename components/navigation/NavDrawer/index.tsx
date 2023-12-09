@@ -19,15 +19,29 @@ import {
 } from '@/components/ui/accordion'
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
+import { Dispatch, SetStateAction } from 'react'
 
-export default function AppBar() {
+export interface NavigationProps {
+  isNavExpanded: boolean
+  setIsNavExpanded: Dispatch<SetStateAction<boolean>>
+}
+
+export default function AppBar({
+  isNavExpanded,
+  setIsNavExpanded,
+}: NavigationProps) {
   const pathname = usePathname()
   const queryType = useSearchParams().get('type')
   const onDashboard = pathname === '/dashboard'
 
   return (
-    <nav className="nav-drawer">
-      <div>
+    <nav
+      className={['nav-drawer', isNavExpanded && 'expand'].join(' ')}
+      onClick={() => {
+        setIsNavExpanded(false)
+      }}
+    >
+      <div className="nav-container" onClick={(e) => e.stopPropagation()}>
         <ul>
           <li className="accordion">
             <Accordion type="single" collapsible className="w-full">
@@ -95,7 +109,7 @@ export default function AppBar() {
           >
             <Link href="/dashboard/create-announcement">
               <PlusCircle />
-              Create Announcemnet
+              Create Announcement
             </Link>
           </li>
           <li className={pathname.includes('/partners') ? 'selected' : ''}>

@@ -1,4 +1,5 @@
 // default layout styles
+$breakpoint-hide-nav: 700px;
 
 .layout-default {
   display: grid;
@@ -14,5 +15,12 @@
     grid-area: main;
     background-color: var(--clr-background-main);
     padding: 1rem;
+  }
+
+  @media screen and (max-width: $breakpoint-hide-nav) {
+    grid-template-areas:
+      'appbar'
+      'main';
+    grid-template-columns: 1fr;
   }
 }

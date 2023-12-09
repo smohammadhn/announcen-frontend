@@ -2,18 +2,32 @@ import './index.scss'
 
 import { Button } from '@/components/ui/button'
 import Image from 'next/image'
+import { NavigationProps } from '../NavDrawer'
 
 import {
   CircleUserRound,
   ClipboardList,
   HelpCircle,
   Mail,
+  Menu,
   Settings,
 } from 'lucide-react'
 
-export default function AppBar() {
+export default function AppBar({
+  isNavExpanded,
+  setIsNavExpanded,
+}: NavigationProps) {
   return (
     <header className="app-bar">
+      <Button
+        className="ms-2"
+        size="icon"
+        variant="ghost"
+        onClick={() => setIsNavExpanded(!isNavExpanded)}
+      >
+        <Menu />
+      </Button>
+
       <div className="app-bar__logo">
         <Image
           className="logo"

@@ -1,7 +1,32 @@
+$breakpoint-hide-nav: 700px;
+
 .nav-drawer {
   grid-area: navbar;
-  padding-inline: 0.5rem;
-  padding-block: 1rem;
+  height: 100%;
+  width: 100%;
+  transition: 500ms;
+
+  @media screen and (max-width: $breakpoint-hide-nav) {
+    position: fixed;
+    transform: translateX(-100%);
+
+    &.expand {
+      transform: translateX(0);
+
+      .nav-container {
+        box-shadow: 0 0 0 999em rgba(0, 0, 0, 0.7);
+      }
+    }
+  }
+
+  .nav-container {
+    padding-inline: 0.5rem;
+    padding-block: 1rem;
+    background-color: white;
+    height: 100%;
+    width: fit-content;
+    transition: 500ms;
+  }
 
   ul {
     li:not(.accordion) {
@@ -10,7 +35,7 @@
         display: flex;
         gap: 0.5rem;
         padding-block: 0.6rem;
-        padding-inline-start: 0.5rem;
+        padding-inline: 0.5rem;
         border-radius: 0.5rem;
         width: 100%;
         cursor: pointer;

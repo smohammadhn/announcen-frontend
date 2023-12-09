@@ -53,5 +53,11 @@ $breakpoint-hide-actions: 700px;
     padding-inline: 0.75rem;
     font-weight: 500;
     font-size: min(1rem, 4vw);
+
+    h2 {
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 }
