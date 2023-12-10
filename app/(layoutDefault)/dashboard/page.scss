@@ -9,3 +9,41 @@ $breakpoint-hide-actions: 700px;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
   }
 }
+
+.dashboard-sorting {
+  background-color: white;
+  display: flex;
+  padding: 0.5rem;
+  padding-block: 0.7rem;
+  margin: -1rem;
+  margin-bottom: 1rem;
+  font-size: 0.9rem;
+
+  svg {
+    width: 20px;
+  }
+
+  li {
+    flex: 1;
+    display: grid;
+    place-items: center;
+    border-left: 2px solid var(--clr-background-main);
+
+    a {
+      border-radius: 0.5rem;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.25rem;
+      width: fit-content;
+
+      &:hover {
+        color: hsl(var(--primary));
+      }
+    }
+
+    &.selected {
+      color: hsl(var(--primary));
+    }
+  }
+}
