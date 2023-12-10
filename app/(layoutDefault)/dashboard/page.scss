@@ -17,7 +17,7 @@ $breakpoint-hide-actions: 700px;
   padding-block: 0.7rem;
   margin: -1rem;
   margin-bottom: 1rem;
-  font-size: 0.9rem;
+  font-size: min(3.5vw, 0.9rem);
 
   svg {
     width: 20px;
@@ -27,7 +27,10 @@ $breakpoint-hide-actions: 700px;
     flex: 1;
     display: grid;
     place-items: center;
-    border-left: 2px solid var(--clr-background-main);
+
+    &:not(:first-child) {
+      border-left: 2px solid var(--clr-background-main);
+    }
 
     a {
       border-radius: 0.5rem;
@@ -36,6 +39,17 @@ $breakpoint-hide-actions: 700px;
       justify-content: center;
       gap: 0.25rem;
       width: fit-content;
+      text-align: center;
+
+      @media screen and (max-width: 950px) {
+        span {
+          display: none;
+        }
+      }
+
+      br.hide-on-desktop {
+        display: none;
+      }
 
       &:hover {
         color: hsl(var(--primary));

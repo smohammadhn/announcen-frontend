@@ -32,7 +32,8 @@ export default function Dashboard() {
             }}
           >
             <Filter />
-            Sort by announcement date
+            <span>Sort by</span>
+            announcement date
           </Link>
         </li>
         <li className={querySorting === 'eventDate' ? 'selected' : ''}>
@@ -42,7 +43,8 @@ export default function Dashboard() {
             }}
           >
             <Filter />
-            Sort by event date
+            <span>Sort by</span>
+            event date
           </Link>
         </li>
         <li className={querySorting === 'name' ? 'selected' : ''}>
@@ -52,7 +54,8 @@ export default function Dashboard() {
             }}
           >
             <Filter />
-            Sort by name
+            <span>Sort by</span>
+            name
           </Link>
         </li>
       </ul>
