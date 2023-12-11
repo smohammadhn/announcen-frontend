@@ -3,7 +3,7 @@ import { NextRequest } from 'next/server'
 import authService from './services/authService'
 
 export async function middleware(req: NextRequest) {
-  return NextResponse.next()
+  // return NextResponse.next()
 
   const url = req.nextUrl.pathname
 
@@ -19,8 +19,6 @@ export async function middleware(req: NextRequest) {
 
   // there is a token present in cookies
   const tokenVerified = await authService.verifyToken(token)
-
-  console.log('tokenVerified :>> ', tokenVerified)
 
   if (tokenVerified) return NextResponse.next()
   return NextResponse.redirect(new URL('/login', req.url))
