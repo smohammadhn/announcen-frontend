@@ -29,13 +29,13 @@ export default function LoginForm() {
   const router = useRouter()
 
   const login = authService.login(({ access }) => {
-    router.push('/dashboard')
-
     cookies.set('auth-token', access, {
       secure: true,
       sameSite: 'none',
       maxAge: 6 * 3_600_000,
     })
+
+    router.replace('/dashboard')
   })
 
   // Define form
