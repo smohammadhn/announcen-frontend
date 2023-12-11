@@ -24,13 +24,6 @@ const authService = {
     })
   },
 
-  logout(onSuccess?: () => void) {
-    return useMutation<undefined, AxiosError<ErrorMessage>>({
-      mutationFn: () => axios.post('/auth/logout'),
-      onSuccess,
-    })
-  },
-
   register(onSuccess: (savedUser: User) => void) {
     return useMutation<User, AxiosError<ErrorMessage>, User>({
       mutationFn: (user: User) =>

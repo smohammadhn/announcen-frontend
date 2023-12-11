@@ -20,8 +20,9 @@ import {
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { Dispatch, SetStateAction } from 'react'
-import authService from '@/services/authService'
 import { useRouter } from 'next/navigation'
+import Cookies from 'universal-cookie'
+import { COOKIE_OPTIONS } from '@/components/forms/LoginForm'
 
 export interface NavigationProps {
   isNavExpanded: boolean
@@ -36,13 +37,11 @@ export default function AppBar({
   const router = useRouter()
   const queryType = useSearchParams().get('type')
   const onDashboard = pathname === '/dashboard'
-
-  const logout = authService.logout(() => {
-    router.push('/login')
-  })
+  const cookies = new Cookies(null, { path: '/' })
 
   const handleSignOut = () => {
-    logout.mutate()
+    cookies.remove('auth-token', COOKIE_OPTIONS)
+    router.replace('/login')
   }
 
   return (
