@@ -20,6 +20,8 @@ import {
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { Dispatch, SetStateAction } from 'react'
+import authService from '@/services/authService'
+import { useRouter } from 'next/navigation'
 
 export interface NavigationProps {
   isNavExpanded: boolean
@@ -31,8 +33,17 @@ export default function AppBar({
   setIsNavExpanded,
 }: NavigationProps) {
   const pathname = usePathname()
+  const router = useRouter()
   const queryType = useSearchParams().get('type')
   const onDashboard = pathname === '/dashboard'
+
+  const logout = authService.logout(() => {
+    router.push('/login')
+  })
+
+  const handleSignOut = () => {
+    logout.mutate()
+  }
 
   return (
     <nav
@@ -136,7 +147,7 @@ export default function AppBar({
             </Link>
           </li>
           <li>
-            <button>
+            <button onClick={handleSignOut}>
               <LogOut />
               Sign out
             </button>
