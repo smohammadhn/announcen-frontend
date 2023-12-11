@@ -36,20 +36,24 @@ const authService = {
   async verifyToken(authToken: string) {
     // TODO: make sure that the authToken variable contains a valid base64-encoded JWT token (object). and not any malicious input
 
-    return fetch('http://localhost:8000/api/auth/verify', {
+    return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`, {
       method: 'POST',
       headers: {
         Cookie: `auth-token=${authToken}`,
       },
-    }).then((res) => {
-      res.status
-
-      if (res.status === 200) {
-        return true
-      }
-
-      return false
     })
+      .then((res) => {
+        res.status
+
+        if (res.status === 200) {
+          return true
+        }
+
+        return false
+      })
+      .catch(() => {
+        return false
+      })
   },
 }
 

@@ -11,24 +11,24 @@ export default function CreateAnnouncement() {
   const [announcementObject, setAnnouncementObject] = useState({})
   const [stepperValue, setStepperValue] = useState(1)
 
-  const onFinishForm = (formPayload, isFinalForm = false) => {
-    setAnnouncementObject((item) => {
-      return Object.assign(item, formPayload)
-    })
+  // const onFinishForm = (formPayload, isFinalForm = false) => {
+  //   setAnnouncementObject((item) => {
+  //     return Object.assign(item, formPayload)
+  //   })
 
-    if (isFinalForm) {
-      console.log(announcementObject)
-    } else {
-      setStepperValue((prev) => prev + 1)
-    }
-  }
+  //   if (isFinalForm) {
+  //     console.log(announcementObject)
+  //   } else {
+  //     setStepperValue((prev) => prev + 1)
+  //   }
+  // }
 
   const forms = [
-    <CreateAnnouncementForm1 key="1" onFinish={onFinishForm} />,
-    <CreateAnnouncementForm1 key="2" onFinish={onFinishForm} />,
-    <CreateAnnouncementForm1 key="3" onFinish={onFinishForm} />,
-    <CreateAnnouncementForm1 key="4" onFinish={onFinishForm} />,
-    <CreateAnnouncementForm1 key="5" onFinish={onFinishForm} />,
+    <CreateAnnouncementForm1 key="1" />,
+    <CreateAnnouncementForm1 key="2" />,
+    <CreateAnnouncementForm1 key="3" />,
+    <CreateAnnouncementForm1 key="4" />,
+    <CreateAnnouncementForm1 key="5" />,
   ]
 
   const handleAction = (direction: 'next' | 'back') => {
