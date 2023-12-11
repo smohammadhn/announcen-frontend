@@ -56,7 +56,7 @@ export default function AppBar({
 
       <div className="app-bar__profile">
         <CircleUserRound />
-        <h2>S.Mohammad Hn.</h2>
+        <h2>User Name</h2>
       </div>
     </header>
   )

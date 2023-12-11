@@ -1,6 +1,7 @@
+import { Fragment } from 'react'
 import './index.scss'
 
-import { Circle } from 'lucide-react'
+import { Circle, Key } from 'lucide-react'
 
 interface Props {
   value: number
@@ -19,9 +20,8 @@ export default function Stepper({ value }: Props) {
     <>
       <div className="stepper">
         {items.map((item, index) => (
-          <>
+          <Fragment key={index}>
             <div
-              key={`bullet-${index}`}
               className={['stepper--item', value > index && 'success'].join(
                 ' '
               )}
@@ -31,14 +31,13 @@ export default function Stepper({ value }: Props) {
             </div>
             {index !== items.length - 1 && (
               <span
-                key={`line-${index}`}
                 className={[
                   'stepper--line',
                   value > index + 1 && 'success',
                 ].join(' ')}
-              ></span>
+              />
             )}
-          </>
+          </Fragment>
         ))}
       </div>
       <div className="stepper--title">{items[value - 1]}</div>

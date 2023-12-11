@@ -132,7 +132,7 @@ export default function AppBar({
           <li className={pathname.includes('/account') ? 'selected' : ''}>
             <Link href="/dashboard/account">
               <CircleUserRound />
-              S.Mohammadhn
+              Account Details
             </Link>
           </li>
           <li>

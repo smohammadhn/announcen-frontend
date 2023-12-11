@@ -1,0 +1,27 @@
+.create-ann {
+  display: flex;
+  flex-direction: column;
+  min-height: 100%;
+
+  &__actions {
+    display: flex;
+    flex-wrap: wrap;
+    justify-content: center;
+    gap: 2rem;
+    align-items: center;
+
+    button {
+      min-width: 100px;
+    }
+  }
+
+  &__form {
+    flex-grow: 1;
+    display: grid;
+    align-items: center;
+    border: 3px solid white;
+    margin-bottom: 1rem;
+    border-radius: 1rem;
+    padding: min(1.5vw, 1rem);
+  }
+}
