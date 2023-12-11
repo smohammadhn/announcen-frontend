@@ -16,6 +16,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import authService from '@/services/authService'
+import { useRouter } from 'next/navigation'
 
 const formSchema = z.object({
   email: z.string().min(4).max(50).email(),
@@ -24,8 +25,10 @@ const formSchema = z.object({
 })
 
 export default function RegisterForm() {
-  const register = authService.register((savedUser) => {
-    console.log('result :>> ', savedUser)
+  const router = useRouter()
+
+  const register = authService.register(() => {
+    router.push('/login')
   })
 
   // Define form
