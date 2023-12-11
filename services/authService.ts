@@ -2,18 +2,24 @@
 
 import axios from '@/services/apiClient'
 import { useMutation } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 
 interface User {
   email: string
   password: string
 }
 
+interface LoginResponse {
+  access: string
+}
+
 const authService = {
-  login(onSuccess?: () => void) {
-    return useMutation<User, AxiosError<ErrorMessage>, User>({
+  login(onSuccess?: (loginResponse: LoginResponse) => void) {
+    return useMutation<LoginResponse, AxiosError<ErrorMessage>, User>({
       mutationFn: (user: User) =>
-        axios.post<User>('/auth', user).then((res) => res.data),
+        axios
+          .post<User, AxiosResponse<LoginResponse>>('/auth', user)
+          .then((res) => res.data),
       onSuccess,
     })
   },
@@ -43,8 +49,6 @@ const authService = {
       },
     })
       .then((res) => {
-        res.status
-
         if (res.status === 200) {
           return true
         }

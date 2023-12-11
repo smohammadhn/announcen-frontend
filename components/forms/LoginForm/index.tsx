@@ -17,6 +17,7 @@ import {
 } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { useRouter } from 'next/navigation'
+import Cookies from 'universal-cookie'
 
 const formSchema = z.object({
   email: z.string().min(4).max(30),
@@ -24,10 +25,17 @@ const formSchema = z.object({
 })
 
 export default function LoginForm() {
+  const cookies = new Cookies(null, { path: '/' })
   const router = useRouter()
 
-  const login = authService.login(() => {
+  const login = authService.login(({ access }) => {
     router.push('/dashboard')
+
+    cookies.set('auth-token', access, {
+      secure: true,
+      sameSite: 'none',
+      maxAge: 6 * 3_600_000,
+    })
   })
 
   // Define form
