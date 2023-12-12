@@ -1,8 +1,12 @@
 'use client'
 
+import axiosInstance from '@/services/apiClient'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { useState } from 'react'
+
+import { useToast } from '@/components/ui/use-toast'
+import { AxiosError } from 'axios'
 
 export default function ReactQueryProvider({
   children,
@@ -21,6 +25,19 @@ export default function ReactQueryProvider({
           },
         },
       })
+  )
+
+  const { toast } = useToast()
+  axiosInstance.interceptors.response.use(
+    (res) => res,
+    (err: AxiosError<ErrorMessage>) => {
+      console.log(err.response?.data.message)
+
+      toast({
+        variant: 'destructive',
+        title: err.response?.data.message,
+      })
+    }
   )
 
   return (
