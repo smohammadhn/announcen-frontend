@@ -2,7 +2,7 @@
 import './index.scss'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { UseFormReturn, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import {
@@ -13,43 +13,59 @@ import {
   FormLabel,
   FormMessage,
 } from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
+
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from '@/components/ui/select'
 
 const formSchema = z.object({
-  field1: z.string().min(4).max(30),
+  type: z.string({ required_error: 'Field is required' }),
 })
 
-export default function LoginForm() {
+interface Props {
+  onSubmit?: (values: z.infer<typeof formSchema>) => void
+  onError?: () => void
+}
+
+export default function CreateAnnouncementForm1({
+  onSubmit = () => {},
+  onError = () => {},
+}: Props) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     resolver: zodResolver(formSchema),
-    defaultValues: {
-      field1: '',
-    },
   })
-
-  // submit handler
-  function onSubmit(values: z.infer<typeof formSchema>) {
-    console.log(values)
-  }
 
   return (
     <Form {...form}>
-      <form className="space-y-8 flex flex-col">
+      <form className="space-y-4 w-60 flex justify-self-center flex-col">
+        <h3>Announcement Type</h3>
         {/* email */}
         <FormField
           control={form.control}
-          name="field1"
+          name="type"
           render={({ field }) => (
-            <FormItem onBlur={() => onSubmit(form.getValues())}>
-              <FormLabel>Sample Field</FormLabel>
-              <FormControl>
-                <Input
-                  className="rounded-full"
-                  placeholder="Enter Information"
-                  {...field}
-                />
-              </FormControl>
+            <FormItem onBlur={form.handleSubmit(onSubmit, onError)}>
+              <Select
+                onValueChange={field.onChange}
+                defaultValue={field.value}
+                required
+              >
+                <FormControl>
+                  <SelectTrigger>
+                    <SelectValue placeholder="Please Select" />
+                  </SelectTrigger>
+                </FormControl>
+                <SelectContent>
+                  <SelectItem value="death">Death</SelectItem>
+                  <SelectItem value="birth">Birth</SelectItem>
+                  <SelectItem value="wedding">Wedding</SelectItem>
+                </SelectContent>
+              </Select>
               <FormMessage />
             </FormItem>
           )}

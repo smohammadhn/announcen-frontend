@@ -6,25 +6,33 @@ import { useState } from 'react'
 import Stepper from '@/components/ui/Stepper'
 import CreateAnnouncementForm1 from '@/components/forms/CreateAnnouncementForm1'
 import { Button } from '@/components/ui/button'
+import { toast } from '@/components/ui/use-toast'
+
+interface AnnouncementObject {
+  type?: string
+}
 
 export default function CreateAnnouncement() {
   const [announcementObject, setAnnouncementObject] = useState({})
   const [stepperValue, setStepperValue] = useState(1)
+  const [formInvalid, setFormInvalid] = useState(true)
 
-  // const onFinishForm = (formPayload, isFinalForm = false) => {
-  //   setAnnouncementObject((item) => {
-  //     return Object.assign(item, formPayload)
-  //   })
+  const onFormSuccess = (incomingData: AnnouncementObject) => {
+    console.log('incomingData :>> ', incomingData)
+    setFormInvalid(false)
 
-  //   if (isFinalForm) {
-  //     console.log(announcementObject)
-  //   } else {
-  //     setStepperValue((prev) => prev + 1)
-  //   }
-  // }
+    setAnnouncementObject((item) => {
+      const announcementObjectCopy = { ...item }
+      return Object.assign(announcementObjectCopy, incomingData)
+    })
+  }
 
   const forms = [
-    <CreateAnnouncementForm1 key="1" />,
+    <CreateAnnouncementForm1
+      key="form-type"
+      onSubmit={onFormSuccess}
+      onError={() => setFormInvalid(true)}
+    />,
     <CreateAnnouncementForm1 key="2" />,
     <CreateAnnouncementForm1 key="3" />,
     <CreateAnnouncementForm1 key="4" />,
@@ -32,12 +40,27 @@ export default function CreateAnnouncement() {
   ]
 
   const handleAction = (direction: 'next' | 'back') => {
+    if (formInvalid) {
+      toast({
+        title: 'Please fill in the form correcly!',
+        variant: 'destructive',
+      })
+      return
+    }
+
+    console.log('announcementObject :>> ', announcementObject)
+
     if (direction === 'back') {
       if (stepperValue === 1) return
       setStepperValue((prev) => prev - 1)
     }
     if (direction === 'next') {
-      if (stepperValue > forms.length - 1) return
+      if (stepperValue > forms.length - 1) {
+        // send the payload to the backend
+        return
+      }
+
+      // next form
       setStepperValue((prev) => prev + 1)
     }
   }
@@ -50,7 +73,6 @@ export default function CreateAnnouncement() {
 
       <div className="create-ann__actions">
         <Button
-          variant={'default'}
           disabled={stepperValue === 1}
           onClick={() => handleAction('back')}
         >
