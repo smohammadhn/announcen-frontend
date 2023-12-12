@@ -7,6 +7,7 @@ import CardAnnouncement from '@/components/cards/CardAnnouncement'
 import { Filter } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
+import Head from 'next/head'
 
 type SortingKeys = 'announceDate' | 'eventDate' | 'name'
 
@@ -24,6 +25,10 @@ export default function Dashboard() {
 
   return (
     <>
+      <Head>
+        <title>Announcen</title>
+      </Head>
+
       <ul className="dashboard-sorting">
         <li className={querySorting === 'announceDate' ? 'selected' : ''}>
           <Link

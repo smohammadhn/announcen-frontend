@@ -46,7 +46,7 @@ export default function CreateAnnouncement() {
     <section className="create-ann">
       <Stepper value={stepperValue} />
 
-      <div className="create-ann__form">{forms[stepperValue]}</div>
+      <div className="create-ann__form">{forms[stepperValue - 1]}</div>
 
       <div className="create-ann__actions">
         <Button
