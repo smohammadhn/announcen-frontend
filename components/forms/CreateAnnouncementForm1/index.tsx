@@ -2,7 +2,7 @@
 import './index.scss'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { UseFormReturn, useForm } from 'react-hook-form'
+import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 import {
@@ -10,7 +10,6 @@ import {
   FormControl,
   FormField,
   FormItem,
-  FormLabel,
   FormMessage,
 } from '@/components/ui/form'
 
@@ -25,6 +24,7 @@ import {
 const formSchema = z.object({
   type: z.string({ required_error: 'Field is required' }),
 })
+export type IForm1 = z.infer<typeof formSchema>
 
 interface Props {
   onSubmit?: (values: z.infer<typeof formSchema>) => void
@@ -44,7 +44,7 @@ export default function CreateAnnouncementForm1({
     <Form {...form}>
       <form className="space-y-4 w-60 flex justify-self-center flex-col">
         <h3>Announcement Type</h3>
-        {/* email */}
+        {/* type */}
         <FormField
           control={form.control}
           name="type"

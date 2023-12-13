@@ -5,12 +5,14 @@ import './page.scss'
 import { useState } from 'react'
 import Stepper from '@/components/ui/Stepper'
 import CreateAnnouncementForm1 from '@/components/forms/CreateAnnouncementForm1'
+import CreateAnnouncementForm2 from '@/components/forms/CreateAnnouncementForm2'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 
-interface AnnouncementObject {
-  type?: string
-}
+import { IForm1 } from '@/components/forms/CreateAnnouncementForm1'
+import { IForm2 } from '@/components/forms/CreateAnnouncementForm2'
+
+type AnnouncementObject = IForm1 | IForm2
 
 export default function CreateAnnouncement() {
   const [announcementObject, setAnnouncementObject] = useState({})
@@ -33,7 +35,11 @@ export default function CreateAnnouncement() {
       onSubmit={onFormSuccess}
       onError={() => setFormInvalid(true)}
     />,
-    <CreateAnnouncementForm1 key="2" />,
+    <CreateAnnouncementForm2
+      key="detail-defunct"
+      onSubmit={onFormSuccess}
+      onError={() => setFormInvalid(true)}
+    />,
     <CreateAnnouncementForm1 key="3" />,
     <CreateAnnouncementForm1 key="4" />,
     <CreateAnnouncementForm1 key="5" />,

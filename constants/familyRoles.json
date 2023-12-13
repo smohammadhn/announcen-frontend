@@ -1,0 +1,13 @@
+[
+  { "id": "mother", "label": "Mother" },
+  { "id": "father", "label": "Father" },
+  { "id": "sister", "label": "Sister" },
+  { "id": "brother", "label": "Brother" },
+  { "id": "daughter", "label": "Daughter" },
+  { "id": "boy", "label": "Boy" },
+  { "id": "stepmother", "label": "Stepmother" },
+  { "id": "stepfather", "label": "Stepfather" },
+  { "id": "aunt", "label": "Aunt" },
+  { "id": "uncle", "label": "Uncle" },
+  { "id": "cousin", "label": "Cousin" }
+]
