@@ -42,7 +42,7 @@ export default function CreateAnnouncementForm1({
 
   return (
     <Form {...form}>
-      <form className="space-y-4 w-60 flex justify-self-center flex-col">
+      <form className="space-y-4 w-60 flex justify-self-center flex-col ca-form1">
         <h3>Announcement Type</h3>
         {/* type */}
         <FormField

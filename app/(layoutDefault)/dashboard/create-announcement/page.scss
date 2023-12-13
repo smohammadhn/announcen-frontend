@@ -1,3 +1,5 @@
+$breakpoint-shift-stepper: 600px;
+
 .create-ann {
   display: flex;
   flex-direction: column;
@@ -18,8 +20,13 @@
   &__form {
     flex-grow: 1;
     display: grid;
-    align-items: center;
     margin-bottom: 1rem;
     border-radius: 1rem;
+  }
+
+  @media screen and (max-width: $breakpoint-shift-stepper) {
+    h3.hide-mobile {
+      display: none;
+    }
   }
 }

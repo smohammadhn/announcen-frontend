@@ -78,7 +78,7 @@ export default function CreateAnnouncementForm1({
   return (
     <Form {...form}>
       <form className="ca-form2">
-        <h3 className="form-title">Details about the defunct</h3>
+        <h3 className="form-title hide-mobile">Details about the defunct</h3>
 
         <section className="grid grid-col-3 mb-5">
           {/* first name */}
@@ -171,13 +171,17 @@ export default function CreateAnnouncementForm1({
 
         {/* include marital status checkbox */}
         <div className="items-top flex space-x-2 mb-3">
-          <Checkbox id="checkbox-marital-status" />
+          <Checkbox
+            checked={checkboxMaritalStatus}
+            onCheckedChange={(e: boolean) => setCheckboxMaritalStatus(e)}
+            id="checkbox-marital-status"
+          />
           <div className="grid gap-1.5 leading-none">
             <label
               htmlFor="checkbox-marital-status"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
-              Inclue marital status
+              Include marital status?
             </label>
           </div>
         </div>
@@ -341,7 +345,11 @@ export default function CreateAnnouncementForm1({
 
         {/* include family roles checkbox */}
         <div className="items-top flex space-x-2 mb-3">
-          <Checkbox id="checkbox-family-roles" />
+          <Checkbox
+            checked={checkboxFamilyRoles}
+            onCheckedChange={(e: boolean) => setCheckboxFamilyRoles(e)}
+            id="checkbox-family-roles"
+          />
           <div className="grid gap-1.5 leading-none">
             <label
               htmlFor="checkbox-family-roles"
