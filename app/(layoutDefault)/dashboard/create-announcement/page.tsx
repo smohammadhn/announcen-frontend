@@ -9,14 +9,16 @@ import { RefObject, useRef, useState } from 'react'
 import Stepper from '@/components/ui/Stepper'
 import CreateAnnouncementForm1 from '@/components/forms/CreateAnnouncementForm1'
 import CreateAnnouncementForm2 from '@/components/forms/CreateAnnouncementForm2'
+import CreateAnnouncementForm3 from '@/components/forms/CreateAnnouncementForm3'
 import { IForm1 } from '@/components/forms/CreateAnnouncementForm1'
 import { IForm2 } from '@/components/forms/CreateAnnouncementForm2'
+import { IForm3 } from '@/components/forms/CreateAnnouncementForm3'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 
 import { DATE_FORMAT } from '@/constants/core'
 
-type AnnouncementObject = Partial<IForm1 & IForm2 & {}>
+type AnnouncementObject = Partial<IForm1 & IForm2 & IForm3 & {}>
 
 interface FormRef {
   submit: (
@@ -54,9 +56,13 @@ export default function CreateAnnouncement() {
       ref={refForm2}
       key="detail-defunct"
     />,
+    <CreateAnnouncementForm3
+      announcementObject={announcementObject}
+      ref={refForm3}
+      key="detail-funeral"
+    />,
     <CreateAnnouncementForm1 ref={refForm1} key="form-type3" />,
     <CreateAnnouncementForm1 ref={refForm1} key="form-type4" />,
-    <CreateAnnouncementForm1 ref={refForm1} key="form-type5" />,
   ]
 
   // methods
