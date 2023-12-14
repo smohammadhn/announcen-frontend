@@ -41,36 +41,55 @@ import {
 } from '@/components/ui/command'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
-import { useState } from 'react'
+import { forwardRef, useImperativeHandle, useState } from 'react'
 
 const formSchema = z.object({
-  firstName: z.string({ required_error: 'Field is required' }).min(3).max(100),
-  lastName: z.string({ required_error: 'Field is required' }).min(3).max(100),
-  city: z.string({ required_error: 'Field is required' }).min(3).max(100),
-  maritalStatus: z.string(),
-  partnerName: z.string().max(100),
-  placeOfBirth: z.string().max(100),
-  placeOfDeath: z.string().max(100),
-  dateOfBirth: z.date({ required_error: 'Field is required' }),
-  dateOfDeath: z.date({ required_error: 'Field is required' }),
+  firstName: z.string().min(3).max(100),
+  lastName: z.string().min(3).max(100),
+  city: z.string().min(1, 'Required').max(100),
+
+  maritalStatus: z.string().optional(),
+  partnerName: z.string().max(100).optional(),
+  placeOfBirth: z.string().max(100).optional(),
+  placeOfDeath: z.string().max(100).optional(),
+  dateOfBirth: z.date().optional(),
+  dateOfDeath: z.date().optional(),
   familyRoles: z.array(z.string()),
 })
 
 export type IForm2 = z.infer<typeof formSchema>
 
 interface Props {
-  onSubmit?: (values: z.infer<typeof formSchema>) => void
-  onError?: () => void
+  announcementObject?: Partial<IForm2 & {}>
 }
 
-export default function CreateAnnouncementForm1({
-  onSubmit = () => {},
-  onError = () => {},
-}: Props) {
+export default forwardRef(function CreateAnnouncementForm1(
+  { announcementObject }: Props,
+  ref
+) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
+    mode: 'all',
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      firstName: announcementObject?.firstName || '',
+      lastName: announcementObject?.lastName || '',
+      city: announcementObject?.city || '',
+      maritalStatus: announcementObject?.maritalStatus || '',
+      partnerName: announcementObject?.partnerName || '',
+      placeOfBirth: announcementObject?.placeOfBirth || '',
+      placeOfDeath: announcementObject?.placeOfDeath || '',
+      dateOfBirth: announcementObject?.dateOfBirth,
+      dateOfDeath: announcementObject?.dateOfDeath,
+      familyRoles: announcementObject?.familyRoles || [],
+    },
   })
+
+  useImperativeHandle(ref, () => ({
+    submit: (onValid: (values: IForm2) => void, onInvalid: () => void) => {
+      form.handleSubmit(onValid, onInvalid)()
+    },
+  }))
 
   const [checkboxMaritalStatus, setCheckboxMaritalStatus] = useState(true)
   const [checkboxFamilyRoles, setCheckboxFamilyRoles] = useState(true)
@@ -173,7 +192,9 @@ export default function CreateAnnouncementForm1({
         <div className="items-top flex space-x-2 mb-3">
           <Checkbox
             checked={checkboxMaritalStatus}
-            onCheckedChange={(e: boolean) => setCheckboxMaritalStatus(e)}
+            onCheckedChange={(e: boolean) => {
+              setCheckboxMaritalStatus(e)
+            }}
             id="checkbox-marital-status"
           />
           <div className="grid gap-1.5 leading-none">
@@ -193,7 +214,7 @@ export default function CreateAnnouncementForm1({
               control={form.control}
               name="maritalStatus"
               render={({ field }) => (
-                <FormItem onBlur={form.handleSubmit(onSubmit, onError)}>
+                <FormItem>
                   <Select
                     onValueChange={field.onChange}
                     defaultValue={field.value}
@@ -347,7 +368,10 @@ export default function CreateAnnouncementForm1({
         <div className="items-top flex space-x-2 mb-3">
           <Checkbox
             checked={checkboxFamilyRoles}
-            onCheckedChange={(e: boolean) => setCheckboxFamilyRoles(e)}
+            onCheckedChange={(e: boolean) => {
+              form.setValue('familyRoles', [])
+              setCheckboxFamilyRoles(e)
+            }}
             id="checkbox-family-roles"
           />
           <div className="grid gap-1.5 leading-none">
@@ -414,4 +438,4 @@ export default function CreateAnnouncementForm1({
       </form>
     </Form>
   )
-}
+})

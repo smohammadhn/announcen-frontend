@@ -2,73 +2,92 @@
 
 import './page.scss'
 
-import { useState } from 'react'
+import moment from 'moment'
+
+import { RefObject, useRef, useState } from 'react'
+
 import Stepper from '@/components/ui/Stepper'
 import CreateAnnouncementForm1 from '@/components/forms/CreateAnnouncementForm1'
 import CreateAnnouncementForm2 from '@/components/forms/CreateAnnouncementForm2'
+import { IForm1 } from '@/components/forms/CreateAnnouncementForm1'
+import { IForm2 } from '@/components/forms/CreateAnnouncementForm2'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 
-import { IForm1 } from '@/components/forms/CreateAnnouncementForm1'
-import { IForm2 } from '@/components/forms/CreateAnnouncementForm2'
+import { DATE_FORMAT } from '@/constants/core'
 
-type AnnouncementObject = IForm1 | IForm2
+type AnnouncementObject = Partial<IForm1 & IForm2 & {}>
+
+interface FormRef {
+  submit: (
+    onValid: (values: AnnouncementObject) => void,
+    onInvalid: () => void
+  ) => void
+}
+
+interface FormElement extends Element {
+  ref: RefObject<FormRef>
+}
 
 export default function CreateAnnouncement() {
-  const [announcementObject, setAnnouncementObject] = useState({})
+  // data
+  const [announcementObject, setAnnouncementObject] =
+    useState<AnnouncementObject>({})
   const [stepperValue, setStepperValue] = useState(1)
-  const [formInvalid, setFormInvalid] = useState(true)
 
-  const onFormSuccess = (incomingData: AnnouncementObject) => {
-    console.log('incomingData :>> ', incomingData)
-    setFormInvalid(false)
+  // refs
+  const refForm1 = useRef<FormRef>(null)
+  const refForm2 = useRef<FormRef>(null)
+  const refForm3 = useRef<FormRef>(null)
+  const refForm4 = useRef<FormRef>(null)
+  const refForm5 = useRef<FormRef>(null)
+
+  // forms
+  const forms = [
+    <CreateAnnouncementForm1
+      announcementObject={announcementObject}
+      ref={refForm1}
+      key="form-type"
+    />,
+    <CreateAnnouncementForm2
+      announcementObject={announcementObject}
+      ref={refForm2}
+      key="detail-defunct"
+    />,
+    <CreateAnnouncementForm1 ref={refForm1} key="form-type3" />,
+    <CreateAnnouncementForm1 ref={refForm1} key="form-type4" />,
+    <CreateAnnouncementForm1 ref={refForm1} key="form-type5" />,
+  ]
+
+  // methods
+  const onFormInvalid = () => {
+    toast({
+      title: 'Please fill in the form correcly!',
+      variant: 'destructive',
+    })
+  }
+
+  const onFormValid = (incomingData: AnnouncementObject) => {
+    console.log('ann object updated :>> ', incomingData)
 
     setAnnouncementObject((item) => {
       const announcementObjectCopy = { ...item }
       return Object.assign(announcementObjectCopy, incomingData)
     })
-  }
 
-  const forms = [
-    <CreateAnnouncementForm1
-      key="form-type"
-      onSubmit={onFormSuccess}
-      onError={() => setFormInvalid(true)}
-    />,
-    <CreateAnnouncementForm2
-      key="detail-defunct"
-      onSubmit={onFormSuccess}
-      onError={() => setFormInvalid(true)}
-    />,
-    <CreateAnnouncementForm1 key="3" />,
-    <CreateAnnouncementForm1 key="4" />,
-    <CreateAnnouncementForm1 key="5" />,
-  ]
-
-  const handleAction = (direction: 'next' | 'back') => {
-    if (formInvalid) {
-      toast({
-        title: 'Please fill in the form correcly!',
-        variant: 'destructive',
-      })
+    if (stepperValue > forms.length - 1) {
+      // send the payload to the backend
       return
     }
 
-    console.log('announcementObject :>> ', announcementObject)
+    // next form
+    setStepperValue((prev) => prev + 1)
+  }
 
-    if (direction === 'back') {
-      if (stepperValue === 1) return
-      setStepperValue((prev) => prev - 1)
-    }
-    if (direction === 'next') {
-      if (stepperValue > forms.length - 1) {
-        // send the payload to the backend
-        return
-      }
+  const submitForm = () => {
+    const announcementForm = forms[stepperValue - 1] as unknown as FormElement
 
-      // next form
-      setStepperValue((prev) => prev + 1)
-    }
+    announcementForm.ref.current?.submit(onFormValid, onFormInvalid)
   }
 
   return (
@@ -80,11 +99,13 @@ export default function CreateAnnouncement() {
       <div className="create-ann__actions">
         <Button
           disabled={stepperValue === 1}
-          onClick={() => handleAction('back')}
+          onClick={() => {
+            if (stepperValue !== 1) setStepperValue((prev) => prev - 1)
+          }}
         >
           Back
         </Button>
-        <Button onClick={() => handleAction('next')}>Next</Button>
+        <Button onClick={submitForm}>Next</Button>
       </div>
     </section>
   )

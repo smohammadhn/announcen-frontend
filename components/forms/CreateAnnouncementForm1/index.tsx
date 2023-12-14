@@ -20,25 +20,36 @@ import {
   SelectTrigger,
   SelectValue,
 } from '@/components/ui/select'
+import { forwardRef, useImperativeHandle } from 'react'
 
 const formSchema = z.object({
-  type: z.string({ required_error: 'Field is required' }),
+  type: z.string().min(1, 'Required'),
 })
+
 export type IForm1 = z.infer<typeof formSchema>
 
 interface Props {
-  onSubmit?: (values: z.infer<typeof formSchema>) => void
-  onError?: () => void
+  announcementObject?: Partial<IForm1 & {}>
 }
 
-export default function CreateAnnouncementForm1({
-  onSubmit = () => {},
-  onError = () => {},
-}: Props) {
+export default forwardRef(function CreateAnnouncementForm1(
+  { announcementObject }: Props,
+  ref
+) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
+    mode: 'all',
     resolver: zodResolver(formSchema),
+    defaultValues: {
+      type: announcementObject?.type || '',
+    },
   })
+
+  useImperativeHandle(ref, () => ({
+    submit: (onValid: (values: IForm1) => void, onInvalid: () => void) => {
+      form.handleSubmit(onValid, onInvalid)()
+    },
+  }))
 
   return (
     <Form {...form}>
@@ -49,7 +60,7 @@ export default function CreateAnnouncementForm1({
           control={form.control}
           name="type"
           render={({ field }) => (
-            <FormItem onBlur={form.handleSubmit(onSubmit, onError)}>
+            <FormItem>
               <Select
                 onValueChange={field.onChange}
                 defaultValue={field.value}
@@ -73,4 +84,4 @@ export default function CreateAnnouncementForm1({
       </form>
     </Form>
   )
-}
+})

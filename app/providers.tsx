@@ -31,8 +31,6 @@ export default function ReactQueryProvider({
   axiosInstance.interceptors.response.use(
     (res) => res,
     (err: AxiosError<ErrorMessage>) => {
-      console.log(err.response?.data.message)
-
       toast({
         variant: 'destructive',
         title: err.response?.data.message,
