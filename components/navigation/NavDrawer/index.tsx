@@ -2,37 +2,23 @@
 
 import './index.scss'
 
-import {
-  CircleUserRound,
-  ClipboardList,
-  LogOut,
-  PencilLine,
-  PlusCircle,
-  Server,
-} from 'lucide-react'
+import { CircleUserRound, ClipboardList, LogOut, PencilLine, PlusCircle, Server } from 'lucide-react'
 
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion'
+import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from '@/components/ui/accordion'
 import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { Dispatch, SetStateAction } from 'react'
 import { useRouter } from 'next/navigation'
 import Cookies from 'universal-cookie'
 import { COOKIE_OPTIONS } from '@/components/forms/LoginForm'
+import { cn } from '@/lib/utils'
 
 export interface NavigationProps {
   isNavExpanded: boolean
   setIsNavExpanded: Dispatch<SetStateAction<boolean>>
 }
 
-export default function AppBar({
-  isNavExpanded,
-  setIsNavExpanded,
-}: NavigationProps) {
+export default function AppBar({ isNavExpanded, setIsNavExpanded }: NavigationProps) {
   const pathname = usePathname()
   const router = useRouter()
   const queryType = useSearchParams().get('type')
@@ -46,7 +32,7 @@ export default function AppBar({
 
   return (
     <nav
-      className={['nav-drawer', isNavExpanded && 'expand'].join(' ')}
+      className={cn('nav-drawer', isNavExpanded && 'expand')}
       onClick={() => {
         setIsNavExpanded(false)
       }}
@@ -65,11 +51,7 @@ export default function AppBar({
                     <li className={onDashboard && !queryType ? 'selected' : ''}>
                       <Link href={{ pathname: '/dashboard' }}>All</Link>
                     </li>
-                    <li
-                      className={
-                        onDashboard && queryType === 'death' ? 'selected' : ''
-                      }
-                    >
+                    <li className={onDashboard && queryType === 'death' ? 'selected' : ''}>
                       <Link
                         href={{
                           pathname: '/dashboard',
@@ -79,11 +61,7 @@ export default function AppBar({
                         Death
                       </Link>
                     </li>
-                    <li
-                      className={
-                        onDashboard && queryType === 'birth' ? 'selected' : ''
-                      }
-                    >
+                    <li className={onDashboard && queryType === 'birth' ? 'selected' : ''}>
                       <Link
                         href={{
                           pathname: '/dashboard',
@@ -93,11 +71,7 @@ export default function AppBar({
                         Birth
                       </Link>
                     </li>
-                    <li
-                      className={
-                        onDashboard && queryType === 'wedding' ? 'selected' : ''
-                      }
-                    >
+                    <li className={onDashboard && queryType === 'wedding' ? 'selected' : ''}>
                       <Link
                         href={{
                           pathname: '/dashboard',
@@ -112,11 +86,7 @@ export default function AppBar({
               </AccordionItem>
             </Accordion>
           </li>
-          <li
-            className={
-              pathname.includes('/create-announcement') ? 'selected' : ''
-            }
-          >
+          <li className={pathname.includes('/create-announcement') ? 'selected' : ''}>
             <Link href="/dashboard/create-announcement">
               <PlusCircle />
               Create Announcement

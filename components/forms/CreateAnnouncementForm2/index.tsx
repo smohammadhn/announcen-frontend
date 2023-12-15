@@ -9,36 +9,12 @@ import * as z from 'zod'
 import { cn } from '@/lib/utils'
 import { format } from 'date-fns'
 import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react'
-import {
-  Form,
-  FormControl,
-  FormDescription,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
-import {
-  Popover,
-  PopoverContent,
-  PopoverTrigger,
-} from '@/components/ui/popover'
-import {
-  Command,
-  CommandEmpty,
-  CommandGroup,
-  CommandInput,
-  CommandItem,
-} from '@/components/ui/command'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { forwardRef, useImperativeHandle, useState } from 'react'
@@ -48,7 +24,7 @@ const formSchema = z.object({
   lastName: z.string().min(3).max(100),
   city: z.string().min(1, 'Required').max(100),
 
-  maritalStatus: z.string().optional(),
+  maritalStatus: z.enum(['single', 'married', '']).optional(),
   partnerName: z.string().max(100).optional(),
   placeOfBirth: z.string().max(100).optional(),
   placeOfDeath: z.string().max(100).optional(),
@@ -63,10 +39,7 @@ interface Props {
   announcementObject?: Partial<IForm2 & {}>
 }
 
-export default forwardRef(function CreateAnnouncementForm1(
-  { announcementObject }: Props,
-  ref
-) {
+export default forwardRef(function CreateAnnouncementForm1({ announcementObject }: Props, ref) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
@@ -140,15 +113,9 @@ export default forwardRef(function CreateAnnouncementForm1(
                       <Button
                         variant="outline"
                         role="combobox"
-                        className={cn(
-                          'justify-between',
-                          !field.value && 'text-muted-foreground'
-                        )}
+                        className={cn('justify-between', !field.value && 'text-muted-foreground')}
                       >
-                        {field.value
-                          ? allCities.find((e) => e.value === field.value)
-                              ?.label
-                          : 'City'}
+                        {field.value ? allCities.find((e) => e.value === field.value)?.label : 'City'}
                         <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
                       </Button>
                     </FormControl>
@@ -167,12 +134,7 @@ export default forwardRef(function CreateAnnouncementForm1(
                             }}
                           >
                             <Check
-                              className={cn(
-                                'mr-2 h-4 w-4',
-                                e.value === field.value
-                                  ? 'opacity-100'
-                                  : 'opacity-0'
-                              )}
+                              className={cn('mr-2 h-4 w-4', e.value === field.value ? 'opacity-100' : 'opacity-0')}
                             />
                             {e.label}
                           </CommandItem>
@@ -215,20 +177,15 @@ export default forwardRef(function CreateAnnouncementForm1(
               name="maritalStatus"
               render={({ field }) => (
                 <FormItem>
-                  <Select
-                    onValueChange={field.onChange}
-                    defaultValue={field.value}
-                    required
-                  >
+                  <Select onValueChange={field.onChange} defaultValue={field.value} required>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Marital Status" />
                       </SelectTrigger>
                     </FormControl>
                     <SelectContent>
-                      <SelectItem value="death">Death</SelectItem>
-                      <SelectItem value="birth">Birth</SelectItem>
-                      <SelectItem value="wedding">Wedding</SelectItem>
+                      <SelectItem value="single">Single</SelectItem>
+                      <SelectItem value="married">Married</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -261,16 +218,9 @@ export default forwardRef(function CreateAnnouncementForm1(
                       <FormControl>
                         <Button
                           variant={'outline'}
-                          className={cn(
-                            'pl-3 text-left font-normal',
-                            !field.value && 'text-muted-foreground'
-                          )}
+                          className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
                         >
-                          {field.value ? (
-                            format(field.value, 'PPP')
-                          ) : (
-                            <span>Date of Birth</span>
-                          )}
+                          {field.value ? format(field.value, 'PPP') : <span>Date of Birth</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -280,9 +230,7 @@ export default forwardRef(function CreateAnnouncementForm1(
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date('1900-01-01')
-                        }
+                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
                         initialFocus
                       />
                     </PopoverContent>
@@ -317,16 +265,9 @@ export default forwardRef(function CreateAnnouncementForm1(
                       <FormControl>
                         <Button
                           variant={'outline'}
-                          className={cn(
-                            'pl-3 text-left font-normal',
-                            !field.value && 'text-muted-foreground'
-                          )}
+                          className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
                         >
-                          {field.value ? (
-                            format(field.value, 'PPP')
-                          ) : (
-                            <span>Date of Birth</span>
-                          )}
+                          {field.value ? format(field.value, 'PPP') : <span>Date of Birth</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -336,9 +277,7 @@ export default forwardRef(function CreateAnnouncementForm1(
                         mode="single"
                         selected={field.value}
                         onSelect={field.onChange}
-                        disabled={(date) =>
-                          date > new Date() || date < new Date('1900-01-01')
-                        }
+                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
                         initialFocus
                       />
                     </PopoverContent>
@@ -403,27 +342,18 @@ export default forwardRef(function CreateAnnouncementForm1(
                       name="familyRoles"
                       render={({ field }) => {
                         return (
-                          <FormItem
-                            key={item.id}
-                            className="flex flex-row items-start space-x-3 space-y-0"
-                          >
+                          <FormItem key={item.id} className="flex flex-row items-start space-x-3 space-y-0">
                             <FormControl>
                               <Checkbox
                                 checked={field.value?.includes(item.id)}
                                 onCheckedChange={(checked) => {
                                   return checked
                                     ? field.onChange([...field.value, item.id])
-                                    : field.onChange(
-                                        field.value?.filter(
-                                          (value) => value !== item.id
-                                        )
-                                      )
+                                    : field.onChange(field.value?.filter((value) => value !== item.id))
                                 }}
                               />
                             </FormControl>
-                            <FormLabel className="font-normal">
-                              {item.label}
-                            </FormLabel>
+                            <FormLabel className="font-normal">{item.label}</FormLabel>
                           </FormItem>
                         )
                       }}

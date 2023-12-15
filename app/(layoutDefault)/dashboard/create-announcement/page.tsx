@@ -2,7 +2,7 @@
 
 import './page.scss'
 import moment from 'moment'
-import { RefObject, useRef, useState } from 'react'
+import { RefObject, useEffect, useRef, useState } from 'react'
 import { DATE_FORMAT } from '@/constants/core'
 
 import Stepper from '@/components/ui/Stepper'
@@ -29,6 +29,7 @@ export default function CreateAnnouncement() {
   // data
   const [announcementObject, setAnnouncementObject] = useState<AnnouncementObject>({})
   const [stepperValue, setStepperValue] = useState(1)
+  const [isLastForm, setIsLastForm] = useState(false)
 
   // refs
   const refForm1 = useRef<FormRef>(null)
@@ -45,6 +46,11 @@ export default function CreateAnnouncement() {
     <CreateAnnouncementForm5 announcementObject={announcementObject} key="ann-preview" />,
   ]
 
+  // hooks
+  useEffect(() => {
+    setIsLastForm(stepperValue === forms.length)
+  }, [stepperValue])
+
   // methods
   const onFormInvalid = () => {
     toast({
@@ -54,23 +60,22 @@ export default function CreateAnnouncement() {
   }
 
   const onFormValid = (incomingData: AnnouncementObject) => {
-    console.log('ann object updated :>> ', incomingData)
-
     setAnnouncementObject((item) => {
       const announcementObjectCopy = { ...item }
       return Object.assign(announcementObjectCopy, incomingData)
     })
-
-    if (stepperValue > forms.length - 1) {
-      // send the payload to the backend
-      return
-    }
 
     // next form
     setStepperValue((prev) => prev + 1)
   }
 
   const submitForm = () => {
+    if (stepperValue === forms.length) {
+      // send the payload to the backend
+      console.log('final backend payload :>> ', announcementObject)
+      return
+    }
+
     const announcementForm = forms[stepperValue - 1] as unknown as FormElement
 
     announcementForm.ref.current?.submit(onFormValid, onFormInvalid)
@@ -91,7 +96,7 @@ export default function CreateAnnouncement() {
         >
           Back
         </Button>
-        <Button onClick={submitForm}>Next</Button>
+        <Button onClick={submitForm}>{isLastForm ? 'Create' : 'Next'}</Button>
       </div>
     </section>
   )

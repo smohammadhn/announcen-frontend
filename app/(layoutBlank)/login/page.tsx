@@ -10,6 +10,7 @@ import LoginForm from '@/components/forms/LoginForm'
 import RegisterForm from '@/components/forms/RegisterForm'
 
 import { usePathname } from 'next/navigation'
+import { cn } from '@/lib/utils'
 
 export default function LoginPage() {
   const onRegisterPage = usePathname() === '/register'
@@ -22,13 +23,7 @@ export default function LoginPage() {
       </section>
 
       <section className="page-login__form">
-        <Image
-          className="logo"
-          src="/logos/Logo.svg"
-          width={75}
-          height={75}
-          alt="website logo"
-        />
+        <Image className="logo" src="/logos/Logo.svg" width={75} height={75} alt="website logo" />
 
         <h2 className="page-login__welcome">Welcome to Announcen</h2>
 
@@ -36,7 +31,7 @@ export default function LoginPage() {
           <Button
             asChild
             variant={!onRegisterPage ? 'default' : 'ghost'}
-            className={['rounded-full', onRegisterPage && 'ghost'].join(' ')}
+            className={cn('rounded-full', onRegisterPage && 'ghost')}
           >
             <Link href="/login">Login</Link>
           </Button>
@@ -44,15 +39,14 @@ export default function LoginPage() {
           <Button
             asChild
             variant={onRegisterPage ? 'default' : 'ghost'}
-            className={['rounded-full', !onRegisterPage && 'ghost'].join(' ')}
+            className={cn('rounded-full', !onRegisterPage && 'ghost')}
           >
             <Link href="/register">Register</Link>
           </Button>
         </div>
 
         <p className="page-login__description">
-          Lorem Ipsum is simply dummy text of the printing and typesetting
-          industry.
+          Lorem Ipsum is simply dummy text of the printing and typesetting industry.
         </p>
 
         {onRegisterPage ? <RegisterForm /> : <LoginForm />}

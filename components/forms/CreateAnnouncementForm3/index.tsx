@@ -4,14 +4,7 @@ import './index.scss'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Checkbox } from '@/components/ui/checkbox'
 import { forwardRef, useImperativeHandle, useState } from 'react'
@@ -33,10 +26,7 @@ interface Props {
   announcementObject?: Partial<IForm3 & {}>
 }
 
-export default forwardRef(function CreateAnnouncementForm1(
-  { announcementObject }: Props,
-  ref
-) {
+export default forwardRef(function CreateAnnouncementForm1({ announcementObject }: Props, ref) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
@@ -164,15 +154,10 @@ export default forwardRef(function CreateAnnouncementForm1(
               render={({ field }) => (
                 <FormItem className="items-top flex space-x-2 mb-5 space-y-0">
                   <FormControl>
-                    <Checkbox
-                      checked={field.value}
-                      onCheckedChange={field.onChange}
-                    />
+                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
                   </FormControl>
                   <div className="space-y-1 leading-none">
-                    <FormLabel>
-                      Use different settings for my mobile devices
-                    </FormLabel>
+                    <FormLabel>The funeral will take place in the closest family circle.</FormLabel>
                   </div>
                 </FormItem>
               )}
