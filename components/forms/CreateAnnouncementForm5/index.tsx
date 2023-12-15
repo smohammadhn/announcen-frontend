@@ -28,7 +28,7 @@ export default function CreateAnnouncementForm1({ announcementObject: ann }: Pro
         Mourning:
         <br />
         {ann?.relatives?.map((e) => (
-          <p key={e.name}>{`${e?.name} a ${e?.partnerName}`}</p>
+          <span key={e.name}>{`${e?.name} a ${e?.partnerName}`}</span>
         ))}
       </p>
       <br />

@@ -11,8 +11,10 @@
     align-items: end;
     gap: 0.5rem;
 
-    @media screen and (max-width: 700px) {
-      grid-template-columns: repeat(autofit, minmax(200px, 1fr));
+    @media screen and (max-width: 900px) {
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      border-bottom: 3px solid white;
+      padding-bottom: 0.5rem;
     }
   }
 

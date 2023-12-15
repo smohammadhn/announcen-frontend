@@ -89,6 +89,7 @@ export default function CreateAnnouncement() {
 
       <div className="create-ann__actions">
         <Button
+          className="rounded-full"
           disabled={stepperValue === 1}
           onClick={() => {
             if (stepperValue !== 1) setStepperValue((prev) => prev - 1)
@@ -96,7 +97,9 @@ export default function CreateAnnouncement() {
         >
           Back
         </Button>
-        <Button onClick={submitForm}>{isLastForm ? 'Create' : 'Next'}</Button>
+        <Button className="rounded-full" onClick={submitForm}>
+          {isLastForm ? 'Create' : 'Next'}
+        </Button>
       </div>
     </section>
   )

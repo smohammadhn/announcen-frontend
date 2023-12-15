@@ -184,7 +184,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               render={({ field }) => (
                 <FormItem className="mb-3">
                   <FormControl>
-                    <Input placeholder="Time of funeral" {...field} />
+                    <Input placeholder="Place of funeral" {...field} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
