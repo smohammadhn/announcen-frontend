@@ -1,23 +1,17 @@
 'use client'
 import './index.scss'
 
+import useAuthStore from '@/store/auth'
 import authService from '@/services/authService'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-
-import { Button } from '@/components/ui/button'
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormLabel,
-  FormMessage,
-} from '@/components/ui/form'
-import { Input } from '@/components/ui/input'
 import { useRouter } from 'next/navigation'
 import Cookies, { CookieSetOptions } from 'universal-cookie'
+
+import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Button } from '@/components/ui/button'
+import { Input } from '@/components/ui/input'
 
 export const COOKIE_OPTIONS: CookieSetOptions = {
   secure: true,
@@ -33,9 +27,12 @@ const formSchema = z.object({
 export default function LoginForm() {
   const cookies = new Cookies(null, { path: '/' })
   const router = useRouter()
+  const setUser = useAuthStore((s) => s.setUser)
 
-  const login = authService.login(({ access }) => {
+  const login = authService.login(({ access, user }) => {
     cookies.set('auth-token', access, COOKIE_OPTIONS)
+
+    if (user) setUser(user)
     router.replace('/dashboard')
   })
 
@@ -55,10 +52,7 @@ export default function LoginForm() {
 
   return (
     <Form {...form}>
-      <form
-        onSubmit={form.handleSubmit(onSubmit)}
-        className="space-y-8 flex flex-col"
-      >
+      <form onSubmit={form.handleSubmit(onSubmit)} className="space-y-8 flex flex-col">
         {/* email */}
         <FormField
           control={form.control}
@@ -98,11 +92,7 @@ export default function LoginForm() {
             </FormItem>
           )}
         />
-        <Button
-          loading={login.isPending}
-          type="submit"
-          className="page-login--submit-btn"
-        >
+        <Button loading={login.isPending} type="submit" className="page-login--submit-btn">
           Login
         </Button>
       </form>

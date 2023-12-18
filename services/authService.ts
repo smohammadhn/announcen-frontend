@@ -3,31 +3,30 @@
 import axios from '@/services/apiClient'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
-
-interface User {
-  email: string
-  password: string
-}
+import { User } from '@/store/auth'
 
 interface LoginResponse {
   access: string
+  user: User
+}
+
+interface VerifyEndpointResponse {
+  user: User
+  message: string
 }
 
 const authService = {
   login(onSuccess?: (loginResponse: LoginResponse) => void) {
-    return useMutation<LoginResponse, AxiosError<ErrorMessage>, User>({
-      mutationFn: (user: User) =>
-        axios
-          .post<User, AxiosResponse<LoginResponse>>('/auth', user)
-          .then((res) => res.data),
+    return useMutation<LoginResponse, AxiosError<ErrorMessage>, Partial<User>>({
+      mutationFn: (user) =>
+        axios.post<Partial<User>, AxiosResponse<LoginResponse>>('/auth', user).then((res) => res.data),
       onSuccess,
     })
   },
 
   register(onSuccess: (savedUser: User) => void) {
     return useMutation<User, AxiosError<ErrorMessage>, User>({
-      mutationFn: (user: User) =>
-        axios.post<User>('/users', user).then((res) => res.data),
+      mutationFn: (user: User) => axios.post<User>('/users', user).then((res) => res.data),
       onSuccess,
     })
   },
@@ -37,20 +36,29 @@ const authService = {
 
     return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`, {
       method: 'POST',
+      credentials: 'include',
       headers: {
         Cookie: `auth-token=${authToken}`,
       },
     })
-      .then((res) => {
-        if (res.status === 200) {
-          return true
+      .then((res) => res.json())
+      .then((res: VerifyEndpointResponse) => {
+        if (res.user?._id) {
+          return {
+            isTokenVerified: true,
+            user: res.user,
+          }
         }
 
-        return false
+        return {
+          isTokenVerified: false,
+          user: {},
+        }
       })
-      .catch(() => {
-        return false
-      })
+      .catch(() => ({
+        isTokenVerified: false,
+        user: {},
+      }))
   },
 }
 

@@ -4,7 +4,6 @@ import authService from './services/authService'
 
 export async function middleware(req: NextRequest) {
   // return NextResponse.next()
-
   const url = req.nextUrl.pathname
 
   if (url === '/') return NextResponse.redirect(new URL('/dashboard', req.url))
@@ -16,14 +15,15 @@ export async function middleware(req: NextRequest) {
 
   // no token available
   if (!token) return NextResponse.redirect(new URL('/login', req.url))
+  return NextResponse.next()
 
   // there is a token present in cookies
-  const tokenVerified = await authService.verifyToken(token)
-
-  if (tokenVerified) return NextResponse.next()
-  return NextResponse.redirect(new URL('/login', req.url))
+  //   const { isTokenVerified } = await authService.verifyToken(token)
+  //   if (isTokenVerified) return NextResponse.next()
+  //   return NextResponse.redirect(new URL('/login', req.url))
 }
 
 export const config = {
-  matcher: ['/((?!api|_next/static|_next/image|favicon.ico|logos|images).*)'],
+  // matcher: ['/((?!api|_next/static|_next/image|favicon.ico|logos|images).*)'],
+  matcher: ['/dashboard', '/dashboard/(.*)'],
 }
