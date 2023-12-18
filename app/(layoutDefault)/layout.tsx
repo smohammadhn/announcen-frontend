@@ -7,7 +7,8 @@ import AppBar from '@/components/navigation/AppBar'
 import NavDrawer from '@/components/navigation/NavDrawer'
 import authService from '@/services/authService'
 import useAuthStore, { User } from '@/store/auth'
-import { useState } from 'react'
+import { useRouter } from 'next/navigation'
+import { useEffect, useState } from 'react'
 import Cookies from 'universal-cookie'
 
 interface RootLayoutProps {
@@ -15,20 +16,27 @@ interface RootLayoutProps {
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
-  const [isNavExpanded, setisNavExpanded] = useState(true)
+  const [isNavExpanded, setisNavExpanded] = useState(false)
   const { user, setUser } = useAuthStore()
+  const router = useRouter()
 
+  // all routes under this layout are protected
   // check to see if the token that is present inside browser cookie is valid
   // runs only once on page refresh
-  if (!user || !user._id) {
-    const cookies = new Cookies()
-    const authToken = cookies.get('auth-token')
+  useEffect(() => {
+    if (!user || !user._id) {
+      const cookies = new Cookies()
+      const authToken = cookies.get('auth-token')
 
-    authService.verifyToken(authToken).then((res) => {
-      if (res.isTokenVerified) setUser(res.user as User)
-      console.log('reached here')
-    })
-  }
+      authService.verifyToken(authToken).then((res) => {
+        if (res.isTokenVerified) setUser(res.user as User)
+        else {
+          cookies.remove('auth-token')
+          router.replace('/login')
+        }
+      })
+    }
+  }, [])
 
   return (
     <div className="layout-default">
