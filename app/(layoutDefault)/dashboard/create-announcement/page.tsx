@@ -9,18 +9,16 @@ import Stepper from '@/components/ui/Stepper'
 import { Button } from '@/components/ui/button'
 import { toast } from '@/components/ui/use-toast'
 
-import CreateAnnouncementForm1, { IForm1 } from '@/components/forms/CreateAnnouncementForm1'
-import CreateAnnouncementForm2, { IForm2 } from '@/components/forms/CreateAnnouncementForm2'
-import CreateAnnouncementForm3, { IForm3 } from '@/components/forms/CreateAnnouncementForm3'
-import CreateAnnouncementForm4, { IForm4 } from '@/components/forms/CreateAnnouncementForm4'
+import CreateAnnouncementForm1 from '@/components/forms/CreateAnnouncementForm1'
+import CreateAnnouncementForm2 from '@/components/forms/CreateAnnouncementForm2'
+import CreateAnnouncementForm3 from '@/components/forms/CreateAnnouncementForm3'
+import CreateAnnouncementForm4 from '@/components/forms/CreateAnnouncementForm4'
 import CreateAnnouncementForm5 from '@/components/forms/CreateAnnouncementForm5'
 import announcementService from '@/services/announcementService'
 import { useRouter } from 'next/navigation'
 
-export type AnnouncementObject = Partial<IForm1 & IForm2 & IForm3 & IForm4 & { _id: string } & {}>
-
 interface FormRef {
-  submit: (onValid: (values: AnnouncementObject) => void, onInvalid: () => void) => void
+  submit: (onValid: (values: AnnouncementFrontend) => void, onInvalid: () => void) => void
 }
 
 interface FormElement extends Element {
@@ -37,7 +35,7 @@ export default function CreateAnnouncement() {
   })
 
   // data
-  const [announcementObject, setAnnouncementObject] = useState<AnnouncementObject>({})
+  const [announcementObject, setAnnouncementObject] = useState<AnnouncementFrontend>({})
   const [stepperValue, setStepperValue] = useState(1)
   const [isLastForm, setIsLastForm] = useState(false)
 
@@ -69,7 +67,7 @@ export default function CreateAnnouncement() {
     })
   }
 
-  const onFormValid = (incomingData: AnnouncementObject) => {
+  const onFormValid = (incomingData: AnnouncementFrontend) => {
     setAnnouncementObject((item) => {
       const announcementObjectCopy = { ...item }
       return Object.assign(announcementObjectCopy, incomingData)
@@ -84,7 +82,7 @@ export default function CreateAnnouncement() {
       // send the payload to the backend
       console.log('final backend payload :>> ', announcementObject)
 
-      const dateFields: (keyof AnnouncementObject)[] = ['dateOfBirth', 'dateOfDeath']
+      const dateFields: (keyof AnnouncementFrontend)[] = ['dateOfBirth', 'dateOfDeath']
       dateFields.forEach((e) => {
         const dateValue = announcementObject[e] as Date | undefined
 

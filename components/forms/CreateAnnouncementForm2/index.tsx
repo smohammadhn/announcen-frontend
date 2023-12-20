@@ -28,8 +28,8 @@ const formSchema = z.object({
   partnerName: z.string().max(100).optional(),
   placeOfBirth: z.string().max(100).optional(),
   placeOfDeath: z.string().max(100).optional(),
-  dateOfBirth: z.union([z.date(), z.string()]).optional(),
-  dateOfDeath: z.union([z.date(), z.string()]).optional(),
+  dateOfBirth: z.date().optional(),
+  dateOfDeath: z.date().optional(),
   familyRoles: z.array(z.string()),
 })
 
@@ -220,7 +220,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                           variant={'outline'}
                           className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
                         >
-                          {field.value ? format(field.value, 'PPP') : <span>Date of Birth</span>}
+                          {field.value ? 'dsd' : <span>Date of Birth</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>
@@ -267,7 +267,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                           variant={'outline'}
                           className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
                         >
-                          {field.value ? format(field.value, 'PPP') : <span>Date of Birth</span>}
+                          {field.value ? format(field.value as Date, 'PPP') : <span>Date of Birth</span>}
                           <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
                         </Button>
                       </FormControl>

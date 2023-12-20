@@ -1,13 +1,12 @@
 'use client'
 import './index.scss'
 
-import { AnnouncementObject } from '@/app/(layoutDefault)/dashboard/create-announcement/page'
 import { DATE_FORMAT } from '@/constants/core'
 import { cn } from '@/lib/utils'
 import moment from 'moment'
 
 interface Props {
-  announcementObject?: AnnouncementObject
+  announcementObject?: AnnouncementFrontend | AnnouncementBackend
   variant?: string
 }
 

@@ -3,7 +3,6 @@
 import './page.scss'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import announcementService from '@/services/announcementService'
-import { AnnouncementObject } from '@/app/(layoutDefault)/dashboard/create-announcement/page'
 import Image from 'next/image'
 import moment from 'moment'
 import CreateAnnouncementForm5 from '@/components/forms/CreateAnnouncementForm5'
@@ -34,7 +33,7 @@ export default function AnnouncementDetails({ params }: Props) {
   )
 }
 
-function DetailsSection({ item }: { item: AnnouncementObject }) {
+function DetailsSection({ item }: { item: AnnouncementBackend }) {
   const getPersonAge = () => {
     return moment().diff(moment(item.dateOfBirth), 'years')
   }
@@ -54,10 +53,10 @@ function DetailsSection({ item }: { item: AnnouncementObject }) {
         <div>
           <span>Living in {item.city}</span>
           <span>
-            Born in {item.placeOfBirth} on the {item.dateOfBirth as string}
+            Born in {item.placeOfBirth} on the {item.dateOfBirth}
           </span>
           <span>
-            Deceased at {item.placeOfDeath} on the {item.dateOfDeath as string} aged {getPersonAge()}
+            Deceased at {item.placeOfDeath} on the {item.dateOfDeath} aged {getPersonAge()}
           </span>
           <span>Widower of {item.partnerName}</span>
         </div>

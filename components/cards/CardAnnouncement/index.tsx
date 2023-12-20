@@ -1,4 +1,3 @@
-import { AnnouncementObject } from '@/app/(layoutDefault)/dashboard/create-announcement/page'
 import './index.scss'
 import { Button } from '@/components/ui/button'
 
@@ -6,7 +5,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 
 interface Props {
-  item: AnnouncementObject
+  item: AnnouncementFrontend
 }
 
 export default function CardAnnouncement({ item }: Props) {
