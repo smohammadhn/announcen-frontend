@@ -11,16 +11,24 @@ import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 
 type SortingKeys = 'announceDate' | 'eventDate' | 'name'
 
-export default function Dashboard() {
-  const searchParams = useSearchParams()
-  const querySorting = searchParams.get('sorting')
+export interface AnnouncementListQueryParams {
+  type?: 'death' | 'birth' | 'wedding'
+  sorting?: 'announceDate' | 'eventDate' | 'name'
+}
 
-  const { data: announcements, isLoading } = announcementService.read()
+interface Props {
+  searchParams: AnnouncementListQueryParams
+}
+
+export default function Dashboard({ searchParams }: Props) {
+  const querySorting = searchParams.sorting
+
+  const { data: announcements, isLoading } = announcementService.read(searchParams)
 
   // methods
   const getNewUrlQueryObject = (key: SortingKeys) => {
     let query: DashboardUrlQuery = {}
-    for (const [k, v] of searchParams.entries()) query[k] = v
+    for (const [k, v] of Object.entries(searchParams)) query[k] = v
     return (query = Object.assign(query, { sorting: key }))
   }
 

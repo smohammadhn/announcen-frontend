@@ -4,12 +4,14 @@ import axios from '@/services/apiClient'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AnnouncementObject } from '@/app/(layoutDefault)/dashboard/create-announcement/page'
 import { AxiosError } from 'axios'
+import { AnnouncementListQueryParams } from '@/app/(layoutDefault)/dashboard/page'
 
 const announcementService = {
-  read() {
+  read(searchParams: AnnouncementListQueryParams | undefined) {
     return useQuery<AnnouncementObject[], AxiosError<ErrorMessage>>({
-      queryKey: ['announcements'],
-      queryFn: () => axios.get<AnnouncementObject[]>('/announcements').then((res) => res.data),
+      queryKey: ['announcements', searchParams?.type || 'all', searchParams?.sorting || 'all'],
+      queryFn: () =>
+        axios.get<AnnouncementObject[]>('/announcements', { params: searchParams }).then((res) => res.data),
     })
   },
 
