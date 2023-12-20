@@ -62,16 +62,22 @@ export default function Dashboard() {
         </li>
       </ul>
 
-      {isLoading && <LoadingSpinner />}
-
-      {Array.isArray(announcements) && announcements.length > 0 && (
-        <ul className="dashboard-grid">
-          {announcements.map((item, index) => (
-            <li key={index}>
-              <CardAnnouncement />
-            </li>
-          ))}
-        </ul>
+      {isLoading ? (
+        <LoadingSpinner />
+      ) : (
+        <>
+          {Array.isArray(announcements) && announcements.length > 0 ? (
+            <ul className="dashboard-grid">
+              {announcements.map((item) => (
+                <li key={item._id}>
+                  <CardAnnouncement item={item} />
+                </li>
+              ))}
+            </ul>
+          ) : (
+            <p className="no-content">Create an announcement first!</p>
+          )}
+        </>
       )}
     </>
   )

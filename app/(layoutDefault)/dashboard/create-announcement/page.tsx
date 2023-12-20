@@ -17,7 +17,7 @@ import CreateAnnouncementForm5 from '@/components/forms/CreateAnnouncementForm5'
 import announcementService from '@/services/announcementService'
 import { useRouter } from 'next/navigation'
 
-export type AnnouncementObject = Partial<IForm1 & IForm2 & IForm3 & IForm4 & {}>
+export type AnnouncementObject = Partial<IForm1 & IForm2 & IForm3 & IForm4 & { _id: string } & {}>
 
 interface FormRef {
   submit: (onValid: (values: AnnouncementObject) => void, onInvalid: () => void) => void
