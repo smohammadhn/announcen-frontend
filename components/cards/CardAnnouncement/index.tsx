@@ -21,7 +21,7 @@ export default function CardAnnouncement({ item }: Props) {
 
       <h3 className="card-announcement__title">{`${item.firstName} ${item.lastName}`}</h3>
       <p className="card-announcement__subtitle">From: {item.city}</p>
-      <p className="card-announcement__subtitle">{`${item.dateOfBirth} ${item.dateOfDeath}`}</p>
+      <p className="card-announcement__subtitle">{`${item.dateOfBirth} - ${item.dateOfDeath}`}</p>
 
       <div className="card-announcement__actions">
         <Button variant="secondary" className="w-full">

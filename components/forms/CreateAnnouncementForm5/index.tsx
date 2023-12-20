@@ -1,18 +1,19 @@
 'use client'
 import './index.scss'
 
-import { forwardRef } from 'react'
 import { AnnouncementObject } from '@/app/(layoutDefault)/dashboard/create-announcement/page'
-import moment from 'moment'
 import { DATE_FORMAT } from '@/constants/core'
+import { cn } from '@/lib/utils'
+import moment from 'moment'
 
 interface Props {
   announcementObject?: AnnouncementObject
+  variant?: string
 }
 
-export default function CreateAnnouncementForm1({ announcementObject: ann }: Props) {
+export default function CreateAnnouncementForm1({ announcementObject: ann, variant }: Props) {
   return (
-    <section className="ca-form5">
+    <section className={cn('ca-form5', variant)}>
       <p>In love and gratitude, we share the news of the death of our beloved {ann?.familyRoles?.join(', ')}</p>
       <br />
       <p className="font-bold text-lg">{`${ann?.firstName} ${ann?.lastName}`}</p>
