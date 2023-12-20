@@ -28,8 +28,8 @@ const formSchema = z.object({
   partnerName: z.string().max(100).optional(),
   placeOfBirth: z.string().max(100).optional(),
   placeOfDeath: z.string().max(100).optional(),
-  dateOfBirth: z.date().optional(),
-  dateOfDeath: z.date().optional(),
+  dateOfBirth: z.union([z.date(), z.string()]).optional(),
+  dateOfDeath: z.union([z.date(), z.string()]).optional(),
   familyRoles: z.array(z.string()),
 })
 

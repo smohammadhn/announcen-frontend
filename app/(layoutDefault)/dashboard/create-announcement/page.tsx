@@ -14,6 +14,8 @@ import CreateAnnouncementForm2, { IForm2 } from '@/components/forms/CreateAnnoun
 import CreateAnnouncementForm3, { IForm3 } from '@/components/forms/CreateAnnouncementForm3'
 import CreateAnnouncementForm4, { IForm4 } from '@/components/forms/CreateAnnouncementForm4'
 import CreateAnnouncementForm5 from '@/components/forms/CreateAnnouncementForm5'
+import announcementService from '@/services/announcementService'
+import { useRouter } from 'next/navigation'
 
 export type AnnouncementObject = Partial<IForm1 & IForm2 & IForm3 & IForm4 & {}>
 
@@ -26,6 +28,14 @@ interface FormElement extends Element {
 }
 
 export default function CreateAnnouncement() {
+  const router = useRouter()
+  const annService = announcementService.create(() => {
+    toast({
+      title: 'Announcement Created Successfully!',
+    })
+    router.push('/dashboard')
+  })
+
   // data
   const [announcementObject, setAnnouncementObject] = useState<AnnouncementObject>({})
   const [stepperValue, setStepperValue] = useState(1)
@@ -73,11 +83,22 @@ export default function CreateAnnouncement() {
     if (stepperValue === forms.length) {
       // send the payload to the backend
       console.log('final backend payload :>> ', announcementObject)
+
+      const dateFields: (keyof AnnouncementObject)[] = ['dateOfBirth', 'dateOfDeath']
+      dateFields.forEach((e) => {
+        const dateValue = announcementObject[e] as Date | undefined
+
+        if (dateValue && typeof announcementObject[e] !== 'undefined') {
+          // fuck typescript
+          announcementObject[e] = moment(dateValue).format(DATE_FORMAT) as any
+        }
+      })
+
+      annService.mutate(announcementObject)
       return
     }
 
     const announcementForm = forms[stepperValue - 1] as unknown as FormElement
-
     announcementForm.ref.current?.submit(onFormValid, onFormInvalid)
   }
 
