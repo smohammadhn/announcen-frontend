@@ -26,7 +26,7 @@ const authService = {
 
   register(onSuccess: (savedUser: User) => void) {
     return useMutation<User, AxiosError<ErrorMessage>, User>({
-      mutationFn: (user: User) => axios.post<User>('/users', user).then((res) => res.data),
+      mutationFn: (user) => axios.post<User>('/users', user).then((res) => res.data),
       onSuccess,
     })
   },
