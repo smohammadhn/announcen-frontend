@@ -8,18 +8,14 @@ import { useState } from 'react'
 import { useToast } from '@/components/ui/use-toast'
 import { AxiosError } from 'axios'
 
-export default function ReactQueryProvider({
-  children,
-}: {
-  children: React.ReactNode
-}) {
+export default function ReactQueryProvider({ children }: { children: React.ReactNode }) {
   const [queryClient] = useState(
     () =>
       new QueryClient({
         defaultOptions: {
           queries: {
             retry: 0,
-            staleTime: 60 * 60 * 1000, // 10s
+            staleTime: 30 * 60 * 1000, // 30 mins
             refetchOnReconnect: false,
             refetchOnWindowFocus: false,
           },

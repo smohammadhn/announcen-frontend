@@ -2,21 +2,22 @@
 
 import './page.scss'
 
-import { useState } from 'react'
 import CardAnnouncement from '@/components/cards/CardAnnouncement'
 import { Filter } from 'lucide-react'
 import { useSearchParams } from 'next/navigation'
 import Link from 'next/link'
-import Head from 'next/head'
+import announcementService from '@/services/announcementService'
+import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 
 type SortingKeys = 'announceDate' | 'eventDate' | 'name'
 
 export default function Dashboard() {
-  const querySorting = useSearchParams().get('sorting')
   const searchParams = useSearchParams()
+  const querySorting = searchParams.get('sorting')
 
-  const [announcements, setAnnouncements] = useState(Array.from({ length: 9 }))
+  const { data: announcements, isLoading } = announcementService.read()
 
+  // methods
   const getNewUrlQueryObject = (key: SortingKeys) => {
     let query: DashboardUrlQuery = {}
     for (const [k, v] of searchParams.entries()) query[k] = v
@@ -25,10 +26,6 @@ export default function Dashboard() {
 
   return (
     <>
-      <Head>
-        <title>Announcen</title>
-      </Head>
-
       <ul className="dashboard-sorting">
         <li className={querySorting === 'announceDate' ? 'selected' : ''}>
           <Link
@@ -65,13 +62,17 @@ export default function Dashboard() {
         </li>
       </ul>
 
-      <ul className="dashboard-grid">
-        {announcements.map((item, index) => (
-          <li key={index}>
-            <CardAnnouncement />
-          </li>
-        ))}
-      </ul>
+      {isLoading && <LoadingSpinner />}
+
+      {Array.isArray(announcements) && announcements.length > 0 && (
+        <ul className="dashboard-grid">
+          {announcements.map((item, index) => (
+            <li key={index}>
+              <CardAnnouncement />
+            </li>
+          ))}
+        </ul>
+      )}
     </>
   )
 }
