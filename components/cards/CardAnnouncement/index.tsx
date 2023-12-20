@@ -3,6 +3,7 @@ import './index.scss'
 import { Button } from '@/components/ui/button'
 
 import Image from 'next/image'
+import Link from 'next/link'
 
 interface Props {
   item: AnnouncementObject
@@ -24,8 +25,8 @@ export default function CardAnnouncement({ item }: Props) {
       <p className="card-announcement__subtitle">{`${item.dateOfBirth} - ${item.dateOfDeath}`}</p>
 
       <div className="card-announcement__actions">
-        <Button variant="secondary" className="w-full">
-          Open
+        <Button asChild variant="secondary" className="w-full">
+          <Link href={`/dashboard/announcements/${item._id}`}>Open</Link>
         </Button>
         <Button variant="secondary" className="w-full">
           Donate
