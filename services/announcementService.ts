@@ -13,6 +13,13 @@ const announcementService = {
     })
   },
 
+  details(announcementId: string) {
+    return useQuery<AnnouncementObject, AxiosError<ErrorMessage>>({
+      queryKey: ['announcements', announcementId],
+      queryFn: () => axios.get<AnnouncementObject>(`/announcements/${announcementId}`).then((res) => res.data),
+    })
+  },
+
   create(onSuccess?: () => void) {
     return useMutation<AnnouncementObject, AxiosError<ErrorMessage>, AnnouncementObject>({
       mutationFn: (payload) => axios.post<AnnouncementObject>('/announcements', payload).then((res) => res.data),
