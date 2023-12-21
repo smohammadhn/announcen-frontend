@@ -7,17 +7,10 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import { useRouter } from 'next/navigation'
-import Cookies, { CookieSetOptions } from 'universal-cookie'
 
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Button } from '@/components/ui/button'
 import { Input } from '@/components/ui/input'
-
-export const COOKIE_OPTIONS: CookieSetOptions = {
-  secure: true,
-  sameSite: 'none',
-  maxAge: 6 * 3_600_000,
-}
 
 const formSchema = z.object({
   email: z.string().min(4).max(30),
@@ -25,12 +18,11 @@ const formSchema = z.object({
 })
 
 export default function LoginForm() {
-  const cookies = new Cookies(null, { path: '/' })
   const router = useRouter()
   const setUser = useAuthStore((s) => s.setUser)
 
   const login = authService.login(({ access, user }) => {
-    cookies.set('auth-token', access, COOKIE_OPTIONS)
+    localStorage.setItem('auth-token', access)
 
     if (user) setUser(user)
     router.replace('/dashboard')

@@ -9,8 +9,6 @@ import Link from 'next/link'
 import { usePathname, useSearchParams } from 'next/navigation'
 import { Dispatch, SetStateAction } from 'react'
 import { useRouter } from 'next/navigation'
-import Cookies from 'universal-cookie'
-import { COOKIE_OPTIONS } from '@/components/forms/LoginForm'
 import { cn } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
 
@@ -24,11 +22,10 @@ export default function AppBar({ isNavExpanded, setIsNavExpanded }: NavigationPr
   const router = useRouter()
   const queryType = useSearchParams().get('type')
   const onDashboard = pathname === '/dashboard'
-  const cookies = new Cookies(null, { path: '/' })
   const queryClient = useQueryClient()
 
   const handleSignOut = () => {
-    cookies.remove('auth-token', COOKIE_OPTIONS)
+    localStorage.removeItem('auth-token')
     queryClient.clear()
     router.replace('/login')
   }
