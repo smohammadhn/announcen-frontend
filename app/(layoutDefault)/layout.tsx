@@ -9,12 +9,14 @@ import authService from '@/services/authService'
 import useAuthStore, { User } from '@/store/auth'
 import { useRouter } from 'next/navigation'
 import { useEffect, useState } from 'react'
+import Cookies from 'universal-cookie'
 
 interface RootLayoutProps {
   children: React.ReactNode
 }
 
 export default function RootLayout({ children }: RootLayoutProps) {
+  const cookies = new Cookies()
   const [isNavExpanded, setisNavExpanded] = useState(false)
   const { user, setUser } = useAuthStore()
   const router = useRouter()
@@ -24,12 +26,12 @@ export default function RootLayout({ children }: RootLayoutProps) {
   // runs only once on page refresh
   useEffect(() => {
     if (!user || !user._id) {
-      const authToken = localStorage.getItem('auth-token') || ''
-
-      authService.verifyToken(authToken).then((res) => {
+      authService.verifyToken().then((res) => {
         if (res.isTokenVerified) setUser(res.user as User)
         else {
           localStorage.removeItem('auth-token')
+          cookies.remove('auth-token')
+
           router.replace('/login')
         }
       })
