@@ -1,6 +1,9 @@
 import axios from 'axios'
 
-const authToken = localStorage.getItem('auth-token')
+let authToken: string | undefined
+if (localStorage) {
+  authToken = localStorage.getItem('auth-token') ?? undefined
+}
 
 const axiosInstance = axios.create({
   baseURL: process.env.NEXT_PUBLIC_BASE_URL,
