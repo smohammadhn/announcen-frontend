@@ -34,21 +34,14 @@ const authService = {
   async verifyToken(authToken: string) {
     // TODO: make sure that the authToken variable contains a valid base64-encoded JWT token (object). and not any malicious input
 
-    return fetch(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`, {
-      method: 'POST',
-      credentials: 'include',
-      headers: {
-        Cookie: `auth-token=${authToken}`,
-      },
-    })
-      .then((res) => res.json())
-      .then((res: VerifyEndpointResponse) => {
-        if (res.user?._id) {
+    return axios
+      .post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`)
+      .then(({ data }) => {
+        if (data.user?._id)
           return {
             isTokenVerified: true,
-            user: res.user,
+            user: data.user,
           }
-        }
 
         return {
           isTokenVerified: false,
