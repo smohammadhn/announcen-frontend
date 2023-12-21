@@ -1,6 +1,7 @@
 'use client'
 import './index.scss'
 
+import axios from '@/services/apiClient'
 import useAuthStore from '@/store/auth'
 import authService from '@/services/authService'
 import { zodResolver } from '@hookform/resolvers/zod'
@@ -23,6 +24,7 @@ export default function LoginForm() {
 
   const login = authService.login(({ access, user }) => {
     localStorage.setItem('auth-token', access)
+    axios.defaults.headers['Authorization'] = access
 
     if (user) setUser(user)
     router.replace('/dashboard')
