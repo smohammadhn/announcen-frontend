@@ -1,7 +1,14 @@
 .ca-form5 {
   align-self: center;
 
+  p:after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    white-space: pre;
+  }
+
   &.small {
-    font-size: 85%;
+    font-size: 90%;
   }
 }
