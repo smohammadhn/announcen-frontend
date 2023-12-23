@@ -2,8 +2,12 @@ import './index.scss'
 
 import { cn, formatToUiDate } from '@/lib/utils'
 import RichTextEditor from '@/components/ui/rich-text-editor'
-import { useEffect, useState } from 'react'
+import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 import obituaryTemplates from '@/constants/templates'
+
+export type IForm5 = {
+  obituary: string
+}
 
 interface Props {
   announcementObject?: AnnouncementFrontend | AnnouncementBackend
@@ -11,12 +15,18 @@ interface Props {
   manualEditMode?: boolean
 }
 
-export default function CreateAnnouncementForm1({
-  announcementObject: ann = {},
-  variant = undefined,
-  manualEditMode = false,
-}: Props) {
-  const [editorData, setEditorData] = useState(ann?.obituary || '')
+export default forwardRef(function CreateAnnouncementForm5(
+  { announcementObject: ann = {}, variant = undefined, manualEditMode = false }: Props,
+  ref
+) {
+  const [editorData, setEditorData] = useState(ann.obituary || '')
+
+  useImperativeHandle(ref, () => ({
+    submit: (onValid: (values: IForm5) => void, onInvalid: () => void) => {
+      if (editorData.length < 5) onInvalid()
+      else onValid({ obituary: editorData })
+    },
+  }))
 
   useEffect(() => {
     if (variant === 'small') return
@@ -47,5 +57,7 @@ export default function CreateAnnouncementForm1({
   if (manualEditMode) return <RichTextEditor initialData={editorData} onBlur={setEditorData} />
 
   // variant === 'small' or manualEditMode === false
-  return <section className={cn('ca-form5', variant)} dangerouslySetInnerHTML={{ __html: ann?.obituary || '' }} />
-}
+  return (
+    <section className={cn('ca-form5', variant)} dangerouslySetInnerHTML={{ __html: ann?.obituary || '<p></p>' }} />
+  )
+})

@@ -45,6 +45,7 @@ export default function CreateAnnouncement() {
   const refForm2 = useRef<FormRef>(null)
   const refForm3 = useRef<FormRef>(null)
   const refForm4 = useRef<FormRef>(null)
+  const refForm5 = useRef<FormRef>(null)
 
   // forms
   const forms = [
@@ -54,6 +55,7 @@ export default function CreateAnnouncement() {
     <CreateAnnouncementForm4 announcementObject={announcementObject} ref={refForm4} key="detail-family" />,
     <CreateAnnouncementForm5
       announcementObject={announcementObject}
+      ref={refForm5}
       manualEditMode={manualEditMode}
       key="ann-preview"
     />,
@@ -74,34 +76,32 @@ export default function CreateAnnouncement() {
   }
 
   const onFormValid = (incomingData: AnnouncementFrontend) => {
+    // update announcement object
     setAnnouncementObject((item) => {
       const announcementObjectCopy = { ...item }
       return Object.assign(announcementObjectCopy, incomingData)
     })
 
-    // next form
-    setStepperValue((prev) => prev + 1)
-  }
-
-  const submitForm = () => {
-    if (stepperValue === forms.length) {
-      // send the payload to the backend
-      console.log('final backend payload :>> ', announcementObject)
-
-      const dateFields: (keyof AnnouncementFrontend)[] = ['dateOfBirth', 'dateOfDeath']
-      dateFields.forEach((e) => {
-        const dateValue = announcementObject[e] as Date | undefined
-
-        if (dateValue && typeof announcementObject[e] !== 'undefined') {
-          // fuck typescript
-          announcementObject[e] = moment(dateValue).format(DATE_FORMAT) as any
-        }
-      })
-
-      annService.mutate(announcementObject)
+    if (stepperValue !== forms.length) {
+      setStepperValue((prev) => prev + 1)
       return
     }
 
+    // send data to the backend
+    const dateFields: (keyof AnnouncementFrontend)[] = ['dateOfBirth', 'dateOfDeath']
+    dateFields.forEach((e) => {
+      const dateValue = announcementObject[e] as Date | undefined
+
+      if (dateValue && typeof announcementObject[e] !== 'undefined') {
+        // fuck you typescript
+        announcementObject[e] = moment(dateValue).format(DATE_FORMAT) as any
+      }
+    })
+
+    annService.mutate(announcementObject)
+  }
+
+  const submitForm = () => {
     const announcementForm = forms[stepperValue - 1] as unknown as FormElement
     announcementForm.ref.current?.submit(onFormValid, onFormInvalid)
   }

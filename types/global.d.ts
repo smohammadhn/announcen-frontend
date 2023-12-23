@@ -2,6 +2,7 @@ import { IForm1 } from '@/components/forms/CreateAnnouncementForm1'
 import { IForm2 } from '@/components/forms/CreateAnnouncementForm2'
 import { IForm3 } from '@/components/forms/CreateAnnouncementForm3'
 import { IForm4 } from '@/components/forms/CreateAnnouncementForm4'
+import { IForm5 } from '@/components/forms/CreateAnnouncementForm5'
 
 type OmittedFrontendKeys = 'dateOfBirth' & 'dateOfDeath' & 'serviceDate'
 
@@ -18,7 +19,7 @@ declare global {
     sorting?: string
   }
 
-  type AnnouncementFrontend = Partial<IForm1 & IForm2 & IForm3 & IForm4 & { _id: string } & {}>
+  type AnnouncementFrontend = Partial<IForm1 & IForm2 & IForm3 & IForm4 & IForm5 & { _id: string } & {}>
 
   type AnnouncementBackend = Omit<AnnouncementFrontend, OmittedFrontendKeys> & {
     dateOfBirth: string
