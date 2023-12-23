@@ -105,7 +105,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                     <PopoverTrigger asChild>
                       <FormControl>
                         <Button
-                          variant={'outline'}
+                          variant={'formField'}
                           className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
                         >
                           {field.value ? formatToUiDate(field.value) : <span>Date of service & funeral</span>}

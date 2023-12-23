@@ -9,7 +9,7 @@ export function cn(...inputs: ClassValue[]) {
 
 // ---
 
-export function formatToUiDate(date: Date | string | undefined): string {
+export function formatToUiDate(date: Date | string | undefined | null): string {
   if (!date) return ''
   return moment(date).format(UI_DATE_FORMAT)
 }

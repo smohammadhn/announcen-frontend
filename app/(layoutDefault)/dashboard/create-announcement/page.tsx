@@ -38,6 +38,7 @@ export default function CreateAnnouncement() {
   const [announcementObject, setAnnouncementObject] = useState<AnnouncementFrontend>({})
   const [stepperValue, setStepperValue] = useState(1)
   const [isLastForm, setIsLastForm] = useState(false)
+  const [manualEditMode, setManualEditMode] = useState(false)
 
   // refs
   const refForm1 = useRef<FormRef>(null)
@@ -47,16 +48,21 @@ export default function CreateAnnouncement() {
 
   // forms
   const forms = [
-    <CreateAnnouncementForm3 announcementObject={announcementObject} ref={refForm3} key="detail-funeral" />,
     <CreateAnnouncementForm1 announcementObject={announcementObject} ref={refForm1} key="ann-type" />,
     <CreateAnnouncementForm2 announcementObject={announcementObject} ref={refForm2} key="detail-defunct" />,
+    <CreateAnnouncementForm3 announcementObject={announcementObject} ref={refForm3} key="detail-funeral" />,
     <CreateAnnouncementForm4 announcementObject={announcementObject} ref={refForm4} key="detail-family" />,
-    <CreateAnnouncementForm5 announcementObject={announcementObject} key="ann-preview" />,
+    <CreateAnnouncementForm5
+      announcementObject={announcementObject}
+      manualEditMode={manualEditMode}
+      key="ann-preview"
+    />,
   ]
 
   // hooks
   useEffect(() => {
     setIsLastForm(stepperValue === forms.length)
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [stepperValue])
 
   // methods
@@ -116,6 +122,20 @@ export default function CreateAnnouncement() {
         >
           Back
         </Button>
+
+        {stepperValue >= 2 && (
+          <Button
+            className="rounded-full "
+            variant={'outline'}
+            onClick={() => {
+              if (isLastForm) setManualEditMode((prev) => !prev)
+              else setStepperValue(forms.length)
+            }}
+          >
+            {isLastForm ? 'Edit Manually' : 'Preview'}
+          </Button>
+        )}
+
         <Button className="rounded-full" onClick={submitForm}>
           {isLastForm ? 'Create' : 'Next'}
         </Button>

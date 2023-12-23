@@ -8,9 +8,14 @@ import moment from 'moment'
 interface Props {
   announcementObject?: AnnouncementFrontend | AnnouncementBackend
   variant?: string
+  manualEditMode?: boolean
 }
 
-export default function CreateAnnouncementForm1({ announcementObject: ann, variant }: Props) {
+export default function CreateAnnouncementForm1({
+  announcementObject: ann,
+  variant = undefined,
+  manualEditMode = false,
+}: Props) {
   return (
     <section className={cn('ca-form5', variant)}>
       <p>In love and gratitude, we share the news of the death of our beloved {ann?.familyRoles?.join(', ')}</p>
@@ -20,8 +25,8 @@ export default function CreateAnnouncementForm1({ announcementObject: ann, varia
       <br />
       <p>Widower of {ann?.partnerName}</p>
       <p>
-        The funeral takes place on {ann?.serviceDate} at {ann?.funeralTime} o&apos;clock at the cemetery in{' '}
-        {ann?.funeralPlace}, followed by a ceremony in the {ann?.servicePlace}{' '}
+        The funeral takes place on {formatToUiDate(ann?.serviceDate)} at {ann?.funeralTime} o&apos;clock at the cemetery
+        in {ann?.funeralPlace}, followed by a ceremony in the {ann?.servicePlace}{' '}
       </p>
       <br />
       <p>
@@ -34,7 +39,7 @@ export default function CreateAnnouncementForm1({ announcementObject: ann, varia
       <br />
 
       <p>
-        {ann?.relatives?.map((e) => e.city).join(', ')} on the {ann?.serviceDate}
+        {ann?.relatives?.map((e) => e.city).join(', ')} on the {formatToUiDate(ann?.serviceDate)}
       </p>
       <br />
 

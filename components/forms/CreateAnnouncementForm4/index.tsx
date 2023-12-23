@@ -19,8 +19,8 @@ import { cn } from '@/lib/utils'
 const formSchema = z.object({
   relatives: z.array(
     z.object({
-      name: z.string().min(3),
-      partnerName: z.string().optional(),
+      name: z.string().min(1, 'Required').min(3),
+      partnerName: z.string(),
       children: z.enum(['yes', 'no', '']),
       city: z.string().min(1, 'Required'),
     })
@@ -28,11 +28,11 @@ const formSchema = z.object({
 
   nonProfits: z.array(
     z.object({
-      name: z.string().min(3, 'Required'),
+      name: z.string().min(1, 'Required').min(3),
     })
   ),
 
-  specialThanks: z.string().max(1000).optional(),
+  specialThanks: z.string().min(1, 'Required').max(1000).nullable(),
 })
 
 export type IForm4 = z.infer<typeof formSchema>
@@ -42,13 +42,29 @@ interface Props {
 }
 
 export default forwardRef(function CreateAnnouncementForm1({ announcementObject }: Props, ref) {
+  const [includeRelativeNames, setIncludeRelativeNames] = useState(true)
+  const [includeRelativeCities, setIncludeRelativeCities] = useState(true)
+  const [includeSpecialThanks, setIncludeSpecialThanks] = useState(true)
+  const [includeNonProfit, setIncludeNonProfit] = useState(true)
+
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
     resolver: zodResolver(formSchema),
     defaultValues: {
-      relatives: announcementObject?.relatives || [],
-      nonProfits: announcementObject?.nonProfits || [],
+      relatives: announcementObject?.relatives || [
+        {
+          name: '',
+          partnerName: '',
+          city: '',
+          children: '',
+        },
+      ],
+      nonProfits: announcementObject?.nonProfits || [
+        {
+          name: '',
+        },
+      ],
       specialThanks: announcementObject?.specialThanks || '',
     },
   })
@@ -59,27 +75,25 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
     },
   }))
 
-  const [includeRelativeNames, setIncludeRelativeNames] = useState(true)
-  const [includeRelativeCities, setIncludeRelativeCities] = useState(true)
-  const [includeSpecialThanks, setIncludeSpecialThanks] = useState(true)
-
   const handleAddNewRelative = () => {
-    const array = form.getValues('relatives')
-    array.push({
-      name: '',
-      partnerName: '',
-      city: '',
-      children: '',
-    })
-    form.setValue('relatives', array)
+    form.setValue('relatives', [
+      ...form.getValues('relatives'),
+      {
+        name: '',
+        partnerName: '',
+        city: '',
+        children: '',
+      },
+    ])
   }
 
   const handleAddNewNonProfit = () => {
-    const array = form.getValues('nonProfits')
-    array.push({
-      name: '',
-    })
-    form.setValue('nonProfits', array)
+    form.setValue('nonProfits', [
+      ...form.getValues('nonProfits'),
+      {
+        name: '',
+      },
+    ])
   }
 
   return (
@@ -93,6 +107,10 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
             checked={includeRelativeNames}
             onCheckedChange={(e: boolean) => {
               setIncludeRelativeNames(e)
+
+              if (e === false) {
+                form.setValue('relatives', [])
+              } else handleAddNewRelative()
             }}
             id="checkbox-rel-names"
           />
@@ -188,14 +206,14 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                       control={form.control}
                       name={`relatives.${index}.city`}
                       render={({ field }) => (
-                        <FormItem className="flex flex-col space-y-1">
+                        <FormItem className="flex flex-col space-y-1" onChange={(e) => console.log(e)}>
                           <FormLabel>City</FormLabel>
 
                           <Popover>
                             <PopoverTrigger asChild>
                               <FormControl>
                                 <Button
-                                  variant="outline"
+                                  variant="formField"
                                   role="combobox"
                                   className={cn('justify-between', !field.value && 'text-muted-foreground')}
                                 >
@@ -215,6 +233,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                                       key={e.value}
                                       onSelect={() => {
                                         form.setValue(`relatives.${index}.city`, e.value)
+                                        form.clearErrors(`relatives.${index}.city`)
                                       }}
                                     >
                                       <Check
@@ -254,6 +273,10 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
             checked={includeSpecialThanks}
             onCheckedChange={(e: boolean) => {
               setIncludeSpecialThanks(e)
+
+              if (e === false) {
+                form.setValue('specialThanks', null)
+              } else form.resetField('specialThanks')
             }}
             id="checkbox-special-thanks"
           />
@@ -276,7 +299,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               render={({ field }) => (
                 <FormItem className="mb-8">
                   <FormControl>
-                    <Input placeholder="Write special thanks" {...field} />
+                    <Input placeholder="Write special thanks" {...field} value={field.value || undefined} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -286,6 +309,29 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
         )}
 
         <h4>Non-profit to support</h4>
+
+        {/* include non profit */}
+        <div className="items-top flex space-x-2 mb-3">
+          <Checkbox
+            checked={includeNonProfit}
+            onCheckedChange={(e: boolean) => {
+              setIncludeNonProfit(e)
+
+              if (e === false) {
+                form.setValue('nonProfits', [])
+              } else handleAddNewNonProfit()
+            }}
+            id="checkbox-special-thanks"
+          />
+          <div className="grid gap-1.5 leading-none">
+            <label
+              htmlFor="checkbox-special-thanks"
+              className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+            >
+              Add non-profit to the announcement
+            </label>
+          </div>
+        </div>
 
         {form.watch('nonProfits').map((_, index) => (
           <div key={index} className="my-4">
