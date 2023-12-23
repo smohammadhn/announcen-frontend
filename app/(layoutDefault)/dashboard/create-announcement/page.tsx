@@ -47,9 +47,9 @@ export default function CreateAnnouncement() {
 
   // forms
   const forms = [
+    <CreateAnnouncementForm3 announcementObject={announcementObject} ref={refForm3} key="detail-funeral" />,
     <CreateAnnouncementForm1 announcementObject={announcementObject} ref={refForm1} key="ann-type" />,
     <CreateAnnouncementForm2 announcementObject={announcementObject} ref={refForm2} key="detail-defunct" />,
-    <CreateAnnouncementForm3 announcementObject={announcementObject} ref={refForm3} key="detail-funeral" />,
     <CreateAnnouncementForm4 announcementObject={announcementObject} ref={refForm4} key="detail-family" />,
     <CreateAnnouncementForm5 announcementObject={announcementObject} key="ann-preview" />,
   ]

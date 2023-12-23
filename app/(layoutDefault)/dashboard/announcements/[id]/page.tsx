@@ -8,6 +8,7 @@ import moment from 'moment'
 import CreateAnnouncementForm5 from '@/components/forms/CreateAnnouncementForm5'
 import { Button } from '@/components/ui/button'
 import Link from 'next/link'
+import { formatToUiDate } from '@/lib/utils'
 
 interface Props {
   params: { id: string }
@@ -53,12 +54,13 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
         <div>
           <span>Living in {item.city}</span>
           <span>
-            Born in {item.placeOfBirth} on the {item.dateOfBirth}
+            Born in {item.placeOfBirth} on {formatToUiDate(item.dateOfBirth)}
           </span>
           <span>
-            Deceased at {item.placeOfDeath} on the {item.dateOfDeath} aged {getPersonAge()}
+            Deceased at {item.placeOfDeath} on {item.dateOfDeath} aged {getPersonAge()}
           </span>
-          <span>Widower of {item.partnerName}</span>
+
+          {item.partnerName && <span>Widower of {item.partnerName}</span>}
         </div>
       </div>
 

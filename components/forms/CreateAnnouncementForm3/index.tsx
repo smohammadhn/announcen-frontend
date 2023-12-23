@@ -1,23 +1,28 @@
 'use client'
 import './index.scss'
 
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import { Button } from '@/components/ui/button'
+import { Calendar } from '@/components/ui/calendar'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { REGEX_TIME } from '@/constants/core'
+import { cn, formatToUiDate } from '@/lib/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { CalendarIcon } from 'lucide-react'
 import { forwardRef, useImperativeHandle, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
 const formSchema = z.object({
-  serviceDate: z.string().max(100).optional(),
-  serviceTime: z.string().max(100).optional(),
-  servicePlace: z.string().max(100).optional(),
-
-  funeralTime: z.string().max(100).optional(),
-  funeralPlace: z.string().max(100).optional(),
+  serviceDate: z.date().nullable(),
+  serviceTime: z.string().regex(REGEX_TIME, 'Correct format is HH:mm').nullable(),
+  servicePlace: z.string().min(1, 'Required').max(100).nullable(),
 
   closestFamilyCircle: z.boolean(),
+  funeralTime: z.string().regex(REGEX_TIME, 'Correct format is HH:mm').nullable(),
+  funeralPlace: z.string().min(1, 'Required').max(100).nullable(),
 })
 
 export type IForm3 = z.infer<typeof formSchema>
@@ -32,7 +37,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
     mode: 'all',
     resolver: zodResolver(formSchema),
     defaultValues: {
-      serviceDate: announcementObject?.serviceDate || '',
+      serviceDate: announcementObject?.serviceDate || ('' as any),
       serviceTime: announcementObject?.serviceTime || '',
       servicePlace: announcementObject?.servicePlace || '',
 
@@ -65,6 +70,16 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
             checked={checkboxService}
             onCheckedChange={(e: boolean) => {
               setCheckboxService(e)
+
+              if (e === false) {
+                form.setValue('serviceDate', null)
+                form.setValue('serviceTime', null)
+                form.setValue('servicePlace', null)
+              } else {
+                form.resetField('serviceDate')
+                form.resetField('serviceTime')
+                form.resetField('servicePlace')
+              }
             }}
             id="checkbox-service"
           />
@@ -85,10 +100,29 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               control={form.control}
               name="serviceDate"
               render={({ field }) => (
-                <FormItem className="mb-3">
-                  <FormControl>
-                    <Input placeholder="Date of service & funeral" {...field} />
-                  </FormControl>
+                <FormItem className="flex flex-col mb-3">
+                  <Popover>
+                    <PopoverTrigger asChild>
+                      <FormControl>
+                        <Button
+                          variant={'outline'}
+                          className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
+                        >
+                          {field.value ? formatToUiDate(field.value) : <span>Date of service & funeral</span>}
+                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                        </Button>
+                      </FormControl>
+                    </PopoverTrigger>
+                    <PopoverContent className="w-auto p-0" align="start">
+                      <Calendar
+                        mode="single"
+                        selected={field.value || undefined}
+                        onSelect={field.onChange}
+                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                        initialFocus
+                      />
+                    </PopoverContent>
+                  </Popover>
                   <FormMessage />
                 </FormItem>
               )}
@@ -101,7 +135,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               render={({ field }) => (
                 <FormItem className="mb-3">
                   <FormControl>
-                    <Input placeholder="Time of service" {...field} />
+                    <Input placeholder="Time of service" {...field} value={field.value || undefined} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -115,7 +149,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               render={({ field }) => (
                 <FormItem className="mb-10">
                   <FormControl>
-                    <Input placeholder="Place of service" {...field} />
+                    <Input placeholder="Place of service" {...field} value={field.value || undefined} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -132,6 +166,14 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
             checked={checkboxFuneral}
             onCheckedChange={(e: boolean) => {
               setCheckboxFuneral(e)
+
+              if (e === false) {
+                form.setValue('funeralTime', null)
+                form.setValue('funeralPlace', null)
+              } else {
+                form.resetField('funeralTime')
+                form.resetField('funeralPlace')
+              }
             }}
             id="checkbox-funeral"
           />
@@ -154,7 +196,20 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               render={({ field }) => (
                 <FormItem className="items-top flex space-x-2 mb-5 space-y-0">
                   <FormControl>
-                    <Checkbox checked={field.value} onCheckedChange={field.onChange} />
+                    <Checkbox
+                      checked={field.value}
+                      onCheckedChange={(e) => {
+                        field.onChange(e)
+
+                        if (e === false) {
+                          form.resetField('funeralTime')
+                          form.resetField('funeralPlace')
+                        } else {
+                          form.setValue('funeralTime', null)
+                          form.setValue('funeralPlace', null)
+                        }
+                      }}
+                    />
                   </FormControl>
                   <div className="space-y-1 leading-none">
                     <FormLabel>The funeral will take place in the closest family circle.</FormLabel>
@@ -163,33 +218,37 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               )}
             />
 
-            {/* funeral time */}
-            <FormField
-              control={form.control}
-              name="funeralTime"
-              render={({ field }) => (
-                <FormItem className="mb-3">
-                  <FormControl>
-                    <Input placeholder="Time of funeral" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {form.watch('closestFamilyCircle') === false && (
+              <>
+                {/* funeral time */}
+                <FormField
+                  control={form.control}
+                  name="funeralTime"
+                  render={({ field }) => (
+                    <FormItem className="mb-3">
+                      <FormControl>
+                        <Input placeholder="Time of funeral" {...field} value={field.value || undefined} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
 
-            {/* funeral place */}
-            <FormField
-              control={form.control}
-              name="funeralPlace"
-              render={({ field }) => (
-                <FormItem className="mb-3">
-                  <FormControl>
-                    <Input placeholder="Place of funeral" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+                {/* funeral place */}
+                <FormField
+                  control={form.control}
+                  name="funeralPlace"
+                  render={({ field }) => (
+                    <FormItem className="mb-3">
+                      <FormControl>
+                        <Input placeholder="Place of funeral" {...field} value={field.value || undefined} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </>
+            )}
           </>
         )}
       </form>

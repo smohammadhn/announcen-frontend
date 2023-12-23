@@ -2,7 +2,7 @@
 import './index.scss'
 
 import { DATE_FORMAT } from '@/constants/core'
-import { cn } from '@/lib/utils'
+import { cn, formatToUiDate } from '@/lib/utils'
 import moment from 'moment'
 
 interface Props {
@@ -16,7 +16,7 @@ export default function CreateAnnouncementForm1({ announcementObject: ann, varia
       <p>In love and gratitude, we share the news of the death of our beloved {ann?.familyRoles?.join(', ')}</p>
       <br />
       <p className="font-bold text-lg">{`${ann?.firstName} ${ann?.lastName}`}</p>
-      <p>{`${moment(ann?.dateOfBirth).format(DATE_FORMAT)} ${moment(ann?.dateOfDeath).format(DATE_FORMAT)}`}</p>
+      <p>{`${formatToUiDate(ann?.dateOfBirth)} - ${formatToUiDate(ann?.dateOfDeath)}`}</p>
       <br />
       <p>Widower of {ann?.partnerName}</p>
       <p>
@@ -28,13 +28,13 @@ export default function CreateAnnouncementForm1({ announcementObject: ann, varia
         Mourning:
         <br />
         {ann?.relatives?.map((e) => (
-          <span key={e.name}>{`${e?.name} a ${e?.partnerName}`}</span>
+          <div key={e.name}>{`${e?.name} a ${e?.partnerName}`}</div>
         ))}
       </p>
       <br />
 
       <p>
-        {ann?.nonProfits?.map((e) => e.name).join(', ')} on the {ann?.serviceDate}
+        {ann?.relatives?.map((e) => e.city).join(', ')} on the {ann?.serviceDate}
       </p>
       <br />
 

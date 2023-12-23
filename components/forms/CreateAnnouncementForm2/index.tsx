@@ -1,35 +1,38 @@
 'use client'
 import './index.scss'
 
-import allCities from '@/constants/cities.json'
-import familyRoles from '@/constants/familyRoles.json'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
-import { cn } from '@/lib/utils'
-import { format } from 'date-fns'
-import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react'
-import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
+import { Checkbox } from '@/components/ui/checkbox'
+import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
+import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
+import { Input } from '@/components/ui/input'
+import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import allCities from '@/constants/cities.json'
+import familyRoles from '@/constants/familyRoles.json'
+import { cn, formatToUiDate } from '@/lib/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react'
 import { forwardRef, useImperativeHandle, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
 const formSchema = z.object({
-  firstName: z.string().min(3).max(100),
-  lastName: z.string().min(3).max(100),
+  firstName: z.string().min(1, 'Required').min(3).max(100),
+  lastName: z.string().min(1, 'Required').min(3).max(100),
   city: z.string().min(1, 'Required').max(100),
 
-  maritalStatus: z.enum(['single', 'married', '']).optional(),
-  partnerName: z.string().max(100).optional(),
-  placeOfBirth: z.string().max(100).optional(),
-  placeOfDeath: z.string().max(100).optional(),
-  dateOfBirth: z.date().optional(),
-  dateOfDeath: z.date().optional(),
+  placeOfBirth: z.string().min(1, 'Required').max(100),
+  placeOfDeath: z.string().min(1, 'Required').max(100),
+  dateOfBirth: z.date(),
+  dateOfDeath: z.date(),
+
+  maritalStatus: z
+    .enum(['single', 'married', 'partner', 'widow', 'widower'], { invalid_type_error: 'Required' })
+    .nullable(),
+  partnerName: z.string().max(100),
+
   familyRoles: z.array(z.string()),
 })
 
@@ -48,7 +51,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
       firstName: announcementObject?.firstName || '',
       lastName: announcementObject?.lastName || '',
       city: announcementObject?.city || '',
-      maritalStatus: announcementObject?.maritalStatus || '',
+      maritalStatus: announcementObject?.maritalStatus || null,
       partnerName: announcementObject?.partnerName || '',
       placeOfBirth: announcementObject?.placeOfBirth || '',
       placeOfDeath: announcementObject?.placeOfDeath || '',
@@ -72,7 +75,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
       <form className="ca-form2">
         <h3 className="form-title hide-mobile">Details about the defunct</h3>
 
-        <section className="grid grid-col-3 mb-5">
+        <section className="grid grid-col-3 mb-4">
           {/* first name */}
           <FormField
             control={form.control}
@@ -150,11 +153,108 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
           />
         </section>
 
+        <section className="grid grid-col-2 mb-5">
+          {/* Date of Birth */}
+          <FormField
+            control={form.control}
+            name="dateOfBirth"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={'outline'}
+                        className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
+                      >
+                        {field.value ? formatToUiDate(field.value) : <span>Date of Birth</span>}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* place of birth */}
+          <FormField
+            control={form.control}
+            name="placeOfBirth"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Place of Birth" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* Date of Death */}
+          <FormField
+            control={form.control}
+            name="dateOfDeath"
+            render={({ field }) => (
+              <FormItem className="flex flex-col">
+                <Popover>
+                  <PopoverTrigger asChild>
+                    <FormControl>
+                      <Button
+                        variant={'outline'}
+                        className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
+                      >
+                        {field.value ? formatToUiDate(field.value) : <span>Date of Death</span>}
+                        <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                      </Button>
+                    </FormControl>
+                  </PopoverTrigger>
+                  <PopoverContent className="w-auto p-0" align="start">
+                    <Calendar
+                      mode="single"
+                      selected={field.value}
+                      onSelect={field.onChange}
+                      disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                      initialFocus
+                    />
+                  </PopoverContent>
+                </Popover>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+
+          {/* place of death */}
+          <FormField
+            control={form.control}
+            name="placeOfDeath"
+            render={({ field }) => (
+              <FormItem>
+                <FormControl>
+                  <Input placeholder="Place of Death" {...field} />
+                </FormControl>
+                <FormMessage />
+              </FormItem>
+            )}
+          />
+        </section>
+
         {/* include marital status checkbox */}
         <div className="items-top flex space-x-2 mb-3">
           <Checkbox
             checked={checkboxMaritalStatus}
             onCheckedChange={(e: boolean) => {
+              form.setValue('maritalStatus', null)
               setCheckboxMaritalStatus(e)
             }}
             id="checkbox-marital-status"
@@ -177,7 +277,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               name="maritalStatus"
               render={({ field }) => (
                 <FormItem>
-                  <Select onValueChange={field.onChange} defaultValue={field.value} required>
+                  <Select onValueChange={field.onChange} defaultValue={field.value || undefined} required>
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Marital Status" />
@@ -186,6 +286,9 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                     <SelectContent>
                       <SelectItem value="single">Single</SelectItem>
                       <SelectItem value="married">Married</SelectItem>
+                      <SelectItem value="partner">Partner</SelectItem>
+                      <SelectItem value="widow">Widow</SelectItem>
+                      <SelectItem value="widower">Widower</SelectItem>
                     </SelectContent>
                   </Select>
                   <FormMessage />
@@ -194,112 +297,20 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
             />
 
             {/* name of partner */}
-            <FormField
-              control={form.control}
-              name="partnerName"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Name of Partner" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Date of Birth */}
-            <FormField
-              control={form.control}
-              name="dateOfBirth"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
-                        >
-                          {field.value ? 'dsd' : <span>Date of Birth</span>}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* place of birth */}
-            <FormField
-              control={form.control}
-              name="placeOfBirth"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Place of Birth" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* Date of Death */}
-            <FormField
-              control={form.control}
-              name="dateOfDeath"
-              render={({ field }) => (
-                <FormItem className="flex flex-col">
-                  <Popover>
-                    <PopoverTrigger asChild>
-                      <FormControl>
-                        <Button
-                          variant={'outline'}
-                          className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
-                        >
-                          {field.value ? format(field.value as Date, 'PPP') : <span>Date of Birth</span>}
-                          <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
-                        </Button>
-                      </FormControl>
-                    </PopoverTrigger>
-                    <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value}
-                        onSelect={field.onChange}
-                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                        initialFocus
-                      />
-                    </PopoverContent>
-                  </Popover>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-
-            {/* place of death */}
-            <FormField
-              control={form.control}
-              name="placeOfDeath"
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="Place of Death" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
+            {form.watch('maritalStatus') !== 'single' && (
+              <FormField
+                control={form.control}
+                name="partnerName"
+                render={({ field }) => (
+                  <FormItem>
+                    <FormControl>
+                      <Input placeholder="Name of Partner" {...field} />
+                    </FormControl>
+                    <FormMessage />
+                  </FormItem>
+                )}
+              />
+            )}
           </section>
         )}
 

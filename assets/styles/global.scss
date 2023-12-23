@@ -82,3 +82,8 @@
   font-size: 1.1rem;
   font-weight: bold;
 }
+
+// for calendar ui component
+.rdp-vhidden {
+  @apply hidden;
+}
