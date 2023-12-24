@@ -143,7 +143,7 @@ export default function CreateAnnouncement() {
           Back
         </Button>
 
-        {stepperValue >= 2 && (
+        {stepperValue >= 3 && (
           <Button className="rounded-full " variant={'outline'} onClick={() => submitForm('preview')}>
             {isLastForm ? 'Edit Manually' : 'Preview'}
           </Button>

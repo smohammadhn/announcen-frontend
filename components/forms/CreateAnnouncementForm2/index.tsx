@@ -31,7 +31,7 @@ const formSchema = z.object({
   maritalStatus: z
     .enum(['single', 'married', 'partner', 'widow', 'widower'], { invalid_type_error: 'Required' })
     .nullable(),
-  partnerName: z.string().max(100),
+  partnerName: z.string().max(100).nullable(),
 
   familyRoles: z.array(z.string()),
 })
@@ -52,7 +52,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
       lastName: announcementObject?.lastName || '',
       city: announcementObject?.city || '',
       maritalStatus: announcementObject?.maritalStatus || null,
-      partnerName: announcementObject?.partnerName || '',
+      partnerName: announcementObject?.partnerName || null,
       placeOfBirth: announcementObject?.placeOfBirth || '',
       placeOfDeath: announcementObject?.placeOfDeath || '',
       dateOfBirth: announcementObject?.dateOfBirth,
@@ -304,7 +304,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Name of Partner" {...field} />
+                      <Input placeholder="Name of Partner" {...field} value={field.value || undefined} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
