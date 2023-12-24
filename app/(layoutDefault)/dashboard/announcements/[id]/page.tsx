@@ -1,14 +1,13 @@
 'use client'
 
-import './page.scss'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
-import announcementService from '@/services/announcementService'
-import Image from 'next/image'
-import moment from 'moment'
-import CreateAnnouncementForm5 from '@/components/forms/CreateAnnouncementForm5'
 import { Button } from '@/components/ui/button'
-import Link from 'next/link'
 import { formatToUiDate } from '@/lib/utils'
+import announcementService from '@/services/announcementService'
+import moment from 'moment'
+import Image from 'next/image'
+import Link from 'next/link'
+import './page.scss'
 
 interface Props {
   params: { id: string }
@@ -35,6 +34,14 @@ export default function AnnouncementDetails({ params }: Props) {
 }
 
 function DetailsSection({ item }: { item: AnnouncementBackend }) {
+  const maritalStatusText = {
+    married: 'Married to',
+    widow: 'Widow of',
+    widower: 'Widower of',
+    partner: 'Partner of',
+  }
+
+  // methods
   const getPersonAge = () => {
     return moment().diff(moment(item.dateOfBirth), 'years')
   }
@@ -60,7 +67,11 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
             Deceased at {item.placeOfDeath} on {item.dateOfDeath} aged {getPersonAge()}
           </span>
 
-          {item.partnerName && <span>Widower of {item.partnerName}</span>}
+          {item.maritalStatus && item.maritalStatus !== 'single' && (
+            <span>
+              {maritalStatusText[item.maritalStatus]} {item.partnerName}
+            </span>
+          )}
         </div>
       </div>
 
