@@ -64,12 +64,13 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
         </div>
       </div>
 
+      {/* obituary */}
       <h2 className="heading">Obituary notice</h2>
 
-      <div className="section">
-        <CreateAnnouncementForm5 variant={'small'} announcementObject={item} />
-      </div>
+      <section className="section ca-form5 small" dangerouslySetInnerHTML={{ __html: item.obituary || '' }} />
+      {/* --- */}
 
+      {/* buttons */}
       <h2 className="heading">Interact</h2>
 
       <div className="section section-actions">
@@ -92,6 +93,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
           Send flowers
         </Button>
       </div>
+      {/* --- */}
 
       <h2 className="heading">About</h2>
 

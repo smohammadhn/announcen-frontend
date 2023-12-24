@@ -1,9 +1,9 @@
 'use client'
 
-import './page.scss'
+import { DATE_FORMAT } from '@/constants/core'
 import moment from 'moment'
 import { RefObject, useEffect, useRef, useState } from 'react'
-import { DATE_FORMAT } from '@/constants/core'
+import './page.scss'
 
 import Stepper from '@/components/ui/Stepper'
 import { Button } from '@/components/ui/button'
@@ -14,6 +14,8 @@ import CreateAnnouncementForm2 from '@/components/forms/CreateAnnouncementForm2'
 import CreateAnnouncementForm3 from '@/components/forms/CreateAnnouncementForm3'
 import CreateAnnouncementForm4 from '@/components/forms/CreateAnnouncementForm4'
 import CreateAnnouncementForm5 from '@/components/forms/CreateAnnouncementForm5'
+import CreateAnnouncementFormTemplate from '@/components/forms/CreateAnnouncementFormTemplate'
+
 import announcementService from '@/services/announcementService'
 import { useRouter } from 'next/navigation'
 
@@ -39,6 +41,7 @@ export default function CreateAnnouncement() {
   const [stepperValue, setStepperValue] = useState(1)
   const [isLastForm, setIsLastForm] = useState(false)
   const [manualEditMode, setManualEditMode] = useState(false)
+  const [selectedTemplate, setSelectedTemplate] = useState(1)
 
   // refs
   const refForm1 = useRef<FormRef>(null)
@@ -47,20 +50,6 @@ export default function CreateAnnouncement() {
   const refForm4 = useRef<FormRef>(null)
   const refForm5 = useRef<FormRef>(null)
 
-  // forms
-  const forms = [
-    <CreateAnnouncementForm1 announcementObject={announcementObject} ref={refForm1} key="ann-type" />,
-    <CreateAnnouncementForm2 announcementObject={announcementObject} ref={refForm2} key="detail-defunct" />,
-    <CreateAnnouncementForm3 announcementObject={announcementObject} ref={refForm3} key="detail-funeral" />,
-    <CreateAnnouncementForm4 announcementObject={announcementObject} ref={refForm4} key="detail-family" />,
-    <CreateAnnouncementForm5
-      announcementObject={announcementObject}
-      ref={refForm5}
-      manualEditMode={manualEditMode}
-      key="ann-preview"
-    />,
-  ]
-
   // hooks
   useEffect(() => {
     setIsLastForm(stepperValue === forms.length)
@@ -68,27 +57,31 @@ export default function CreateAnnouncement() {
   }, [stepperValue])
 
   // methods
-  const onFormInvalid = () => {
-    toast({
-      title: 'Please fill in the form correcly!',
-      variant: 'destructive',
-    })
+  const handleTemplateSelect = (selectedTemplateId: number) => {
+    if (selectedTemplateId === -1) setManualEditMode(true)
+    setSelectedTemplate(selectedTemplateId)
   }
 
-  const onFormValid = (incomingData: AnnouncementFrontend) => {
-    // update announcement object
-    setAnnouncementObject((item) => {
-      const announcementObjectCopy = { ...item }
-      return Object.assign(announcementObjectCopy, incomingData)
-    })
+  const onFormInvalid = () => {
+    toast({ title: 'Please fill in the form correcly!', variant: 'destructive' })
+  }
 
-    if (stepperValue !== forms.length) {
-      setStepperValue((prev) => prev + 1)
-      return
-    }
+  const onFormValid = (incomingData?: AnnouncementFrontend, mode?: 'preview') => {
+    // update announcement object
+    if (incomingData)
+      setAnnouncementObject((item) => {
+        const announcementObjectCopy = { ...item }
+        return Object.assign(announcementObjectCopy, incomingData)
+      })
+
+    // jump to preview form
+    if (mode === 'preview') return setStepperValue(forms.length)
+
+    // go to next form
+    if (!isLastForm) return setStepperValue((prev) => prev + 1)
 
     // send data to the backend
-    const dateFields: (keyof AnnouncementFrontend)[] = ['dateOfBirth', 'dateOfDeath']
+    const dateFields: (keyof AnnouncementFrontend)[] = ['dateOfBirth', 'dateOfDeath', 'serviceDate']
     dateFields.forEach((e) => {
       const dateValue = announcementObject[e] as Date | undefined
 
@@ -101,10 +94,37 @@ export default function CreateAnnouncement() {
     annService.mutate(announcementObject)
   }
 
-  const submitForm = () => {
+  const submitForm = (mode?: 'preview') => {
+    // last form + click on preview button
+    if (isLastForm && mode === 'preview') return setManualEditMode((p) => !p)
+
+    // preview form
+    if (stepperValue === 2) onFormValid()
+
+    // normal senario
     const announcementForm = forms[stepperValue - 1] as unknown as FormElement
-    announcementForm.ref.current?.submit(onFormValid, onFormInvalid)
+    announcementForm.ref?.current?.submit((data) => onFormValid(data, mode), onFormInvalid)
   }
+
+  // forms
+  const forms = [
+    <CreateAnnouncementForm1 ref={refForm1} announcementObject={announcementObject} key="ann-type" />,
+    <CreateAnnouncementFormTemplate
+      onSelectTemplate={handleTemplateSelect}
+      selectedTemplate={selectedTemplate}
+      key="ann-template"
+    />,
+    <CreateAnnouncementForm2 ref={refForm2} announcementObject={announcementObject} key="detail-defunct" />,
+    <CreateAnnouncementForm3 ref={refForm3} announcementObject={announcementObject} key="detail-funeral" />,
+    <CreateAnnouncementForm4 ref={refForm4} announcementObject={announcementObject} key="detail-family" />,
+    <CreateAnnouncementForm5
+      ref={refForm5}
+      template={selectedTemplate}
+      announcementObject={announcementObject}
+      manualEditMode={manualEditMode}
+      key="ann-preview"
+    />,
+  ]
 
   return (
     <section className="create-ann">
@@ -124,19 +144,12 @@ export default function CreateAnnouncement() {
         </Button>
 
         {stepperValue >= 2 && (
-          <Button
-            className="rounded-full "
-            variant={'outline'}
-            onClick={() => {
-              if (isLastForm) setManualEditMode((prev) => !prev)
-              else setStepperValue(forms.length)
-            }}
-          >
+          <Button className="rounded-full " variant={'outline'} onClick={() => submitForm('preview')}>
             {isLastForm ? 'Edit Manually' : 'Preview'}
           </Button>
         )}
 
-        <Button className="rounded-full" onClick={submitForm}>
+        <Button className="rounded-full" onClick={() => submitForm()}>
           {isLastForm ? 'Create' : 'Next'}
         </Button>
       </div>

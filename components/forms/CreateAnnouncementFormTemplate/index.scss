@@ -1,0 +1,40 @@
+.ca-form-preview {
+  h2 {
+    padding-block: 1.5rem 1rem;
+    font-size: 1.25rem;
+    font-weight: 700;
+  }
+
+  ul {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+    align-items: stretch;
+    column-gap: 2rem;
+    row-gap: 1rem;
+
+    li {
+      background-color: white;
+      box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
+      padding: 1rem;
+      border-radius: 1rem;
+      cursor: pointer;
+      max-width: 400px;
+      min-height: 400px;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      text-align: justify;
+
+      &.selected {
+        outline: 2px solid hsl(var(--primary));
+      }
+
+      p:after {
+        content: '';
+        display: inline-block;
+        width: 0;
+        white-space: pre;
+      }
+    }
+  }
+}

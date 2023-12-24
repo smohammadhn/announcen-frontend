@@ -11,6 +11,7 @@ interface Props {
 export default function Stepper({ value }: Props) {
   const items = [
     'Announcement Type',
+    'Template Selection',
     'Details about the defunct',
     'Details about the funeral',
     'Details about the family',
