@@ -22,18 +22,18 @@ const formDetailsSchema = z.object({
 })
 
 const formOrganizationSchema = z.object({
-  name: z.string().email().min(3).max(50).nullable(),
-  address: z.string().min(5).max(500).nullable(),
-  postalCode: z.string().min(5).max(20).nullable(),
-  city: z.string().min(3).max(20).nullable(),
-  homepage: z.string().min(5).max(50).nullable(),
-  description: z.string().min(5).max(150).nullable(),
+  name: z.string().max(50).optional(),
+  address: z.string().max(500).optional(),
+  postalCode: z.string().max(20).optional(),
+  city: z.string().max(20).optional(),
+  homepage: z.string().max(50).optional(),
+  description: z.string().max(150).optional(),
 })
 
 const formFinancialSchema = z.object({
-  iban: z.number().min(5).max(30).nullable(),
-  bic: z.string().min(5).max(30).nullable(),
-  stripeAccount: z.string().min(5).max(30).nullable(),
+  iban: z.string().min(5).max(30),
+  bic: z.string().min(5).max(30),
+  stripeAccount: z.string().min(5).max(30),
 })
 
 export type FormDetails = z.infer<typeof formDetailsSchema>
@@ -44,8 +44,6 @@ export type UpdateUserPayload = FormDetails | FormOrganization | FormFinancial
 
 export default function Account() {
   const { user, setUser } = useAuthStore()
-
-  console.log('user :>> ', user)
 
   const updateUser = authService.updateUser((savedUser) => {
     setUser(savedUser)
@@ -61,29 +59,30 @@ export default function Account() {
 
   const formOrganization = useForm<FormOrganization>({
     mode: 'all',
-    resolver: zodResolver(formDetailsSchema),
+    resolver: zodResolver(formOrganizationSchema),
     defaultValues: {
-      name: user.name || null,
-      address: user.address || null,
-      postalCode: user.postalCode || null,
-      city: user.city || null,
-      homepage: user.homepage || null,
-      description: user.description || null,
+      name: user.name || '',
+      address: user.address || '',
+      postalCode: user.postalCode || '',
+      city: user.city || '',
+      homepage: user.homepage || '',
+      description: user.description || '',
     },
   })
 
   const formFinancial = useForm<FormFinancial>({
     mode: 'all',
-    resolver: zodResolver(formDetailsSchema),
+    resolver: zodResolver(formFinancialSchema),
     defaultValues: {
-      iban: user.iban || null,
-      bic: user.bic || null,
-      stripeAccount: user.stripeAccount || null,
+      iban: user.iban || '',
+      bic: user.bic || '',
+      stripeAccount: user.stripeAccount || '',
     },
   })
 
   // methods
-  const onSubmitForm = (data: UpdateUserPayload) => {
+  const onSubmitForm = (data: UpdateUserPayload & Partial<FormDetails>) => {
+    if (!data.email) data.email = user.email
     updateUser.mutate(data)
   }
 
@@ -112,7 +111,7 @@ export default function Account() {
           </form>
 
           {/* action */}
-          <Button className="w-full rounded-full" type="submit">
+          <Button className="w-full rounded-full" onClick={formDetails.handleSubmit(onSubmitForm)}>
             Change account details
           </Button>
         </Form>
@@ -133,12 +132,7 @@ export default function Account() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input
-                        {...field}
-                        className="outlined-field"
-                        placeholder="Organization name"
-                        value={field.value || undefined}
-                      />
+                      <Input className="outlined-field" placeholder="Organization name" {...field} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -152,12 +146,7 @@ export default function Account() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input
-                        {...field}
-                        className="outlined-field"
-                        placeholder="Postal Code"
-                        value={field.value || undefined}
-                      />
+                      <Input {...field} className="outlined-field" placeholder="Postal Code" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -219,12 +208,7 @@ export default function Account() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input
-                        {...field}
-                        className="outlined-field"
-                        placeholder="Homepage"
-                        value={field.value || undefined}
-                      />
+                      <Input {...field} className="outlined-field" placeholder="Homepage" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -239,12 +223,7 @@ export default function Account() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      {...field}
-                      className="outlined-field"
-                      placeholder="Address (street and number)"
-                      value={field.value || undefined}
-                    />
+                    <Input {...field} className="outlined-field" placeholder="Address (street and number)" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -262,7 +241,6 @@ export default function Account() {
                       placeholder="Description of your organisation (max 150 words)"
                       className="resize-none outlined-textarea"
                       {...field}
-                      value={field.value || undefined}
                     />
                   </FormControl>
                   <FormMessage />
@@ -272,7 +250,7 @@ export default function Account() {
           </form>
 
           {/* action */}
-          <Button className="w-full rounded-full" type="submit">
+          <Button className="w-full rounded-full" onClick={formOrganization.handleSubmit(onSubmitForm)}>
             Change organisation details
           </Button>
         </Form>
@@ -284,7 +262,7 @@ export default function Account() {
 
         {/* form */}
         <Form {...formFinancial}>
-          <form onSubmit={formFinancial.handleSubmit(onSubmitForm)}>
+          <form>
             {/* email */}
             <FormField
               control={formFinancial.control}
@@ -299,7 +277,6 @@ export default function Account() {
                       inputMode="numeric"
                       pattern="\d*"
                       placeholder="Bank account (IBAN)"
-                      value={field.value || undefined}
                     />
                   </FormControl>
                   <FormMessage />
@@ -314,7 +291,7 @@ export default function Account() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input {...field} className="outlined-field" placeholder="BIC" value={field.value || undefined} />
+                    <Input {...field} className="outlined-field" placeholder="BIC" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -328,12 +305,7 @@ export default function Account() {
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input
-                      {...field}
-                      className="outlined-field"
-                      placeholder="Stripe account"
-                      value={field.value || undefined}
-                    />
+                    <Input {...field} className="outlined-field" placeholder="Stripe account" />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -342,7 +314,7 @@ export default function Account() {
           </form>
 
           {/* action */}
-          <Button className="w-full rounded-full" type="submit">
+          <Button className="w-full rounded-full" onClick={formFinancial.handleSubmit(onSubmitForm)}>
             Change financial details
           </Button>
         </Form>
