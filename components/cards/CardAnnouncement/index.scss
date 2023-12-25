@@ -8,14 +8,20 @@ $breakpoint-hide-actions: 700px;
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
+  overflow: hidden;
 
   &__image {
-    border-radius: 0.5rem;
+    img {
+      border-radius: 0.5rem;
+    }
   }
 
   &__title {
     font-weight: 700;
     font-size: min(5vw, 1.25rem);
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
   }
 
   &__subtitle {

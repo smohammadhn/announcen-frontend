@@ -36,6 +36,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
         }
       })
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   return (

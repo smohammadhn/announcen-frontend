@@ -321,11 +321,11 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                 form.setValue('nonProfits', [])
               } else handleAddNewNonProfit()
             }}
-            id="checkbox-special-thanks"
+            id="checkbox-non-profit"
           />
           <div className="grid gap-1.5 leading-none">
             <label
-              htmlFor="checkbox-special-thanks"
+              htmlFor="checkbox-non-profit"
               className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
             >
               Add non-profit to the announcement
@@ -333,23 +333,27 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
           </div>
         </div>
 
-        {form.watch('nonProfits').map((_, index) => (
-          <div key={index} className="my-4">
-            {/* non profits */}
-            <FormField
-              control={form.control}
-              name={`nonProfits.${index}.name`}
-              render={({ field }) => (
-                <FormItem>
-                  <FormControl>
-                    <Input placeholder="none-profit name 1" {...field} />
-                  </FormControl>
-                  <FormMessage />
-                </FormItem>
-              )}
-            />
-          </div>
-        ))}
+        {includeNonProfit && (
+          <>
+            {form.watch('nonProfits').map((_, index) => (
+              <div key={index} className="my-4">
+                {/* non profits */}
+                <FormField
+                  control={form.control}
+                  name={`nonProfits.${index}.name`}
+                  render={({ field }) => (
+                    <FormItem>
+                      <FormControl>
+                        <Input placeholder="none-profit name 1" {...field} />
+                      </FormControl>
+                      <FormMessage />
+                    </FormItem>
+                  )}
+                />
+              </div>
+            ))}
+          </>
+        )}
 
         <Button variant={'secondary'} type="button" className="w-full mb-3" onClick={handleAddNewNonProfit}>
           Add new
