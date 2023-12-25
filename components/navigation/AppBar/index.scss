@@ -11,7 +11,7 @@ $breakpoint-hide-actions: 700px;
   top: 0;
   background-color: white;
   z-index: 2;
-  overflow: hidden;
+  max-width: 100vw;
 
   &__logo {
     display: flex;
