@@ -4,11 +4,15 @@ import { IForm3 } from '@/components/forms/CreateAnnouncementForm3'
 import { IForm4 } from '@/components/forms/CreateAnnouncementForm4'
 import { IForm5 } from '@/components/forms/CreateAnnouncementForm5'
 
+import { FormDetails, FormOrganization, FormFinancial } from '@/app/(layoutDefault)/dashboard/account/page'
+
 type OmittedFrontendKeys = 'dateOfBirth' & 'dateOfDeath' & 'serviceDate'
 
 export {}
 
 declare global {
+  type User = { _id?: string; password?: string } & FormDetails & FormOrganization & FormFinancial
+
   interface ErrorMessage {
     message: string
   }

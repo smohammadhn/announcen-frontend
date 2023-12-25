@@ -87,3 +87,17 @@
 .rdp-vhidden {
   @apply hidden;
 }
+
+.outlined-field {
+  border-color: hsl(var(--primary));
+  padding-block: 1.25rem;
+  padding-inline: 1rem;
+  border-radius: 100vmax;
+}
+
+.outlined-textarea {
+  @apply outlined-field;
+
+  padding-block: 0.75rem;
+  border-radius: 1rem;
+}
