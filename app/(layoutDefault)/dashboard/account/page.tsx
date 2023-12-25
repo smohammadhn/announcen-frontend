@@ -15,6 +15,7 @@ import { Check, ChevronsUpDown } from 'lucide-react'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
+import authService from '@/services/authService'
 
 const formDetailsSchema = z.object({
   email: z.string().email().min(1, 'Required'),
@@ -39,14 +40,22 @@ export type FormDetails = z.infer<typeof formDetailsSchema>
 export type FormOrganization = z.infer<typeof formOrganizationSchema>
 export type FormFinancial = z.infer<typeof formFinancialSchema>
 
+export type UpdateUserPayload = FormDetails | FormOrganization | FormFinancial
+
 export default function Account() {
   const { user, setUser } = useAuthStore()
+
+  console.log('user :>> ', user)
+
+  const updateUser = authService.updateUser((savedUser) => {
+    setUser(savedUser)
+  })
 
   const formDetails = useForm<FormDetails>({
     mode: 'all',
     resolver: zodResolver(formDetailsSchema),
     defaultValues: {
-      email: user.email,
+      email: user.email || '',
     },
   })
 
@@ -73,6 +82,11 @@ export default function Account() {
     },
   })
 
+  // methods
+  const onSubmitForm = (data: UpdateUserPayload) => {
+    updateUser.mutate(data)
+  }
+
   return (
     <div className="page-account">
       {/* account details section */}
@@ -98,7 +112,7 @@ export default function Account() {
           </form>
 
           {/* action */}
-          <Button variant="default" className="w-full rounded-full">
+          <Button className="w-full rounded-full" type="submit">
             Change account details
           </Button>
         </Form>
@@ -258,7 +272,7 @@ export default function Account() {
           </form>
 
           {/* action */}
-          <Button variant="default" className="w-full rounded-full">
+          <Button className="w-full rounded-full" type="submit">
             Change organisation details
           </Button>
         </Form>
@@ -269,16 +283,57 @@ export default function Account() {
         <h2>Financial information</h2>
 
         {/* form */}
-        <Form {...formDetails}>
-          <form>
+        <Form {...formFinancial}>
+          <form onSubmit={formFinancial.handleSubmit(onSubmitForm)}>
             {/* email */}
             <FormField
-              control={formDetails.control}
-              name="email"
+              control={formFinancial.control}
+              name="iban"
               render={({ field }) => (
                 <FormItem>
                   <FormControl>
-                    <Input className="outlined-field" type="email" placeholder="Email-address" {...field} />
+                    <Input
+                      {...field}
+                      className="outlined-field"
+                      type="number"
+                      inputMode="numeric"
+                      pattern="\d*"
+                      placeholder="Bank account (IBAN)"
+                      value={field.value || undefined}
+                    />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* bic */}
+            <FormField
+              control={formFinancial.control}
+              name="bic"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input {...field} className="outlined-field" placeholder="BIC" value={field.value || undefined} />
+                  </FormControl>
+                  <FormMessage />
+                </FormItem>
+              )}
+            />
+
+            {/* stripe account */}
+            <FormField
+              control={formFinancial.control}
+              name="stripeAccount"
+              render={({ field }) => (
+                <FormItem>
+                  <FormControl>
+                    <Input
+                      {...field}
+                      className="outlined-field"
+                      placeholder="Stripe account"
+                      value={field.value || undefined}
+                    />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -287,7 +342,7 @@ export default function Account() {
           </form>
 
           {/* action */}
-          <Button variant="default" className="w-full rounded-full">
+          <Button className="w-full rounded-full" type="submit">
             Change financial details
           </Button>
         </Form>

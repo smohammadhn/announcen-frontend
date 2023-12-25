@@ -4,6 +4,7 @@ import axios from '@/services/apiClient'
 import { useMutation, useQuery } from '@tanstack/react-query'
 import { AxiosError } from 'axios'
 import { AnnouncementListQueryParams } from '@/app/(layoutDefault)/dashboard/page'
+import { cleanObject } from '@/lib/utils'
 
 const announcementService = {
   read(searchParams: AnnouncementListQueryParams | undefined) {
@@ -23,7 +24,8 @@ const announcementService = {
 
   create(onSuccess?: () => void) {
     return useMutation<AnnouncementFrontend, AxiosError<ErrorMessage>, AnnouncementFrontend>({
-      mutationFn: (payload) => axios.post<AnnouncementFrontend>('/announcements', payload).then((res) => res.data),
+      mutationFn: (payload) =>
+        axios.post<AnnouncementFrontend>('/announcements', cleanObject(payload)).then((res) => res.data),
       onSuccess,
     })
   },

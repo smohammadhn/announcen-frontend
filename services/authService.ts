@@ -1,9 +1,10 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
+import { UpdateUserPayload } from '@/app/(layoutDefault)/dashboard/account/page'
+import { cleanObject } from '@/lib/utils'
 import axios from '@/services/apiClient'
 import { useMutation } from '@tanstack/react-query'
 import { AxiosError, AxiosResponse } from 'axios'
-import { User } from '@/store/auth'
 
 interface LoginResponse {
   access: string
@@ -31,9 +32,17 @@ const authService = {
     })
   },
 
+  updateUser(onSuccess: (savedUser: User) => void) {
+    return useMutation<User, AxiosError<ErrorMessage>, UpdateUserPayload>({
+      mutationFn: (user) =>
+        axios.put<UpdateUserPayload, AxiosResponse<User>>('/users/update', cleanObject(user)).then((res) => res.data),
+      onSuccess,
+    })
+  },
+
   async verifyToken() {
     return axios
-      .post(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`)
+      .post<undefined, AxiosResponse<VerifyEndpointResponse>>(`${process.env.NEXT_PUBLIC_BASE_URL}/auth/verify`)
       .then(({ data }) => {
         if (data.user?._id)
           return {
