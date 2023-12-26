@@ -16,6 +16,7 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 import authService from '@/services/authService'
+import { toast } from '@/components/ui/use-toast'
 
 const formDetailsSchema = z.object({
   email: z.string().email().min(1, 'Required'),
@@ -47,6 +48,10 @@ export default function Account() {
 
   const updateUser = authService.updateUser((savedUser) => {
     setUser(savedUser)
+
+    toast({
+      title: 'Profile updated Successfully',
+    })
   })
 
   const formDetails = useForm<FormDetails>({
@@ -111,7 +116,11 @@ export default function Account() {
           </form>
 
           {/* action */}
-          <Button className="w-full rounded-full" onClick={formDetails.handleSubmit(onSubmitForm)}>
+          <Button
+            loading={updateUser.isPending}
+            className="w-full rounded-full"
+            onClick={formDetails.handleSubmit(onSubmitForm)}
+          >
             Change account details
           </Button>
         </Form>
@@ -250,7 +259,11 @@ export default function Account() {
           </form>
 
           {/* action */}
-          <Button className="w-full rounded-full" onClick={formOrganization.handleSubmit(onSubmitForm)}>
+          <Button
+            loading={updateUser.isPending}
+            className="w-full rounded-full"
+            onClick={formOrganization.handleSubmit(onSubmitForm)}
+          >
             Change organisation details
           </Button>
         </Form>
@@ -314,7 +327,11 @@ export default function Account() {
           </form>
 
           {/* action */}
-          <Button className="w-full rounded-full" onClick={formFinancial.handleSubmit(onSubmitForm)}>
+          <Button
+            loading={updateUser.isPending}
+            className="w-full rounded-full"
+            onClick={formFinancial.handleSubmit(onSubmitForm)}
+          >
             Change financial details
           </Button>
         </Form>

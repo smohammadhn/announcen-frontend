@@ -3,6 +3,7 @@ import './index.scss'
 import RichTextEditor from '@/components/ui/rich-text-editor'
 import obituaryTemplates from '@/constants/templates'
 import { formatToUiDate } from '@/lib/utils'
+import useAuthStore from '@/store/auth'
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 
 export type IForm5 = {
@@ -20,6 +21,7 @@ export default forwardRef(function CreateAnnouncementForm5(
   ref
 ) {
   const [editorData, setEditorData] = useState('')
+  const user = useAuthStore((s) => s.user)
 
   useImperativeHandle(ref, () => ({
     submit: (onValid: (values: IForm5) => void, onInvalid: () => void) => {
@@ -43,7 +45,7 @@ export default forwardRef(function CreateAnnouncementForm5(
         )
         .replace('{{relativeCities}}', ann.relatives?.map((e) => e.city).join(', ') || '{{relativeCities}}')
         .replace('{{familyRoles}}', ann.familyRoles?.join(', ') || '{{familyRoles}}')
-        .replace('{{nonProfits}}', ann.nonProfits?.map((e) => `"${e}"`).join(', ') || '{{nonProfits}}')
+        .replace('{{nonProfits}}', ann.nonProfits?.map((e) => `\"${e.name}\"`).join(', ') || '{{nonProfits}}')
         .replaceAll('{{firstName}}', ann.firstName || '{{firstName}}')
         .replaceAll('{{lastName}}', ann.lastName || '{{lastName}}')
         .replace('{{partnerName}}', ann.partnerName || '{{partnerName}}')
@@ -53,6 +55,8 @@ export default forwardRef(function CreateAnnouncementForm5(
         .replace('{{servicePlace}}', ann.servicePlace || '{{servicePlace}}')
         .replace('{{specialThanks}}', ann.specialThanks || '{{specialThanks}}')
         .replace('{{maritalStatus}}', ann.maritalStatus || '{{maritalStatus}}')
+        .replace('{{bic}}', user.bic || '{{bic}}')
+        .replace('{{iban}}', user.iban || '{{iban}}')
         .replaceAll('{{serviceDate}}', formatToUiDate(ann.serviceDate, '{{serviceDate}}'))
         .replace('{{dateOfBirth}}', formatToUiDate(ann.dateOfBirth, '{{dateOfBirth}}'))
         .replace('{{dateOfDeath}}', formatToUiDate(ann.dateOfDeath, '{{dateOfDeath}}'))
