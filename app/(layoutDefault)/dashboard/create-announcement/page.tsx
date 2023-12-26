@@ -1,9 +1,10 @@
 'use client'
 
-import { DATE_FORMAT } from '@/constants/core'
-import moment from 'moment'
-import { RefObject, useEffect, useRef, useState } from 'react'
 import './page.scss'
+import moment from 'moment'
+import { DATE_FORMAT } from '@/constants/core'
+import { RefObject, useEffect, useRef, useState } from 'react'
+import { useQueryClient } from '@tanstack/react-query'
 
 import Stepper from '@/components/ui/Stepper'
 import { Button } from '@/components/ui/button'
@@ -29,10 +30,15 @@ interface FormElement extends Element {
 
 export default function CreateAnnouncement() {
   const router = useRouter()
+  const queryClient = useQueryClient()
+
   const annService = announcementService.create(() => {
     toast({
       title: 'Announcement Created Successfully!',
     })
+
+    queryClient.invalidateQueries({ queryKey: ['announcements'] })
+
     router.push('/dashboard')
   })
 
