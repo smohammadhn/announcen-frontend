@@ -23,18 +23,18 @@ const formDetailsSchema = z.object({
 })
 
 const formOrganizationSchema = z.object({
-  name: z.string().max(50).optional(),
-  address: z.string().max(500).optional(),
-  postalCode: z.string().max(20).optional(),
-  city: z.string().max(20).optional(),
-  homepage: z.string().max(50).optional(),
-  description: z.string().max(150).optional(),
+  name: z.string().min(3).max(50).optional().or(z.literal('')),
+  address: z.string().min(3).max(500).optional().or(z.literal('')),
+  postalCode: z.string().min(3).max(20).optional().or(z.literal('')),
+  city: z.string().min(3).max(20).optional().or(z.literal('')),
+  homepage: z.string().min(5).max(50).optional().or(z.literal('')),
+  description: z.string().min(10).max(150).optional().or(z.literal('')),
 })
 
 const formFinancialSchema = z.object({
-  iban: z.string().min(5).max(30),
-  bic: z.string().min(5).max(30),
-  stripeAccount: z.string().min(5).max(30),
+  iban: z.string().min(5).max(30).optional().or(z.literal('')),
+  bic: z.string().min(5).max(30).optional().or(z.literal('')),
+  stripeAccount: z.string().min(5).max(30).optional().or(z.literal('')),
 })
 
 export type FormDetails = z.infer<typeof formDetailsSchema>
