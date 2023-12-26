@@ -11,6 +11,12 @@ $breakpoint-shift-stepper: 600px;
     justify-content: center;
     gap: min(3vw, 4rem);
     align-items: center;
+    position: sticky;
+    padding-block: 0.5rem;
+    bottom: 0;
+    z-index: 5;
+    margin-inline: -2px;
+    background-color: var(--clr-background-main);
 
     button {
       min-width: 100px;
