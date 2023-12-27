@@ -64,7 +64,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
             Born in {item.placeOfBirth} on {formatToUiDate(item.dateOfBirth)}
           </span>
           <span>
-            Deceased at {item.placeOfDeath} on {item.dateOfDeath} aged {getPersonAge()}
+            Deceased at {item.placeOfDeath} on {formatToUiDate(item.dateOfDeath)} aged {getPersonAge()}
           </span>
 
           {item.maritalStatus && item.maritalStatus !== 'single' && (
@@ -78,7 +78,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
       {/* obituary */}
       <h2 className="heading">Obituary notice</h2>
 
-      <section className="section ca-form5 small" dangerouslySetInnerHTML={{ __html: item.obituary || '' }} />
+      <section className="section text-[95%]" dangerouslySetInnerHTML={{ __html: item.obituary || '' }} />
       {/* --- */}
 
       {/* buttons */}
@@ -119,7 +119,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
       <div className="section section-location">
         <div className="date">
           <Image src="/icons/calendar-clock.png" alt="calendar icon" width={40} height={40} />
-          {item.serviceDate} - {item.serviceTime}
+          {formatToUiDate(item.serviceDate)} - {item.serviceTime}
         </div>
         <div className="location">
           <Image src="/icons/location.png" alt="location icon" width={40} height={40} />
@@ -137,7 +137,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
       <div className="section section-location">
         <div className="date">
           <Image src="/icons/calendar-clock.png" alt="calendar icon" width={40} height={40} />
-          {item.serviceDate} - {item.funeralTime}
+          {formatToUiDate(item.serviceDate)} - {item.funeralTime}
         </div>
         <div className="location">
           <Image src="/icons/location.png" alt="location icon" width={40} height={40} />

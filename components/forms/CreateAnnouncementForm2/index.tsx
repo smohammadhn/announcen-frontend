@@ -25,8 +25,8 @@ const formSchema = z.object({
 
   placeOfBirth: z.string().min(1, 'Required').max(100),
   placeOfDeath: z.string().min(1, 'Required').max(100),
-  dateOfBirth: z.date(),
-  dateOfDeath: z.date(),
+  dateOfBirth: z.date().or(z.string()),
+  dateOfDeath: z.date().or(z.string()),
 
   maritalStatus: z
     .enum(['single', 'married', 'partner', 'widow', 'widower'], { invalid_type_error: 'Required' })
@@ -175,9 +175,8 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                      disabled={(date) => date > new Date()}
                       initialFocus
                     />
                   </PopoverContent>
@@ -222,9 +221,8 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                   <PopoverContent className="w-auto p-0" align="start">
                     <Calendar
                       mode="single"
-                      selected={field.value}
                       onSelect={field.onChange}
-                      disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
+                      disabled={(date) => date > new Date()}
                       initialFocus
                     />
                   </PopoverContent>

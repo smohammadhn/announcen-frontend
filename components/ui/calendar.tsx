@@ -13,8 +13,8 @@ export type CalendarProps = React.ComponentProps<typeof DayPicker>
 function Calendar({ className, classNames, showOutsideDays = true, ...props }: CalendarProps) {
   return (
     <DayPicker
-      fromYear={1900}
-      toYear={new Date().getFullYear()}
+      fromYear={1950}
+      toYear={new Date().getFullYear() + 2}
       captionLayout="dropdown-buttons"
       showOutsideDays={showOutsideDays}
       className={cn('p-3', className)}

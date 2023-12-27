@@ -16,12 +16,12 @@ import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 const formSchema = z.object({
-  serviceDate: z.date().nullable(),
-  serviceTime: z.string().regex(REGEX_TIME, 'Correct format is HH:mm').nullable(),
+  serviceDate: z.date().or(z.string()).nullable(),
+  serviceTime: z.string().min(1, 'Required').regex(REGEX_TIME, 'Please use the format HH:MM').nullable(),
   servicePlace: z.string().min(1, 'Required').max(100).nullable(),
 
   closestFamilyCircle: z.boolean(),
-  funeralTime: z.string().regex(REGEX_TIME, 'Correct format is HH:mm').nullable(),
+  funeralTime: z.string().min(1, 'Required').regex(REGEX_TIME, 'Please use the format HH:MM').nullable(),
   funeralPlace: z.string().min(1, 'Required').max(100).nullable(),
 })
 
@@ -31,20 +31,20 @@ interface Props {
   announcementObject?: Partial<IForm3 & {}>
 }
 
-export default forwardRef(function CreateAnnouncementForm1({ announcementObject }: Props, ref) {
+export default forwardRef(function CreateAnnouncementForm1({ announcementObject: ann }: Props, ref) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
     resolver: zodResolver(formSchema),
     defaultValues: {
-      serviceDate: announcementObject?.serviceDate || ('' as any),
-      serviceTime: announcementObject?.serviceTime || '',
-      servicePlace: announcementObject?.servicePlace || '',
+      serviceDate: ann?.serviceDate || '',
+      serviceTime: ann?.serviceTime || '',
+      servicePlace: ann?.servicePlace || '',
 
-      funeralTime: announcementObject?.funeralTime || '',
-      funeralPlace: announcementObject?.funeralPlace || '',
+      funeralTime: ann?.funeralTime || ann?.closestFamilyCircle ? null : '',
+      funeralPlace: ann?.funeralPlace || ann?.closestFamilyCircle ? null : '',
 
-      closestFamilyCircle: announcementObject?.closestFamilyCircle || false,
+      closestFamilyCircle: ann?.closestFamilyCircle || false,
     },
   })
 
@@ -114,13 +114,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                       </FormControl>
                     </PopoverTrigger>
                     <PopoverContent className="w-auto p-0" align="start">
-                      <Calendar
-                        mode="single"
-                        selected={field.value || undefined}
-                        onSelect={field.onChange}
-                        disabled={(date) => date > new Date() || date < new Date('1900-01-01')}
-                        initialFocus
-                      />
+                      <Calendar mode="single" onSelect={field.onChange} initialFocus />
                     </PopoverContent>
                   </Popover>
                   <FormMessage />
@@ -135,7 +129,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               render={({ field }) => (
                 <FormItem className="mb-3">
                   <FormControl>
-                    <Input placeholder="Time of service" {...field} value={field.value || undefined} />
+                    <Input placeholder="Time of service (HH:MM)" {...field} value={field.value || undefined} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -227,7 +221,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                   render={({ field }) => (
                     <FormItem className="mb-3">
                       <FormControl>
-                        <Input placeholder="Time of funeral" {...field} value={field.value || undefined} />
+                        <Input placeholder="Time of funeral (HH:MM)" {...field} value={field.value || undefined} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
