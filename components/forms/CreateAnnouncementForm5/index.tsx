@@ -2,7 +2,6 @@
 
 import RichTextEditor from '@/components/ui/rich-text-editor'
 import obituaryTemplates from '@/constants/templates'
-import { cn } from '@/lib/utils'
 import { forwardRef, useEffect, useImperativeHandle, useState } from 'react'
 
 export type IForm5 = {

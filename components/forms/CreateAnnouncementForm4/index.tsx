@@ -359,12 +359,12 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                 />
               </div>
             ))}
+
+            <Button variant={'secondary'} type="button" className="w-full mb-3" onClick={handleAddNewNonProfit}>
+              Add new
+            </Button>
           </>
         )}
-
-        <Button variant={'secondary'} type="button" className="w-full mb-3" onClick={handleAddNewNonProfit}>
-          Add new
-        </Button>
       </form>
     </Form>
   )

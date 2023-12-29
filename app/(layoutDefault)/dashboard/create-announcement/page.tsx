@@ -105,7 +105,11 @@ export default function CreateAnnouncement() {
       }
     })
 
-    annService.mutate(announcementObject)
+    // hard-setting obituary because states behave like a snapshot (only happens in last form before data is set to the back)
+    const payload = JSON.parse(JSON.stringify(announcementObject))
+    if (!payload.obituary) payload.obituary = incomingData?.obituary
+
+    annService.mutate(payload)
   }
 
   const submitForm = (mode?: 'preview') => {
