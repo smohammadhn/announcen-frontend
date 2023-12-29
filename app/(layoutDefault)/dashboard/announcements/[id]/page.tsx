@@ -8,6 +8,7 @@ import moment from 'moment'
 import Image from 'next/image'
 import Link from 'next/link'
 import './page.scss'
+import _ from 'lodash'
 
 interface Props {
   params: { id: string }
@@ -34,13 +35,6 @@ export default function AnnouncementDetails({ params }: Props) {
 }
 
 function DetailsSection({ item }: { item: AnnouncementBackend }) {
-  const maritalStatusText = {
-    married: 'Married to',
-    widow: 'Widow of',
-    widower: 'Widower of',
-    partner: 'Partner of',
-  }
-
   // methods
   const getPersonAge = () => {
     return moment().diff(moment(item.dateOfBirth), 'years')
@@ -69,7 +63,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
 
           {item.maritalStatus && item.maritalStatus !== 'single' && (
             <span>
-              {maritalStatusText[item.maritalStatus]} {item.partnerName}
+              {_.upperFirst(item.maritalStatus)} of {item.partnerName}
             </span>
           )}
         </div>
@@ -78,7 +72,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
       {/* obituary */}
       <h2 className="heading">Obituary notice</h2>
 
-      <section className="section text-[95%]" dangerouslySetInnerHTML={{ __html: item.obituary || '' }} />
+      <section className="section text-[95%] show-empty-p" dangerouslySetInnerHTML={{ __html: item.obituary || '' }} />
       {/* --- */}
 
       {/* buttons */}
