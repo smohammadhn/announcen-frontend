@@ -23,8 +23,8 @@ const formSchema = z.object({
   lastName: z.string().min(1, 'Required').min(3).max(100),
   city: z.string().min(1, 'Required').max(100),
 
-  placeOfBirth: z.string().min(1, 'Required').max(100),
-  placeOfDeath: z.string().min(1, 'Required').max(100),
+  placeOfBirth: z.string().min(1, 'Required').min(3).max(100),
+  placeOfDeath: z.string().min(1, 'Required').min(3).max(100),
   dateOfBirth: z.date().or(z.string()),
   dateOfDeath: z.date().or(z.string()),
 
@@ -32,7 +32,7 @@ const formSchema = z.object({
     .enum(['single', 'husband', 'wife', 'partner', 'widow', 'widower'], { invalid_type_error: 'Required' })
     .or(z.literal(''))
     .nullable(),
-  partnerName: z.string().max(100).nullable(),
+  partnerName: z.string().min(1, 'Required').min(3).max(100).nullable(),
 
   familyRoles: z.array(z.string()),
 })
@@ -43,22 +43,22 @@ interface Props {
   announcementObject?: Partial<IForm2 & {}>
 }
 
-export default forwardRef(function CreateAnnouncementForm1({ announcementObject }: Props, ref) {
+export default forwardRef(function CreateAnnouncementForm1({ announcementObject: ann }: Props, ref) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
     resolver: zodResolver(formSchema),
     defaultValues: {
-      firstName: announcementObject?.firstName || '',
-      lastName: announcementObject?.lastName || '',
-      city: announcementObject?.city || '',
-      maritalStatus: announcementObject?.maritalStatus || '',
-      partnerName: announcementObject?.partnerName || '',
-      placeOfBirth: announcementObject?.placeOfBirth || '',
-      placeOfDeath: announcementObject?.placeOfDeath || '',
-      dateOfBirth: announcementObject?.dateOfBirth,
-      dateOfDeath: announcementObject?.dateOfDeath,
-      familyRoles: announcementObject?.familyRoles || [],
+      firstName: ann?.firstName || '',
+      lastName: ann?.lastName || '',
+      city: ann?.city || '',
+      maritalStatus: ann?.maritalStatus || '',
+      partnerName: ann?.partnerName || '',
+      placeOfBirth: ann?.placeOfBirth || '',
+      placeOfDeath: ann?.placeOfDeath || '',
+      dateOfBirth: ann?.dateOfBirth,
+      dateOfDeath: ann?.dateOfDeath,
+      familyRoles: ann?.familyRoles || [],
     },
   })
 
@@ -255,8 +255,13 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
             onCheckedChange={(e: boolean) => {
               setCheckboxMaritalStatus(e)
 
-              if (e === false) form.setValue('maritalStatus', null)
-              else form.resetField('maritalStatus')
+              if (e === false) {
+                form.setValue('maritalStatus', null)
+                form.setValue('partnerName', null)
+              } else {
+                form.resetField('maritalStatus')
+                form.resetField('partnerName')
+              }
             }}
             id="checkbox-marital-status"
           />

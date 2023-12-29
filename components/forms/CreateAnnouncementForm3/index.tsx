@@ -18,11 +18,11 @@ import * as z from 'zod'
 const formSchema = z.object({
   serviceDate: z.date().or(z.string()).nullable(),
   serviceTime: z.string().min(1, 'Required').regex(REGEX_TIME, 'Please use the format HH:MM').nullable(),
-  servicePlace: z.string().min(1, 'Required').max(100).nullable(),
+  servicePlace: z.string().min(1, 'Required').min(3).max(100).nullable(),
 
   closestFamilyCircle: z.boolean(),
   funeralTime: z.string().min(1, 'Required').regex(REGEX_TIME, 'Please use the format HH:MM').nullable(),
-  funeralPlace: z.string().min(1, 'Required').max(100).nullable(),
+  funeralPlace: z.string().min(1, 'Required').min(3).max(100).nullable(),
 })
 
 export type IForm3 = z.infer<typeof formSchema>
