@@ -80,7 +80,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
 
       <div className="section section-actions">
         <Button asChild variant="outline" className="w-full">
-          <Link href={`/dashboard/announcements/${item._id}/edit`}>Edit Announcement</Link>
+          <Link href={`/dashboard/announcements/${item._id}/edit`}>Edit Item</Link>
         </Button>
         <Button variant="secondary" className="w-full">
           Donate
