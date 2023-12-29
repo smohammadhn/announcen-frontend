@@ -79,8 +79,8 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
       <h2 className="heading">Interact</h2>
 
       <div className="section section-actions">
-        <Button variant="secondary" className="w-full">
-          Open
+        <Button asChild variant="outline" className="w-full">
+          <Link href={`/dashboard/announcements/${item._id}/edit`}>Edit Announcement</Link>
         </Button>
         <Button variant="secondary" className="w-full">
           Donate
@@ -108,41 +108,49 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
         Site web: www.lih.lu
       </p>
 
-      <h2 className="heading">The ceremony</h2>
+      {(item.serviceDate || item.serviceTime || item.servicePlace) && (
+        <>
+          <h2 className="heading">The ceremony</h2>
 
-      <div className="section section-location">
-        <div className="date">
-          <Image src="/icons/calendar-clock.png" alt="calendar icon" width={40} height={40} />
-          {formatToUiDate(item.serviceDate)} - {item.serviceTime}
-        </div>
-        <div className="location">
-          <Image src="/icons/location.png" alt="location icon" width={40} height={40} />
-          {item.servicePlace}
-        </div>
-        {item.servicePlace && (
-          <Link href={getMapUrl(item.servicePlace)} target="_blank" className="map">
-            <Image src="/icons/map-placeholder.png" alt="google map image" width={120} height={120} />
-          </Link>
-        )}
-      </div>
+          <div className="section section-location">
+            <div className="date">
+              <Image src="/icons/calendar-clock.png" alt="calendar icon" width={40} height={40} />
+              {formatToUiDate(item.serviceDate)} - {item.serviceTime}
+            </div>
+            <div className="location">
+              <Image src="/icons/location.png" alt="location icon" width={40} height={40} />
+              {item.servicePlace || '-'}
+            </div>
+            {item.servicePlace && (
+              <Link href={getMapUrl(item.servicePlace)} target="_blank" className="map">
+                <Image src="/icons/map-placeholder.png" alt="google map image" width={120} height={120} />
+              </Link>
+            )}
+          </div>
+        </>
+      )}
 
-      <h2 className="heading">The funeral</h2>
+      {(item.serviceDate || item.funeralTime || item.funeralPlace) && (
+        <>
+          <h2 className="heading">The funeral</h2>
 
-      <div className="section section-location">
-        <div className="date">
-          <Image src="/icons/calendar-clock.png" alt="calendar icon" width={40} height={40} />
-          {formatToUiDate(item.serviceDate)} - {item.funeralTime}
-        </div>
-        <div className="location">
-          <Image src="/icons/location.png" alt="location icon" width={40} height={40} />
-          {item.funeralPlace}
-        </div>
-        {item.funeralPlace && (
-          <Link href={getMapUrl(item.funeralPlace)} target="_blank" className="map">
-            <Image src="/icons/map-placeholder.png" alt="google map image" width={120} height={120} />
-          </Link>
-        )}
-      </div>
+          <div className="section section-location">
+            <div className="date">
+              <Image src="/icons/calendar-clock.png" alt="calendar icon" width={40} height={40} />
+              {formatToUiDate(item.serviceDate)} - {item.funeralTime}
+            </div>
+            <div className="location">
+              <Image src="/icons/location.png" alt="location icon" width={40} height={40} />
+              {item.funeralPlace || '-'}
+            </div>
+            {item.funeralPlace && (
+              <Link href={getMapUrl(item.funeralPlace)} target="_blank" className="map">
+                <Image src="/icons/map-placeholder.png" alt="google map image" width={120} height={120} />
+              </Link>
+            )}
+          </div>
+        </>
+      )}
     </>
   )
 }

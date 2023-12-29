@@ -51,6 +51,7 @@
 
   .section-location {
     display: grid;
+    row-gap: 0.5rem;
     grid-template-columns: 1fr 130px;
 
     .date,
