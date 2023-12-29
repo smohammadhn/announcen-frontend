@@ -5,14 +5,14 @@
     font-weight: 700;
   }
 
-  ul {
+  ul.template-ul {
     display: grid;
     grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     align-items: stretch;
     column-gap: 2rem;
     row-gap: 1rem;
 
-    li {
+    li.template-li {
       background-color: white;
       box-shadow: 0 10px 15px -3px rgb(0 0 0 / 0.1), 0 4px 6px -4px rgb(0 0 0 / 0.1);
       padding: 1rem;

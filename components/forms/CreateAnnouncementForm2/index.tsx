@@ -29,7 +29,8 @@ const formSchema = z.object({
   dateOfDeath: z.date().or(z.string()),
 
   maritalStatus: z
-    .enum(['single', 'married', 'partner', 'widow', 'widower'], { invalid_type_error: 'Required' })
+    .enum(['single', 'husband', 'wife', 'partner', 'widow', 'widower'], { invalid_type_error: 'Required' })
+    .or(z.literal(''))
     .nullable(),
   partnerName: z.string().max(100).nullable(),
 
@@ -51,8 +52,8 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
       firstName: announcementObject?.firstName || '',
       lastName: announcementObject?.lastName || '',
       city: announcementObject?.city || '',
-      maritalStatus: announcementObject?.maritalStatus || null,
-      partnerName: announcementObject?.partnerName || null,
+      maritalStatus: announcementObject?.maritalStatus || '',
+      partnerName: announcementObject?.partnerName || '',
       placeOfBirth: announcementObject?.placeOfBirth || '',
       placeOfDeath: announcementObject?.placeOfDeath || '',
       dateOfBirth: announcementObject?.dateOfBirth,
@@ -252,8 +253,10 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
           <Checkbox
             checked={checkboxMaritalStatus}
             onCheckedChange={(e: boolean) => {
-              form.setValue('maritalStatus', null)
               setCheckboxMaritalStatus(e)
+
+              if (e === false) form.setValue('maritalStatus', null)
+              else form.resetField('maritalStatus')
             }}
             id="checkbox-marital-status"
           />
@@ -283,7 +286,8 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                     </FormControl>
                     <SelectContent>
                       <SelectItem value="single">Single</SelectItem>
-                      <SelectItem value="married">Married</SelectItem>
+                      <SelectItem value="husband">Husband</SelectItem>
+                      <SelectItem value="wife">Wife</SelectItem>
                       <SelectItem value="partner">Partner</SelectItem>
                       <SelectItem value="widow">Widow</SelectItem>
                       <SelectItem value="widower">Widower</SelectItem>

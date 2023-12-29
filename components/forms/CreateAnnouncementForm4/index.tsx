@@ -20,9 +20,9 @@ const formSchema = z.object({
   relatives: z.array(
     z.object({
       name: z.string().min(1, 'Required').min(3),
-      partnerName: z.string(),
+      partnerName: z.string().optional().or(z.literal('')),
       children: z.enum(['yes', 'no', '']),
-      city: z.string().min(1, 'Required'),
+      city: z.string().min(1, 'Required').nullable(),
     })
   ),
 
@@ -132,6 +132,13 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
                 checked={includeRelativeCities}
                 onCheckedChange={(e: boolean) => {
                   setIncludeRelativeCities(e)
+
+                  const relativesArray = form.getValues('relatives')
+
+                  if (e === false) relativesArray.forEach((e) => (e.city = null))
+                  else relativesArray.forEach((e) => (e.city = ''))
+
+                  form.setValue('relatives', relativesArray)
                 }}
                 id="checkbox-rel-cities"
               />

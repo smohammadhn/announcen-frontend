@@ -2,24 +2,12 @@
 import './index.scss'
 
 import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
+import { FieldErrors, useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-import {
-  Form,
-  FormControl,
-  FormField,
-  FormItem,
-  FormMessage,
-} from '@/components/ui/form'
+import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select'
+import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import { forwardRef, useImperativeHandle } from 'react'
 
 const formSchema = z.object({
@@ -32,10 +20,7 @@ interface Props {
   announcementObject?: Partial<IForm1 & {}>
 }
 
-export default forwardRef(function CreateAnnouncementForm1(
-  { announcementObject }: Props,
-  ref
-) {
+export default forwardRef(function CreateAnnouncementForm1({ announcementObject }: Props, ref) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
@@ -46,7 +31,7 @@ export default forwardRef(function CreateAnnouncementForm1(
   })
 
   useImperativeHandle(ref, () => ({
-    submit: (onValid: (values: IForm1) => void, onInvalid: () => void) => {
+    submit: (onValid: (values: IForm1) => void, onInvalid: (message?: FieldErrors<IForm1> | string) => void) => {
       form.handleSubmit(onValid, onInvalid)()
     },
   }))
@@ -61,11 +46,7 @@ export default forwardRef(function CreateAnnouncementForm1(
           name="type"
           render={({ field }) => (
             <FormItem>
-              <Select
-                onValueChange={field.onChange}
-                defaultValue={field.value}
-                required
-              >
+              <Select onValueChange={field.onChange} defaultValue={field.value} required>
                 <FormControl>
                   <SelectTrigger>
                     <SelectValue placeholder="Please Select" />

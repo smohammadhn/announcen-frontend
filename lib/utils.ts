@@ -12,6 +12,7 @@ export function cn(...inputs: ClassValue[]) {
 
 export function formatToUiDate(date: Date | string | undefined | null, fallbackText = ''): string {
   if (!date) return fallbackText
+  if (typeof date === 'string' && date.includes('{{')) return date
   return moment(date).format(UI_DATE_FORMAT)
 }
 

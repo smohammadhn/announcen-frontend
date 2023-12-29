@@ -1,8 +1,7 @@
-'use client'
-import { Dispatch, SetStateAction } from 'react'
-import './index.scss'
+import { defaultAnnouncementObject } from '@/constants/core'
 import obituaryTemplates from '@/constants/templates'
 import { cn } from '@/lib/utils'
+import './index.scss'
 
 interface Props {
   onSelectTemplate: (id: number) => void
@@ -13,22 +12,23 @@ export default function CreateAnnouncementForm1({ onSelectTemplate, selectedTemp
   return (
     <div className="ca-form-preview">
       <h2>General</h2>
-      <ul>
+      <ul className="template-ul">
         {obituaryTemplates
           .filter((e) => e.category === 'general')
           .map((e) => (
             <li
               key={e.id}
-              className={cn(selectedTemplate === e.id && 'selected')}
-              dangerouslySetInnerHTML={{ __html: e.data }}
+              className={cn(selectedTemplate === e.id && 'selected', 'template-li')}
               onClick={() => onSelectTemplate(e.id)}
-            ></li>
+            >
+              <e.data data={defaultAnnouncementObject as unknown as AnnouncementFrontend} />
+            </li>
           ))}
       </ul>
 
       <h2>Write your own</h2>
-      <ul>
-        <li className={cn(selectedTemplate === -1 && 'selected')} onClick={() => onSelectTemplate(-1)}>
+      <ul className="template-ul">
+        <li className={cn(selectedTemplate === -1 && 'selected', 'template-li')} onClick={() => onSelectTemplate(-1)}>
           Write you own announcement from scratch
         </li>
       </ul>

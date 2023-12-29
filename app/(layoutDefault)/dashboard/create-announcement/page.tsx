@@ -19,9 +19,13 @@ import CreateAnnouncementFormTemplate from '@/components/forms/CreateAnnouncemen
 
 import announcementService from '@/services/announcementService'
 import { useRouter } from 'next/navigation'
+import { FieldErrors } from 'react-hook-form'
 
 interface FormRef {
-  submit: (onValid: (values: AnnouncementFrontend) => void, onInvalid: () => void) => void
+  submit: (
+    onValid: (values: AnnouncementFrontend) => void,
+    onInvalid: (message?: FieldErrors<AnnouncementFrontend> | string | undefined) => void
+  ) => void
 }
 
 interface FormElement extends Element {
@@ -68,11 +72,15 @@ export default function CreateAnnouncement() {
     setSelectedTemplate(selectedTemplateId)
   }
 
-  const onFormInvalid = () => {
-    toast({ title: 'Please fill in the form correcly!', variant: 'destructive' })
+  const onFormInvalid = (message: FieldErrors<AnnouncementFrontend> | string | undefined) => {
+    const title = typeof message === 'string' ? message : 'Please fill in the form correcly!'
+
+    toast({ title, variant: 'destructive' })
   }
 
   const onFormValid = (incomingData?: AnnouncementFrontend, mode?: 'preview') => {
+    console.log('incomingData :>> ', incomingData)
+
     // update announcement object
     if (incomingData)
       setAnnouncementObject((item) => {
@@ -144,6 +152,7 @@ export default function CreateAnnouncement() {
           disabled={stepperValue === 1}
           onClick={() => {
             if (stepperValue !== 1) setStepperValue((prev) => prev - 1)
+            if (selectedTemplate !== -1) setManualEditMode(false)
           }}
         >
           Back
@@ -151,7 +160,7 @@ export default function CreateAnnouncement() {
 
         {stepperValue >= 3 && (
           <Button className="rounded-full " variant={'outline'} onClick={() => submitForm('preview')}>
-            {isLastForm ? 'Edit Manually' : 'Preview'}
+            {isLastForm && !manualEditMode ? 'Edit Manually' : 'Preview'}
           </Button>
         )}
 

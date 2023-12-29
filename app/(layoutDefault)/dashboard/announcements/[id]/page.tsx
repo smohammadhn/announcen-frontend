@@ -61,9 +61,9 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
             Deceased at {item.placeOfDeath} on {formatToUiDate(item.dateOfDeath)} aged {getPersonAge()}
           </span>
 
-          {item.maritalStatus && item.maritalStatus !== 'single' && (
+          {item.maritalStatus && (
             <span>
-              {_.upperFirst(item.maritalStatus)} of {item.partnerName}
+              {_.upperFirst(item.maritalStatus)} {item.partnerName && `of ${item.partnerName}`}
             </span>
           )}
         </div>

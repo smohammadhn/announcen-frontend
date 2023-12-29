@@ -101,3 +101,17 @@
   padding-block: 0.75rem;
   border-radius: 1rem;
 }
+
+.show-empty-p {
+  p:after {
+    content: '';
+    display: inline-block;
+    width: 0;
+    white-space: pre;
+  }
+}
+
+strong {
+  font-weight: 700;
+  font-size: 1.1rem;
+}
