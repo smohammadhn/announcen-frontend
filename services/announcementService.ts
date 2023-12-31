@@ -2,7 +2,7 @@
 
 import axios from '@/services/apiClient'
 import { useMutation, useQuery } from '@tanstack/react-query'
-import { AxiosError } from 'axios'
+import { AxiosError, AxiosResponse } from 'axios'
 import { AnnouncementListQueryParams } from '@/app/(layoutDefault)/dashboard/page'
 import { cleanObject } from '@/lib/utils'
 
@@ -19,6 +19,26 @@ const announcementService = {
     return useQuery<AnnouncementBackend, AxiosError<ErrorMessage>>({
       queryKey: ['announcements', announcementId],
       queryFn: () => axios.get<AnnouncementBackend>(`/announcements/${announcementId}`).then((res) => res.data),
+    })
+  },
+
+  update(announcementId: string, onSuccess?: () => void) {
+    return useMutation<AnnouncementBackend, AxiosError<ErrorMessage>, AnnouncementFrontend>({
+      mutationFn: (payload) =>
+        axios
+          .put<AnnouncementFrontend, AxiosResponse<AnnouncementBackend>>(
+            `/announcements/${announcementId}`,
+            cleanObject(payload)
+          )
+          .then((res) => res.data),
+      onSuccess,
+    })
+  },
+
+  remove(announcementId: string, onSuccess?: () => void) {
+    return useMutation({
+      mutationFn: () => axios.delete<AnnouncementFrontend>(`/announcements/${announcementId}`).then((res) => res.data),
+      onSuccess,
     })
   },
 

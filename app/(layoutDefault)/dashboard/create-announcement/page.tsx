@@ -3,7 +3,7 @@
 import './page.scss'
 import moment from 'moment'
 import { DATE_FORMAT } from '@/constants/core'
-import { RefObject, useEffect, useRef, useState } from 'react'
+import { ReactNode, RefObject, useEffect, useRef, useState } from 'react'
 import { useQueryClient } from '@tanstack/react-query'
 
 import Stepper from '@/components/ui/Stepper'
@@ -21,14 +21,14 @@ import announcementService from '@/services/announcementService'
 import { useRouter } from 'next/navigation'
 import { FieldErrors } from 'react-hook-form'
 
-interface FormRef {
+export interface FormRef {
   submit: (
     onValid: (values: AnnouncementFrontend) => void,
     onInvalid: (message?: FieldErrors<AnnouncementFrontend> | string | undefined) => void
   ) => void
 }
 
-interface FormElement extends Element {
+export type FormElement = ReactNode & {
   ref: RefObject<FormRef>
 }
 
@@ -79,8 +79,6 @@ export default function CreateAnnouncement() {
   }
 
   const onFormValid = (incomingData?: AnnouncementFrontend, mode?: 'preview') => {
-    console.log('incomingData :>> ', incomingData)
-
     // update announcement object
     if (incomingData)
       setAnnouncementObject((item) => {
@@ -120,7 +118,7 @@ export default function CreateAnnouncement() {
     if (stepperValue === 2) onFormValid()
 
     // normal senario
-    const announcementForm = forms[stepperValue - 1] as unknown as FormElement
+    const announcementForm = forms[stepperValue - 1] as FormElement
     announcementForm.ref?.current?.submit((data) => onFormValid(data, mode), onFormInvalid)
   }
 

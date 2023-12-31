@@ -14,7 +14,8 @@ $breakpoint-hide-nav: 700px;
   &-main {
     grid-area: main;
     background-color: var(--clr-background-main);
-    padding: 1rem;
+    padding-block: 1rem;
+    padding-inline: min(2vw, 1rem);
   }
 
   @media screen and (max-width: $breakpoint-hide-nav) {

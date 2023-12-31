@@ -12,10 +12,11 @@ interface Props {
   announcementObject?: AnnouncementFrontend | AnnouncementBackend
   manualEditMode?: boolean
   template?: number
+  dense?: boolean
 }
 
 export default forwardRef(function CreateAnnouncementForm5(
-  { announcementObject: ann = {}, manualEditMode = false, template = 1 }: Props,
+  { announcementObject: ann = {}, manualEditMode = false, template = 1, dense = false }: Props,
   ref
 ) {
   const [editorData, setEditorData] = useState('')
@@ -31,6 +32,11 @@ export default forwardRef(function CreateAnnouncementForm5(
   useEffect(() => {
     // write your own
     if (template === -1) return
+
+    if (dense) {
+      setEditorData(ann.obituary || '')
+      return
+    }
 
     const obituaryContainer = document.getElementById('obituary-container')
     if (obituaryContainer) setEditorData(obituaryContainer.innerHTML)

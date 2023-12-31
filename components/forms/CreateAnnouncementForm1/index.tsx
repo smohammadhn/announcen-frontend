@@ -18,9 +18,10 @@ export type IForm1 = z.infer<typeof formSchema>
 
 interface Props {
   announcementObject?: Partial<IForm1 & {}>
+  dense?: boolean
 }
 
-export default forwardRef(function CreateAnnouncementForm1({ announcementObject }: Props, ref) {
+export default forwardRef(function CreateAnnouncementForm1({ announcementObject, dense = false }: Props, ref) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
@@ -39,7 +40,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
   return (
     <Form {...form}>
       <form className="space-y-4 w-60 flex justify-self-center flex-col ca-form1">
-        <h3>Announcement Type</h3>
+        {!dense && <h3>Announcement Type</h3>}
         {/* type */}
         <FormField
           control={form.control}

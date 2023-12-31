@@ -29,9 +29,10 @@ export type IForm3 = z.infer<typeof formSchema>
 
 interface Props {
   announcementObject?: Partial<IForm3 & {}>
+  dense?: boolean
 }
 
-export default forwardRef(function CreateAnnouncementForm1({ announcementObject: ann }: Props, ref) {
+export default forwardRef(function CreateAnnouncementForm1({ announcementObject: ann, dense = false }: Props, ref) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
@@ -60,9 +61,12 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
   return (
     <Form {...form}>
       <form className="ca-form ca-form3">
-        <h3 className="form-title hide-mobile">Details about the funeral</h3>
-
-        <h4>Service</h4>
+        {!dense && (
+          <>
+            <h3 className="form-title hide-mobile">Details about the funeral</h3>
+            <h4>Service</h4>
+          </>
+        )}
 
         {/* include service checkbox */}
         <div className="items-top flex space-x-2 mb-3">
@@ -141,7 +145,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
               control={form.control}
               name="servicePlace"
               render={({ field }) => (
-                <FormItem className="mb-10">
+                <FormItem className="mb-5">
                   <FormControl>
                     <Input placeholder="Place of service" {...field} value={field.value || undefined} />
                   </FormControl>
@@ -152,7 +156,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
           </>
         )}
 
-        <h4>Funeral</h4>
+        {!dense && <h4 className="mt-10">Funeral</h4>}
 
         {/* include funeral checkbox */}
         <div className="items-top flex space-x-2 mb-3">

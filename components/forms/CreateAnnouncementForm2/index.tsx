@@ -41,9 +41,10 @@ export type IForm2 = z.infer<typeof formSchema>
 
 interface Props {
   announcementObject?: Partial<IForm2 & {}>
+  dense?: boolean
 }
 
-export default forwardRef(function CreateAnnouncementForm1({ announcementObject: ann }: Props, ref) {
+export default forwardRef(function CreateAnnouncementForm1({ announcementObject: ann, dense = false }: Props, ref) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
@@ -74,7 +75,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
   return (
     <Form {...form}>
       <form className="ca-form2">
-        <h3 className="form-title hide-mobile">Details about the defunct</h3>
+        {!dense && <h3 className="form-title hide-mobile">Details about the defunct</h3>}
 
         <section className="grid grid-col-3 mb-4">
           {/* first name */}
@@ -348,10 +349,13 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
             name="familyRoles"
             render={() => (
               <FormItem>
-                <div className="mb-4">
-                  <FormLabel className="text-base">Family Role</FormLabel>
-                  <FormDescription>Select at least one item.</FormDescription>
-                </div>
+                {!dense && (
+                  <div className="mb-4">
+                    <FormLabel className="text-base">Family Role</FormLabel>
+                    <FormDescription>Select at least one item.</FormDescription>
+                  </div>
+                )}
+
                 <div className="grid grid-col-2">
                   {familyRoles.map((item) => (
                     <FormField

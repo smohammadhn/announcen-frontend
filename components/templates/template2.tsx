@@ -28,8 +28,12 @@ export default function Template1({ data }: { data: AnnouncementFrontend }) {
       {(data.servicePlace || data.funeralPlace) && (
         <>
           <p>
-            A mass for the deceased will be held on {formatToUiDate(data.serviceDate)} at {data.funeralTime} in the
-            church in {data.servicePlace}. The funeral will take place at {data.funeralTime} in {data.funeralPlace}
+            {data.servicePlace &&
+              `A mass for the deceased will be held on ${formatToUiDate(data.serviceDate)} at ${data.serviceTime} in the
+            church in ${data.servicePlace}.`}
+            {data.closestFamilyCircle
+              ? `The funeral will take place in the closest family circle.`
+              : `The funeral will take place at ${data.funeralTime} in ${data.funeralPlace}.`}
           </p>
           <p></p>
         </>

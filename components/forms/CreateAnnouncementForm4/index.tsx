@@ -39,9 +39,10 @@ export type IForm4 = z.infer<typeof formSchema>
 
 interface Props {
   announcementObject?: Partial<IForm4 & {}>
+  dense?: boolean
 }
 
-export default forwardRef(function CreateAnnouncementForm1({ announcementObject }: Props, ref) {
+export default forwardRef(function CreateAnnouncementForm1({ announcementObject, dense = false }: Props, ref) {
   const [includeRelativeNames, setIncludeRelativeNames] = useState(true)
   const [includeRelativeCities, setIncludeRelativeCities] = useState(true)
   const [includeSpecialThanks, setIncludeSpecialThanks] = useState(true)
@@ -99,7 +100,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
   return (
     <Form {...form}>
       <form className="ca-form ca-form4">
-        <h3 className="form-title hide-mobile">Details about the family</h3>
+        {!dense && <h3 className="form-title hide-mobile">Details about the family</h3>}
 
         {/* include relative names */}
         <div className="items-top flex space-x-2 mb-3">
@@ -266,13 +267,13 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               </div>
             ))}
 
-            <Button type="button" variant={'secondary'} className="w-full mb-7" onClick={handleAddNewRelative}>
+            <Button type="button" variant={'secondary'} className="w-full mb-5" onClick={handleAddNewRelative}>
               Add new
             </Button>
           </>
         )}
 
-        <h4>Special Thanks</h4>
+        {!dense && <h4 className="mt-7">Special Thanks</h4>}
 
         {/* include special thanks */}
         <div className="items-top flex space-x-2 mb-3">
@@ -304,7 +305,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
               control={form.control}
               name="specialThanks"
               render={({ field }) => (
-                <FormItem className="mb-8">
+                <FormItem className="mb-5">
                   <FormControl>
                     <Input placeholder="Write special thanks" {...field} value={field.value || undefined} />
                   </FormControl>
@@ -315,7 +316,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject 
           </>
         )}
 
-        <h4>Non-profit to support</h4>
+        {!dense && <h4 className="mt-7">Non-profit to support</h4>}
 
         {/* include non profit */}
         <div className="items-top flex space-x-2 mb-3">
