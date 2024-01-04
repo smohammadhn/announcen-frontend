@@ -1,0 +1,88 @@
+.page-register-org {
+  $breakpoint-hide-filler: 800px;
+  $page-block-padding: min(2vw, 2rem);
+
+  min-height: 100vh;
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 1rem;
+  padding: $page-block-padding;
+
+  @media screen and (max-width: $breakpoint-hide-filler) {
+    grid-template-columns: 1fr;
+  }
+
+  .section-filler {
+    background-color: hsl(var(--primary));
+    background: linear-gradient(180deg, hsl(var(--primary-400)) 0%, #c7c7c7 100%);
+    border-radius: 2rem;
+    color: white;
+    display: flex;
+    flex-direction: column;
+    padding: min(5vw, 3.5rem);
+    max-height: calc(100vh - $page-block-padding * 2);
+    position: sticky;
+    top: $page-block-padding;
+    // bottom: $page-block-padding;
+
+    @media screen and (max-width: $breakpoint-hide-filler) {
+      display: none;
+    }
+
+    .title {
+      font-weight: 900;
+      font-size: min(5vw, 2rem);
+      margin-top: auto;
+    }
+
+    .subtitle {
+      font-weight: 700;
+      font-size: min(3vw, 1.5rem);
+    }
+  }
+
+  .section-form {
+    position: relative;
+    padding-inline: min(2vw, 1.5rem);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    gap: min(5vw, 2rem);
+    padding-block: 1rem;
+
+    .logo {
+      position: absolute;
+      top: 0;
+      right: 0;
+    }
+
+    section {
+      &:not(:last-child) {
+        margin-bottom: 2rem;
+      }
+
+      h2 {
+        font-weight: 700;
+        font-size: 1.1rem;
+        margin-bottom: 0.75rem;
+      }
+
+      form {
+        display: flex;
+        flex-direction: column;
+        gap: 1rem;
+        margin-bottom: 1.25rem;
+
+        .grid-col-2 {
+          display: grid;
+          gap: 1rem;
+          grid-template-columns: 1fr 1fr;
+
+          @media screen and (width < 500px) {
+            grid-template-columns: 1fr;
+          }
+        }
+      }
+    }
+  }
+}
