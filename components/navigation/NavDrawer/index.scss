@@ -29,10 +29,12 @@ $breakpoint-hide-nav: 700px;
     padding-inline: 0.5rem;
     padding-block: 1rem;
     background-color: white;
-    width: fit-content;
+    width: 100%;
+    max-width: 250px;
     transition: 500ms;
     position: sticky;
     top: 61px;
+    overflow: hidden;
   }
 
   ul {
@@ -44,9 +46,14 @@ $breakpoint-hide-nav: 700px;
         padding-block: 0.6rem;
         padding-inline: 0.5rem;
         border-radius: 0.5rem;
-        width: 100%;
         cursor: pointer;
         transition: 100ms;
+
+        > span {
+          white-space: nowrap;
+          text-overflow: ellipsis;
+          overflow: hidden;
+        }
 
         &:hover {
           background-color: hsl(var(--primary-100));

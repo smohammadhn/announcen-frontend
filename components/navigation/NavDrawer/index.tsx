@@ -13,6 +13,7 @@ import Cookies from 'universal-cookie'
 import { COOKIE_OPTIONS } from '@/components/forms/LoginForm'
 import { cn } from '@/lib/utils'
 import { useQueryClient } from '@tanstack/react-query'
+import useAuthStore from '@/store/auth'
 
 export interface NavigationProps {
   isNavExpanded: boolean
@@ -26,6 +27,7 @@ export default function AppBar({ isNavExpanded, setIsNavExpanded }: NavigationPr
   const onDashboard = pathname === '/dashboard'
   const cookies = new Cookies(null, { path: '/' })
   const queryClient = useQueryClient()
+  const user = useAuthStore((s) => s.user)
 
   const handleSignOut = () => {
     localStorage.removeItem('auth-token')
@@ -117,7 +119,7 @@ export default function AppBar({ isNavExpanded, setIsNavExpanded }: NavigationPr
           <li className={pathname.includes('/account') ? 'selected' : ''}>
             <Link href="/dashboard/account">
               <CircleUserRound />
-              Account Details
+              <span>{user.email}</span>
             </Link>
           </li>
           <li>
