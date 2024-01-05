@@ -1,19 +1,18 @@
 'use client'
+import CitySelectField from '@/components/ui/CitySelectField'
 import './index.scss'
 
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Checkbox } from '@/components/ui/checkbox'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
 import { Form, FormControl, FormDescription, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import allCities from '@/constants/cities.json'
 import familyRoles from '@/constants/familyRoles.json'
 import { cn, formatToUiDate } from '@/lib/utils'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { CalendarIcon, Check, ChevronsUpDown } from 'lucide-react'
+import { CalendarIcon } from 'lucide-react'
 import { forwardRef, useImperativeHandle, useState } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
@@ -21,7 +20,7 @@ import * as z from 'zod'
 const formSchema = z.object({
   firstName: z.string().min(1, 'Required').min(3).max(100),
   lastName: z.string().min(1, 'Required').min(3).max(100),
-  city: z.string().min(1, 'Required').max(100),
+  city: z.number(),
 
   placeOfBirth: z.string().min(1, 'Required').min(3).max(100),
   placeOfDeath: z.string().min(1, 'Required').min(3).max(100),
@@ -52,9 +51,9 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
     defaultValues: {
       firstName: ann?.firstName || '',
       lastName: ann?.lastName || '',
-      city: ann?.city || '',
+      ...(ann?.city && { city: ann.city }),
+      ...(ann?.partnerName && { partnerName: ann.partnerName }),
       maritalStatus: ann?.maritalStatus || '',
-      partnerName: ann?.partnerName || '',
       placeOfBirth: ann?.placeOfBirth || '',
       placeOfDeath: ann?.placeOfDeath || '',
       dateOfBirth: ann?.dateOfBirth,
@@ -107,51 +106,13 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
           />
 
           {/* city */}
-          <FormField
-            control={form.control}
-            name="city"
-            render={({ field }) => (
-              <FormItem className="flex flex-col">
-                <Popover>
-                  <PopoverTrigger asChild>
-                    <FormControl>
-                      <Button
-                        variant="formField"
-                        role="combobox"
-                        className={cn('justify-between', !field.value && 'text-muted-foreground')}
-                      >
-                        {field.value ? allCities.find((e) => e.value === field.value)?.label : 'City'}
-                        <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                      </Button>
-                    </FormControl>
-                  </PopoverTrigger>
-                  <PopoverContent className="w-[200px] p-0">
-                    <Command>
-                      <CommandInput placeholder="search city" />
-                      <CommandEmpty>Not Found!</CommandEmpty>
-                      <CommandGroup>
-                        {allCities.map((e) => (
-                          <CommandItem
-                            value={e.label}
-                            key={e.value}
-                            onSelect={() => {
-                              form.setValue('city', e.value)
-                            }}
-                          >
-                            <Check
-                              className={cn('mr-2 h-4 w-4', e.value === field.value ? 'opacity-100' : 'opacity-0')}
-                            />
-                            {e.label}
-                          </CommandItem>
-                        ))}
-                      </CommandGroup>
-                    </Command>
-                  </PopoverContent>
-                </Popover>
-
-                <FormMessage />
-              </FormItem>
-            )}
+          <CitySelectField<IForm2>
+            form={form}
+            formFieldName="city"
+            onSelect={(cityId) => {
+              form.setValue('city', cityId)
+              form.clearErrors('city')
+            }}
           />
         </section>
 

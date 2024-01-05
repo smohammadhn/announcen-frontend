@@ -1,6 +1,6 @@
 /* eslint-disable react-hooks/rules-of-hooks */
 
-import { UpdateUserPayload } from '@/app/(layoutDefault)/dashboard/account/page'
+import { IOrganizationPayload } from '@/app/(layoutBlank)/register/organization/page'
 import { cleanObject } from '@/lib/utils'
 import axios from '@/services/apiClient'
 import { useMutation } from '@tanstack/react-query'
@@ -32,10 +32,12 @@ const authService = {
     })
   },
 
-  updateUser(onSuccess: (savedUser: User) => void) {
-    return useMutation<User, AxiosError<ErrorMessage>, UpdateUserPayload>({
+  createOrganization(onSuccess: (savedOrganization: Organization) => void) {
+    return useMutation<User, AxiosError<ErrorMessage>, IOrganizationPayload>({
       mutationFn: (user) =>
-        axios.put<UpdateUserPayload, AxiosResponse<User>>('/users/update', cleanObject(user)).then((res) => res.data),
+        axios
+          .put<IOrganizationPayload, AxiosResponse<Organization>>('/users/update', cleanObject(user))
+          .then((res) => res.data),
       onSuccess,
     })
   },

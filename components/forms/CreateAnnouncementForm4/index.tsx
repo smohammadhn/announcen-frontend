@@ -1,20 +1,16 @@
 'use client'
 import './index.scss'
 
-import allCities from '@/constants/cities.json'
-import { zodResolver } from '@hookform/resolvers/zod'
-import { useForm } from 'react-hook-form'
-import * as z from 'zod'
+import CitySelectField from '@/components/ui/CitySelectField'
+import { Button } from '@/components/ui/button'
+import { Checkbox } from '@/components/ui/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
-import { Checkbox } from '@/components/ui/checkbox'
-import { forwardRef, useImperativeHandle, useState } from 'react'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import { Button } from '@/components/ui/button'
-import { Check, ChevronsUpDown } from 'lucide-react'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
-import { cn } from '@/lib/utils'
+import { zodResolver } from '@hookform/resolvers/zod'
+import { forwardRef, useImperativeHandle, useState } from 'react'
+import { useForm } from 'react-hook-form'
+import * as z from 'zod'
 
 const formSchema = z.object({
   relatives: z.array(
@@ -22,7 +18,7 @@ const formSchema = z.object({
       name: z.string().min(1, 'Required').min(3),
       partnerName: z.string().optional().or(z.literal('')),
       children: z.enum(['yes', 'no', '']),
-      city: z.string().min(1, 'Required').nullable(),
+      city: z.number().nullable(),
     })
   ),
 
@@ -57,7 +53,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
         {
           name: '',
           partnerName: '',
-          city: '',
+          city: null,
           children: '',
         },
       ],
@@ -82,7 +78,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
       {
         name: '',
         partnerName: '',
-        city: '',
+        city: null,
         children: '',
       },
     ])
@@ -210,57 +206,13 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
                 {includeRelativeCities && (
                   <>
                     {/* city */}
-                    <FormField
-                      control={form.control}
-                      name={`relatives.${index}.city`}
-                      render={({ field }) => (
-                        <FormItem className="flex flex-col space-y-1" onChange={(e) => console.log(e)}>
-                          <FormLabel>City</FormLabel>
-
-                          <Popover>
-                            <PopoverTrigger asChild>
-                              <FormControl>
-                                <Button
-                                  variant="formField"
-                                  role="combobox"
-                                  className={cn('justify-between', !field.value && 'text-muted-foreground')}
-                                >
-                                  {field.value ? allCities.find((e) => e.value === field.value)?.label : 'City'}
-                                  <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                                </Button>
-                              </FormControl>
-                            </PopoverTrigger>
-                            <PopoverContent className="w-[200px] p-0">
-                              <Command>
-                                <CommandInput placeholder="search city" />
-                                <CommandEmpty>Not Found!</CommandEmpty>
-                                <CommandGroup>
-                                  {allCities.map((e) => (
-                                    <CommandItem
-                                      value={e.label}
-                                      key={e.value}
-                                      onSelect={() => {
-                                        form.setValue(`relatives.${index}.city`, e.value)
-                                        form.clearErrors(`relatives.${index}.city`)
-                                      }}
-                                    >
-                                      <Check
-                                        className={cn(
-                                          'mr-2 h-4 w-4',
-                                          e.value === field.value ? 'opacity-100' : 'opacity-0'
-                                        )}
-                                      />
-                                      {e.label}
-                                    </CommandItem>
-                                  ))}
-                                </CommandGroup>
-                              </Command>
-                            </PopoverContent>
-                          </Popover>
-
-                          <FormMessage />
-                        </FormItem>
-                      )}
+                    <CitySelectField<IForm4>
+                      form={form}
+                      formFieldName={`relatives.${index}.city`}
+                      onSelect={(cityId) => {
+                        form.setValue(`relatives.${index}.city`, cityId)
+                        form.clearErrors(`relatives.${index}.city`)
+                      }}
                     />
                   </>
                 )}

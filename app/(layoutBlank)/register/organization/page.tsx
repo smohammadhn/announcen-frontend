@@ -1,22 +1,17 @@
 'use client'
 import './page.scss'
 
-import useAuthStore from '@/store/auth'
-import { cn } from '@/lib/utils'
 import { Button } from '@/components/ui/button'
-import { Command, CommandEmpty, CommandGroup, CommandInput, CommandItem } from '@/components/ui/command'
 import { Form, FormControl, FormField, FormItem, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Textarea } from '@/components/ui/textarea'
-import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
-import allCities from '@/constants/cities.json'
-import { Check, ChevronsUpDown } from 'lucide-react'
 
+import CitySelectField from '@/components/ui/CitySelectField'
+import { toast } from '@/components/ui/use-toast'
+import authService from '@/services/authService'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
-import authService from '@/services/authService'
-import { toast } from '@/components/ui/use-toast'
 
 const formDetailsSchema = z.object({
   email: z.string().email().min(1, 'Required'),
@@ -26,7 +21,7 @@ const formOrganizationSchema = z.object({
   name: z.string().min(3).max(50).optional().or(z.literal('')),
   address: z.string().min(3).max(500).optional().or(z.literal('')),
   postalCode: z.string().min(3).max(20).optional().or(z.literal('')),
-  city: z.string().min(3).max(20).optional().or(z.literal('')),
+  city: z.number().optional().or(z.literal('')),
   homepage: z.string().min(5).max(50).optional().or(z.literal('')),
   description: z.string().min(10).max(150).optional().or(z.literal('')),
 })
@@ -41,16 +36,12 @@ export type FormDetails = z.infer<typeof formDetailsSchema>
 export type FormOrganization = z.infer<typeof formOrganizationSchema>
 export type FormFinancial = z.infer<typeof formFinancialSchema>
 
-export type UpdateUserPayload = FormDetails | FormOrganization | FormFinancial
+export type IOrganizationPayload = FormDetails | FormOrganization | FormFinancial
 
 export default function Account() {
-  const { user, setUser } = useAuthStore()
-
-  const updateUser = authService.updateUser((savedUser) => {
-    setUser(savedUser)
-
+  const updateUser = authService.createOrganization(() => {
     toast({
-      title: 'Profile updated Successfully',
+      title: 'Organization created Successfully',
     })
   })
 
@@ -58,7 +49,7 @@ export default function Account() {
     mode: 'all',
     resolver: zodResolver(formDetailsSchema),
     defaultValues: {
-      email: user.email || '',
+      email: '',
     },
   })
 
@@ -66,12 +57,12 @@ export default function Account() {
     mode: 'all',
     resolver: zodResolver(formOrganizationSchema),
     defaultValues: {
-      name: user.name || '',
-      address: user.address || '',
-      postalCode: user.postalCode || '',
-      city: user.city || '',
-      homepage: user.homepage || '',
-      description: user.description || '',
+      name: '',
+      address: '',
+      postalCode: '',
+      city: '',
+      homepage: '',
+      description: '',
     },
   })
 
@@ -79,16 +70,17 @@ export default function Account() {
     mode: 'all',
     resolver: zodResolver(formFinancialSchema),
     defaultValues: {
-      iban: user.iban || '',
-      bic: user.bic || '',
-      stripeAccount: user.stripeAccount || '',
+      iban: '',
+      bic: '',
+      stripeAccount: '',
     },
   })
 
   // methods
-  const onSubmitForm = (data: UpdateUserPayload & Partial<FormDetails>) => {
-    if (!data.email) data.email = user.email
-    updateUser.mutate(data)
+  // Partial<FormDetails> adds email optionally
+  const onSubmitForm = (data: IOrganizationPayload & Partial<FormDetails>) => {
+    console.log('data :>> ', data)
+    // updateUser.mutate(data)
   }
 
   return (
@@ -132,9 +124,9 @@ export default function Account() {
           </Form>
         </section>
 
-        {/* about organisation section */}
+        {/* about organization section */}
         <section>
-          <h2>About your organisation</h2>
+          <h2>About your organization</h2>
 
           {/* form */}
           <Form {...formOrganization}>
@@ -169,54 +161,13 @@ export default function Account() {
                 />
 
                 {/* city */}
-                <FormField
-                  control={formOrganization.control}
-                  name="city"
-                  render={({ field }) => (
-                    <FormItem className="flex flex-col">
-                      <Popover>
-                        <PopoverTrigger asChild>
-                          <FormControl>
-                            <Button
-                              variant="formField"
-                              role="combobox"
-                              className={cn('justify-between outlined-field', !field.value && 'text-muted-foreground')}
-                            >
-                              {field.value ? allCities.find((e) => e.value === field.value)?.label : 'City'}
-                              <ChevronsUpDown className="ml-2 h-4 w-4 shrink-0 opacity-50" />
-                            </Button>
-                          </FormControl>
-                        </PopoverTrigger>
-                        <PopoverContent className="w-[200px] p-0">
-                          <Command>
-                            <CommandInput placeholder="search city" />
-                            <CommandEmpty>Not Found!</CommandEmpty>
-                            <CommandGroup>
-                              {allCities.map((e) => (
-                                <CommandItem
-                                  value={e.label}
-                                  key={e.value}
-                                  onSelect={() => {
-                                    formOrganization.setValue('city', e.value)
-                                  }}
-                                >
-                                  <Check
-                                    className={cn(
-                                      'mr-2 h-4 w-4',
-                                      e.value === field.value ? 'opacity-100' : 'opacity-0'
-                                    )}
-                                  />
-                                  {e.label}
-                                </CommandItem>
-                              ))}
-                            </CommandGroup>
-                          </Command>
-                        </PopoverContent>
-                      </Popover>
-
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                <CitySelectField<FormOrganization>
+                  form={formOrganization}
+                  formFieldName="city"
+                  outlined
+                  onSelect={(cityId) => {
+                    formOrganization.setValue('city', cityId)
+                  }}
                 />
 
                 {/* homepage */}
@@ -256,7 +207,7 @@ export default function Account() {
                   <FormItem>
                     <FormControl>
                       <Textarea
-                        placeholder="Description of your organisation (max 150 words)"
+                        placeholder="Description of your organization (max 150 words)"
                         className="resize-none outlined-textarea"
                         {...field}
                       />
@@ -273,7 +224,7 @@ export default function Account() {
               className="w-full rounded-full"
               onClick={formOrganization.handleSubmit(onSubmitForm)}
             >
-              Change organisation details
+              Change organization details
             </Button>
           </Form>
         </section>
