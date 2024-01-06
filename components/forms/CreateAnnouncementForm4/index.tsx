@@ -9,7 +9,8 @@ import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import useAnnouncementStore from '@/store/announcement'
 import { zodResolver } from '@hookform/resolvers/zod'
-import { forwardRef, useImperativeHandle, useState } from 'react'
+import { Trash2 } from 'lucide-react'
+import { forwardRef, useImperativeHandle } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
@@ -69,7 +70,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
           name: '',
         },
       ],
-      specialThanks: announcementObject?.specialThanks || '',
+      specialThanks: includeSpecialThanks ? announcementObject?.specialThanks || '' : null,
     },
   })
 
@@ -89,6 +90,20 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
         children: '',
       },
     ])
+  }
+
+  const handleRemoveRelativeRow = (index?: number) => {
+    let relativesArray = JSON.parse(JSON.stringify(form.getValues('relatives')))
+    relativesArray.splice(index, 1)
+
+    form.setValue('relatives', relativesArray)
+  }
+
+  const handleRemoveNonProfitRow = (index?: number) => {
+    let nonProfitsArray = JSON.parse(JSON.stringify(form.getValues('nonProfits')))
+    nonProfitsArray.splice(index, 1)
+
+    form.setValue('nonProfits', nonProfitsArray)
   }
 
   const handleAddNewNonProfit = () => {
@@ -223,6 +238,17 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
                     />
                   </>
                 )}
+
+                <Button
+                  type="button"
+                  className="p-0 trash-button"
+                  variant={'secondary'}
+                  title="remove row"
+                  disabled={form.watch('relatives').length < 2}
+                  onClick={() => handleRemoveRelativeRow(index)}
+                >
+                  <Trash2 color="red" />
+                </Button>
               </div>
             ))}
 
@@ -303,7 +329,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
         {includeNonProfit && (
           <>
             {form.watch('nonProfits').map((_, index) => (
-              <div key={index} className="my-4">
+              <div key={index} className="grid grid-col-1 my-4">
                 {/* non profits */}
                 <FormField
                   control={form.control}
@@ -317,6 +343,17 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
                     </FormItem>
                   )}
                 />
+
+                <Button
+                  type="button"
+                  className="p-0 trash-button"
+                  variant={'secondary'}
+                  title="remove row"
+                  disabled={form.watch('nonProfits').length < 2}
+                  onClick={() => handleRemoveNonProfitRow(index)}
+                >
+                  <Trash2 color="red" />
+                </Button>
               </div>
             ))}
 

@@ -7,7 +7,7 @@
   }
 
   .grid-col-4 {
-    grid-template-columns: repeat(4, 1fr);
+    grid-template-columns: repeat(4, 1fr) 40px;
     align-items: end;
     gap: 0.5rem;
 
@@ -15,7 +15,17 @@
       grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
       border-bottom: 3px solid white;
       padding-bottom: 0.5rem;
+
+      .trash-button {
+        grid-column: 1 / -1;
+      }
     }
+  }
+
+  .grid-col-1 {
+    grid-template-columns: 1fr 40px;
+    align-items: end;
+    gap: 0.5rem;
   }
 
   .full-width {

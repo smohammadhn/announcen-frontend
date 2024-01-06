@@ -12,12 +12,12 @@ import { cn, formatToUiDate } from '@/lib/utils'
 import useAnnouncementStore from '@/store/announcement'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from 'lucide-react'
-import { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, useImperativeHandle } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 const formSchema = z.object({
-  serviceDate: z.date().or(z.string()).nullable(),
+  serviceDate: z.date().or(z.string().min(1, 'Required')).nullable(),
   serviceTime: z.string().min(1, 'Required').regex(REGEX_TIME, 'Please use the format HH:MM').nullable(),
   servicePlace: z.string().min(1, 'Required').min(3).max(100).nullable(),
 
@@ -34,17 +34,19 @@ interface Props {
 }
 
 export default forwardRef(function CreateAnnouncementForm1({ announcementObject: ann, dense = false }: Props, ref) {
+  const { checkboxService, checkboxFuneral, setCheckboxService, setCheckboxFuneral } = useAnnouncementStore()
+
   // Define form
-  const form = useForm<z.infer<typeof formSchema>>({
+  const form = useForm<IForm3>({
     mode: 'all',
     resolver: zodResolver(formSchema),
     defaultValues: {
-      serviceDate: ann?.serviceDate || '',
-      serviceTime: ann?.serviceTime || '',
-      servicePlace: ann?.servicePlace || '',
+      serviceDate: checkboxService ? ann?.serviceDate || '' : null,
+      serviceTime: checkboxService ? ann?.serviceTime || '' : null,
+      servicePlace: checkboxService ? ann?.servicePlace || '' : null,
 
-      funeralTime: ann?.funeralTime || ann?.closestFamilyCircle ? null : '',
-      funeralPlace: ann?.funeralPlace || ann?.closestFamilyCircle ? null : '',
+      funeralPlace: !checkboxFuneral || ann?.closestFamilyCircle ? null : ann?.funeralPlace || '',
+      funeralTime: !checkboxFuneral || ann?.closestFamilyCircle ? null : ann?.funeralTime || '',
 
       closestFamilyCircle: ann?.closestFamilyCircle || false,
     },
@@ -55,8 +57,6 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
       form.handleSubmit(onValid, onInvalid)()
     },
   }))
-
-  const { checkboxService, checkboxFuneral, setCheckboxService, setCheckboxFuneral } = useAnnouncementStore()
 
   return (
     <Form {...form}>
