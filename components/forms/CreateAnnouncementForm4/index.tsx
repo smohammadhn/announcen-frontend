@@ -7,6 +7,7 @@ import { Checkbox } from '@/components/ui/checkbox'
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form'
 import { Input } from '@/components/ui/input'
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
+import useAnnouncementStore from '@/store/announcement'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { forwardRef, useImperativeHandle, useState } from 'react'
 import { useForm } from 'react-hook-form'
@@ -39,10 +40,16 @@ interface Props {
 }
 
 export default forwardRef(function CreateAnnouncementForm1({ announcementObject, dense = false }: Props, ref) {
-  const [includeRelativeNames, setIncludeRelativeNames] = useState(true)
-  const [includeRelativeCities, setIncludeRelativeCities] = useState(true)
-  const [includeSpecialThanks, setIncludeSpecialThanks] = useState(true)
-  const [includeNonProfit, setIncludeNonProfit] = useState(true)
+  const {
+    includeRelativeNames,
+    includeRelativeCities,
+    includeSpecialThanks,
+    includeNonProfit,
+    setIncludeRelativeNames,
+    setIncludeRelativeCities,
+    setIncludeSpecialThanks,
+    setIncludeNonProfit,
+  } = useAnnouncementStore()
 
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
@@ -133,7 +140,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
                   const relativesArray = form.getValues('relatives')
 
                   if (e === false) relativesArray.forEach((e) => (e.city = null))
-                  else relativesArray.forEach((e) => (e.city = ''))
+                  else relativesArray.forEach((e) => (e.city = null))
 
                   form.setValue('relatives', relativesArray)
                 }}
@@ -259,7 +266,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
               render={({ field }) => (
                 <FormItem className="mb-5">
                   <FormControl>
-                    <Input placeholder="Write special thanks" {...field} value={field.value || undefined} />
+                    <Input placeholder="Write special thanks" {...field} value={field.value || ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>

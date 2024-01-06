@@ -9,6 +9,7 @@ import { Input } from '@/components/ui/input'
 import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover'
 import { REGEX_TIME } from '@/constants/core'
 import { cn, formatToUiDate } from '@/lib/utils'
+import useAnnouncementStore from '@/store/announcement'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from 'lucide-react'
 import { forwardRef, useImperativeHandle, useState } from 'react'
@@ -55,8 +56,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
     },
   }))
 
-  const [checkboxService, setCheckboxService] = useState(true)
-  const [checkboxFuneral, setCheckboxFuneral] = useState(true)
+  const { checkboxService, checkboxFuneral, setCheckboxService, setCheckboxFuneral } = useAnnouncementStore()
 
   return (
     <Form {...form}>
@@ -133,7 +133,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
               render={({ field }) => (
                 <FormItem className="mb-3">
                   <FormControl>
-                    <Input placeholder="Time of service (HH:MM)" {...field} value={field.value || undefined} />
+                    <Input placeholder="Time of service (HH:MM)" {...field} value={field.value || ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -147,7 +147,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
               render={({ field }) => (
                 <FormItem className="mb-5">
                   <FormControl>
-                    <Input placeholder="Place of service" {...field} value={field.value || undefined} />
+                    <Input placeholder="Place of service" {...field} value={field.value || ''} />
                   </FormControl>
                   <FormMessage />
                 </FormItem>
@@ -225,7 +225,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
                   render={({ field }) => (
                     <FormItem className="mb-3">
                       <FormControl>
-                        <Input placeholder="Time of funeral (HH:MM)" {...field} value={field.value || undefined} />
+                        <Input placeholder="Time of funeral (HH:MM)" {...field} value={field.value || ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
@@ -239,7 +239,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
                   render={({ field }) => (
                     <FormItem className="mb-3">
                       <FormControl>
-                        <Input placeholder="Place of funeral" {...field} value={field.value || undefined} />
+                        <Input placeholder="Place of funeral" {...field} value={field.value || ''} />
                       </FormControl>
                       <FormMessage />
                     </FormItem>

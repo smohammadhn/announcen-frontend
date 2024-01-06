@@ -11,7 +11,7 @@ import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@
 import { forwardRef, useImperativeHandle } from 'react'
 
 const formSchema = z.object({
-  type: z.string().min(1, 'Required'),
+  type: z.string(),
 })
 
 export type IForm1 = z.infer<typeof formSchema>
@@ -21,13 +21,13 @@ interface Props {
   dense?: boolean
 }
 
-export default forwardRef(function CreateAnnouncementForm1({ announcementObject, dense = false }: Props, ref) {
+export default forwardRef(function CreateAnnouncementForm1({ announcementObject: ann, dense = false }: Props, ref) {
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
     resolver: zodResolver(formSchema),
     defaultValues: {
-      type: announcementObject?.type || '',
+      ...(ann?.type && { type: ann.type }),
     },
   })
 

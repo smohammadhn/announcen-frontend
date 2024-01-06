@@ -6,8 +6,8 @@ interface AuthStore {
 }
 
 const useAuthStore = create<AuthStore>((set) => ({
-  user: {} as User,
-  setUser: (payload) => set((_) => ({ user: payload })),
+  user: {} satisfies User,
+  setUser: (payload: User) => set((_) => ({ user: payload })),
 }))
 
 export default useAuthStore

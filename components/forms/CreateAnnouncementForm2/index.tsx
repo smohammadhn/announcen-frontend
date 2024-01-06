@@ -1,7 +1,7 @@
 'use client'
-import CitySelectField from '@/components/ui/CitySelectField'
 import './index.scss'
 
+import CitySelectField from '@/components/ui/CitySelectField'
 import { Button } from '@/components/ui/button'
 import { Calendar } from '@/components/ui/calendar'
 import { Checkbox } from '@/components/ui/checkbox'
@@ -11,29 +11,30 @@ import { Popover, PopoverContent, PopoverTrigger } from '@/components/ui/popover
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select'
 import familyRoles from '@/constants/familyRoles.json'
 import { cn, formatToUiDate } from '@/lib/utils'
+import useAnnouncementStore from '@/store/announcement'
 import { zodResolver } from '@hookform/resolvers/zod'
 import { CalendarIcon } from 'lucide-react'
-import { forwardRef, useImperativeHandle, useState } from 'react'
+import { forwardRef, useImperativeHandle } from 'react'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
 const formSchema = z.object({
   firstName: z.string().min(1, 'Required').min(3).max(100),
   lastName: z.string().min(1, 'Required').min(3).max(100),
-  city: z.number(),
-
   placeOfBirth: z.string().min(1, 'Required').min(3).max(100),
   placeOfDeath: z.string().min(1, 'Required').min(3).max(100),
+  partnerName: z.string().min(1, 'Required').min(3).max(100).nullable(),
+
+  city: z.number(),
+
   dateOfBirth: z.date().or(z.string()),
   dateOfDeath: z.date().or(z.string()),
 
   maritalStatus: z
     .enum(['single', 'husband', 'wife', 'partner', 'widow', 'widower'], { invalid_type_error: 'Required' })
-    .or(z.literal(''))
     .nullable(),
-  partnerName: z.string().min(1, 'Required').min(3).max(100).nullable(),
 
-  familyRoles: z.array(z.string()),
+  familyRoles: z.array(z.string()).nonempty('Select at least one item.').nullable(),
 })
 
 export type IForm2 = z.infer<typeof formSchema>
@@ -44,6 +45,9 @@ interface Props {
 }
 
 export default forwardRef(function CreateAnnouncementForm1({ announcementObject: ann, dense = false }: Props, ref) {
+  const { checkboxMaritalStatus, checkboxFamilyRoles, setCheckboxMaritalStatus, setCheckboxFamilyRoles } =
+    useAnnouncementStore()
+
   // Define form
   const form = useForm<z.infer<typeof formSchema>>({
     mode: 'all',
@@ -51,14 +55,16 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
     defaultValues: {
       firstName: ann?.firstName || '',
       lastName: ann?.lastName || '',
-      ...(ann?.city && { city: ann.city }),
-      ...(ann?.partnerName && { partnerName: ann.partnerName }),
-      maritalStatus: ann?.maritalStatus || '',
       placeOfBirth: ann?.placeOfBirth || '',
       placeOfDeath: ann?.placeOfDeath || '',
+
+      ...(ann?.city && { city: ann.city }),
+      partnerName: !checkboxMaritalStatus || ann?.maritalStatus === 'single' ? null : ann?.partnerName || '',
+      maritalStatus: checkboxMaritalStatus ? ann?.maritalStatus || undefined : null,
+
       dateOfBirth: ann?.dateOfBirth,
       dateOfDeath: ann?.dateOfDeath,
-      familyRoles: ann?.familyRoles || [],
+      familyRoles: checkboxFamilyRoles ? ann?.familyRoles || [] : null,
     },
   })
 
@@ -67,9 +73,6 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
       form.handleSubmit(onValid, onInvalid)()
     },
   }))
-
-  const [checkboxMaritalStatus, setCheckboxMaritalStatus] = useState(true)
-  const [checkboxFamilyRoles, setCheckboxFamilyRoles] = useState(true)
 
   return (
     <Form {...form}>
@@ -222,7 +225,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
                 form.setValue('partnerName', null)
               } else {
                 form.resetField('maritalStatus')
-                form.resetField('partnerName')
+                form.setValue('partnerName', '')
               }
             }}
             id="checkbox-marital-status"
@@ -245,7 +248,13 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
               name="maritalStatus"
               render={({ field }) => (
                 <FormItem>
-                  <Select onValueChange={field.onChange} defaultValue={field.value || undefined} required>
+                  <Select
+                    onValueChange={(v) => {
+                      field.onChange(v)
+                      if (v === 'single') form.setValue('partnerName', null)
+                    }}
+                    defaultValue={field.value || undefined}
+                  >
                     <FormControl>
                       <SelectTrigger>
                         <SelectValue placeholder="Marital Status" />
@@ -273,7 +282,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input placeholder="Name of Partner" {...field} value={field.value || undefined} />
+                      <Input placeholder="Name of Partner" {...field} value={field.value || ''} />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
@@ -288,7 +297,9 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
           <Checkbox
             checked={checkboxFamilyRoles}
             onCheckedChange={(e: boolean) => {
-              form.setValue('familyRoles', [])
+              if (e === false) form.setValue('familyRoles', null)
+              else form.setValue('familyRoles', [] as any)
+
               setCheckboxFamilyRoles(e)
             }}
             id="checkbox-family-roles"
@@ -331,7 +342,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
                                 checked={field.value?.includes(item.id)}
                                 onCheckedChange={(checked) => {
                                   return checked
-                                    ? field.onChange([...field.value, item.id])
+                                    ? field.onChange([...(field.value || []), item.id])
                                     : field.onChange(field.value?.filter((value) => value !== item.id))
                                 }}
                               />

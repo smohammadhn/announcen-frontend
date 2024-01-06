@@ -20,6 +20,7 @@ import CreateAnnouncementFormTemplate from '@/components/forms/CreateAnnouncemen
 import announcementService from '@/services/announcementService'
 import { useRouter } from 'next/navigation'
 import { FieldErrors } from 'react-hook-form'
+import useAnnouncementStore from '@/store/announcement'
 
 export interface FormRef {
   submit: (
@@ -35,6 +36,11 @@ export type FormElement = ReactNode & {
 export default function CreateAnnouncement() {
   const router = useRouter()
   const queryClient = useQueryClient()
+  const resetCheckboxes = useAnnouncementStore((s) => s.reset)
+
+  useEffect(() => {
+    resetCheckboxes()
+  }, [])
 
   const annService = announcementService.create(() => {
     toast({
@@ -117,20 +123,21 @@ export default function CreateAnnouncement() {
     // preview form
     if (stepperValue === 2) onFormValid()
 
-    // normal senario
+    // normal scenario
     const announcementForm = forms[stepperValue - 1] as FormElement
     announcementForm.ref?.current?.submit((data) => onFormValid(data, mode), onFormInvalid)
   }
 
   // forms
   const forms = [
+    <CreateAnnouncementForm2 ref={refForm2} announcementObject={announcementObject} key="detail-defunct" />,
+
     <CreateAnnouncementForm1 ref={refForm1} announcementObject={announcementObject} key="ann-type" />,
     <CreateAnnouncementFormTemplate
       onSelectTemplate={handleTemplateSelect}
       selectedTemplate={selectedTemplate}
       key="ann-template"
     />,
-    <CreateAnnouncementForm2 ref={refForm2} announcementObject={announcementObject} key="detail-defunct" />,
     <CreateAnnouncementForm3 ref={refForm3} announcementObject={announcementObject} key="detail-funeral" />,
     <CreateAnnouncementForm4 ref={refForm4} announcementObject={announcementObject} key="detail-family" />,
     <CreateAnnouncementForm5
