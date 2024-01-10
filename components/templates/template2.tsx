@@ -1,9 +1,19 @@
 import { formatToUiDate } from '@/lib/utils'
+import generalService from '@/services/generalService'
 import useAuthStore from '@/store/auth'
 import _ from 'lodash'
+import moment from 'moment'
 
 export default function Template1({ data }: { data: AnnouncementFrontend }) {
+  const { data: allCities } = generalService.read()
   const user = useAuthStore((s) => s.user)
+
+  const relativeCitiesList = _.uniq(
+    data.relatives
+      ?.map(({ city }) => allCities?.find((other) => other.id === city))
+      .filter((e) => e != null)
+      .map((e) => _.upperFirst(e?.name))
+  )
 
   return (
     <>
@@ -25,12 +35,17 @@ export default function Template1({ data }: { data: AnnouncementFrontend }) {
 
       <p></p>
 
-      {(data.servicePlace || data.funeralPlace) && (
+      {data.servicePlace && (
+        <p>
+          {data.servicePlace &&
+            `A mass for the deceased will be held on ${formatToUiDate(data.serviceDate)} at ${data.serviceTime} in the
+            church in ${data.servicePlace}.`}
+        </p>
+      )}
+
+      {(data.funeralPlace || data.closestFamilyCircle) && (
         <>
           <p>
-            {data.servicePlace &&
-              `A mass for the deceased will be held on ${formatToUiDate(data.serviceDate)} at ${data.serviceTime} in the
-            church in ${data.servicePlace}.`}
             {data.closestFamilyCircle
               ? `The funeral will take place in the closest family circle.`
               : `The funeral will take place at ${data.funeralTime} in ${data.funeralPlace}.`}
@@ -60,11 +75,10 @@ export default function Template1({ data }: { data: AnnouncementFrontend }) {
         </>
       )}
 
-      {data.relatives && data.relatives?.length > 0 && (
+      {relativeCitiesList.length > 0 && (
         <>
           <p>
-            {_.uniq(data.relatives?.map((e) => e.city).filter((e) => e != null)).join(', ')}{' '}
-            {data.serviceDate && `the ${formatToUiDate(data.serviceDate)}`}
+            {relativeCitiesList.join(', ')} {`the ${formatToUiDate(moment().toISOString())}`}
           </p>
           <p></p>
         </>

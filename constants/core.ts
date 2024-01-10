@@ -3,7 +3,7 @@ export const UI_DATE_FORMAT = 'DD/MM/YYYY'
 export const REGEX_TIME = /^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]$/
 
 export const defaultAnnouncementObject = {
-  relatives: [{ name: '{{relatives}}', partnerName: '{{relative partners}}', city: '{{relative cities}}' }],
+  relatives: [{ name: '{{relatives}}', partnerName: '{{relative partners}}', city: 0 }],
   nonProfits: [{ name: '{{non-Profits}}' }],
   familyRoles: ['{{familyRole1}}'],
   firstName: '{{ firstName }}',
