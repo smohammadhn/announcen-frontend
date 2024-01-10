@@ -17,11 +17,18 @@ $breakpoint-hide-actions: 700px;
   }
 
   &__title {
-    font-weight: 700;
-    font-size: min(5vw, 1.25rem);
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding-inline-end: 0.25rem;
+
+    h3 {
+      font-weight: 700;
+      font-size: min(5vw, 1.25rem);
+      overflow: hidden;
+      text-overflow: ellipsis;
+      white-space: nowrap;
+    }
   }
 
   &__subtitle {

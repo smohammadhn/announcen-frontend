@@ -21,7 +21,7 @@ export default function myAnnouncements() {
             <ul className="dashboard-grid">
               {announcements.map((item) => (
                 <li key={item._id}>
-                  <CardAnnouncement item={item} />
+                  <CardAnnouncement item={item} own />
                 </li>
               ))}
             </ul>

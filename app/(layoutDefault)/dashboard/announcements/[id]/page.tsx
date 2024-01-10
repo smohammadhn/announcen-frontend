@@ -79,8 +79,8 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
       <h2 className="heading">Interact</h2>
 
       <div className="section section-actions">
-        <Button asChild variant="outline" className="w-full">
-          <Link href={`/dashboard/announcements/${item._id}/edit`}>Edit Item</Link>
+        <Button variant="secondary" className="w-full">
+          Export
         </Button>
         <Button variant="secondary" className="w-full">
           Donate

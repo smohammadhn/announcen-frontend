@@ -3,19 +3,31 @@ import './index.scss'
 
 import Image from 'next/image'
 import Link from 'next/link'
+import { PenBox } from 'lucide-react'
 
 interface Props {
   item: AnnouncementBackend
+  own?: boolean
 }
 
-export default function CardAnnouncement({ item }: Props) {
+export default function CardAnnouncement({ item, own = false }: Props) {
   return (
     <div className="card-announcement">
       <Link className="card-announcement__image" href={`/dashboard/announcements/${item._id}`}>
         <Image src="/images/placeholder-avatar.jpg" width={100} height={100} alt="website logo" />
       </Link>
 
-      <h3 className="card-announcement__title">{`${item.firstName} ${item.lastName}`}</h3>
+      <div className="card-announcement__title">
+        <h3>{`${item.firstName} ${item.lastName}`}</h3>
+        {own && (
+          <Button title="Edit" size={'icon'} className="rounded-full">
+            <Link href={`/dashboard/announcements/${item._id}/edit`}>
+              <PenBox size={18} />
+            </Link>
+          </Button>
+        )}
+      </div>
+
       <p className="card-announcement__subtitle">From: {item.city?.name}</p>
       <p className="card-announcement__subtitle">{`${item.dateOfBirth} - ${item.dateOfDeath}`}</p>
 
