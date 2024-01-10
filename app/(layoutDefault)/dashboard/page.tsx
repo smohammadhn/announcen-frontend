@@ -83,7 +83,7 @@ export default function Dashboard({ searchParams }: Props) {
               ))}
             </ul>
           ) : (
-            <p className="no-content">Create an announcement first!</p>
+            <p className="no-content">No announcement has been created so far.</p>
           )}
         </>
       )}

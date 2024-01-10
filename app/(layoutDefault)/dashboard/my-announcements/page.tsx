@@ -5,8 +5,6 @@ import './page.scss'
 import CardAnnouncement from '@/components/cards/CardAnnouncement'
 import { LoadingSpinner } from '@/components/ui/LoadingSpinner'
 import announcementService from '@/services/announcementService'
-import { Filter } from 'lucide-react'
-import Link from 'next/link'
 
 export default function myAnnouncements() {
   const { data: announcements, isLoading } = announcementService.readOwn()
@@ -26,7 +24,7 @@ export default function myAnnouncements() {
               ))}
             </ul>
           ) : (
-            <p className="no-content">Create an announcement first!</p>
+            <p className="no-content">No announcement has been created so far.</p>
           )}
         </>
       )}

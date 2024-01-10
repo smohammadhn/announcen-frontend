@@ -108,7 +108,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
         Site web: www.lih.lu
       </p>
 
-      {(item.serviceDate || item.serviceTime || item.servicePlace) && (
+      {item.serviceTime && (
         <>
           <h2 className="heading">The ceremony</h2>
 
@@ -130,25 +130,29 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
         </>
       )}
 
-      {(item.serviceDate || item.funeralTime || item.funeralPlace) && (
+      {(item.funeralTime || item.closestFamilyCircle) && (
         <>
           <h2 className="heading">The funeral</h2>
 
-          <div className="section section-location">
-            <div className="date">
-              <Image src="/icons/calendar-clock.png" alt="calendar icon" width={40} height={40} />
-              {formatToUiDate(item.serviceDate)} - {item.funeralTime}
+          {item.closestFamilyCircle ? (
+            <div className="section">The Funeral will take place in the closest family circle.</div>
+          ) : (
+            <div className="section section-location">
+              <div className="date">
+                <Image src="/icons/calendar-clock.png" alt="calendar icon" width={40} height={40} />
+                {formatToUiDate(item.serviceDate)} - {item.funeralTime}
+              </div>
+              <div className="location">
+                <Image src="/icons/location.png" alt="location icon" width={40} height={40} />
+                {item.funeralPlace || '-'}
+              </div>
+              {item.funeralPlace && (
+                <Link href={getMapUrl(item.funeralPlace)} target="_blank" className="map">
+                  <Image src="/icons/map-placeholder.png" alt="google map image" width={120} height={120} />
+                </Link>
+              )}
             </div>
-            <div className="location">
-              <Image src="/icons/location.png" alt="location icon" width={40} height={40} />
-              {item.funeralPlace || '-'}
-            </div>
-            {item.funeralPlace && (
-              <Link href={getMapUrl(item.funeralPlace)} target="_blank" className="map">
-                <Image src="/icons/map-placeholder.png" alt="google map image" width={120} height={120} />
-              </Link>
-            )}
-          </div>
+          )}
         </>
       )}
     </>
