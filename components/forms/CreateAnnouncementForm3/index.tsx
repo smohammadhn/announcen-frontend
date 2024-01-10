@@ -218,6 +218,34 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject:
 
             {form.watch('closestFamilyCircle') === false && (
               <>
+                {/* service/funeral date if service info is disabled */}
+                {!checkboxService && (
+                  <FormField
+                    control={form.control}
+                    name="serviceDate"
+                    render={({ field }) => (
+                      <FormItem className="flex flex-col mb-3">
+                        <Popover>
+                          <PopoverTrigger asChild>
+                            <FormControl>
+                              <Button
+                                variant={'formField'}
+                                className={cn('pl-3 text-left font-normal', !field.value && 'text-muted-foreground')}
+                              >
+                                {field.value ? formatToUiDate(field.value) : <span>Date of Funeral</span>}
+                                <CalendarIcon className="ml-auto h-4 w-4 opacity-50" />
+                              </Button>
+                            </FormControl>
+                          </PopoverTrigger>
+                          <PopoverContent className="w-auto p-0" align="start">
+                            <Calendar mode="single" onSelect={field.onChange} initialFocus />
+                          </PopoverContent>
+                        </Popover>
+                        <FormMessage />
+                      </FormItem>
+                    )}
+                  />
+                )}
                 {/* funeral time */}
                 <FormField
                   control={form.control}
