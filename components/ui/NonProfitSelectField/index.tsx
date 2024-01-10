@@ -54,12 +54,14 @@ export default function NonProfitSelectField<T extends FieldValues>({
                 <CommandInput placeholder="search city" />
                 <CommandEmpty>Not Found!</CommandEmpty>
                 <CommandGroup>
-                  {data?.map((e) => (
-                    <CommandItem value={e._id.toString()} key={e._id.toString()} onSelect={() => onSelect(e._id)}>
-                      <Check className={cn('mr-2 h-4 w-4', e._id === field.value ? 'opacity-100' : 'opacity-0')} />
-                      {e.name}
-                    </CommandItem>
-                  ))}
+                  {data
+                    ?.filter((e) => e._id !== '659ed395dc2f16e863017e7a')
+                    .map((e) => (
+                      <CommandItem value={e._id.toString()} key={e._id.toString()} onSelect={() => onSelect(e._id)}>
+                        <Check className={cn('mr-2 h-4 w-4', e._id === field.value ? 'opacity-100' : 'opacity-0')} />
+                        {e.name}
+                      </CommandItem>
+                    ))}
                 </CommandGroup>
               </Command>
             </PopoverContent>

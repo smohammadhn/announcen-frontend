@@ -54,13 +54,15 @@ export default function CitySelectField<T extends FieldValues>({
                 <CommandInput placeholder="search city" />
                 <CommandEmpty>Not Found!</CommandEmpty>
                 <CommandGroup>
-                  {allCities?.map((e) => (
-                    <CommandItem value={e.id.toString()} key={e.id.toString()} onSelect={() => onSelect(e.id)}>
-                      <Check className={cn('mr-2 h-4 w-4', e.id === field.value ? 'opacity-100' : 'opacity-0')} />
-                      {e.name}
-                      <span className="opacity-50 ms-1">({e.municipality})</span>
-                    </CommandItem>
-                  ))}
+                  {allCities
+                    ?.filter((e) => e.id !== 0)
+                    .map((e) => (
+                      <CommandItem value={e.id.toString()} key={e.id.toString()} onSelect={() => onSelect(e.id)}>
+                        <Check className={cn('mr-2 h-4 w-4', e.id === field.value ? 'opacity-100' : 'opacity-0')} />
+                        {e.name}
+                        <span className="opacity-50 ms-1">({e.municipality})</span>
+                      </CommandItem>
+                    ))}
                 </CommandGroup>
               </Command>
             </PopoverContent>

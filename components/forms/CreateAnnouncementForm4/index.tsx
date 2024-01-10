@@ -318,7 +318,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
 
         {includeNonProfit && (
           <>
-            {form.watch('nonProfits').map((_, index) => (
+            {form.watch('nonProfits')?.map((_, index) => (
               <div key={index} className="grid grid-col-1 my-4">
                 {/* non profits */}
                 <NonProfitSelectField<IForm4>
