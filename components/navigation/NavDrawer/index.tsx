@@ -116,11 +116,29 @@ export default function AppBar({ isNavExpanded, setIsNavExpanded }: NavigationPr
         <p className="nav-drawer__seperator">Account Information</p>
 
         <ul>
-          <li className={pathname.includes('/account') ? 'selected' : ''}>
-            <Link href="/dashboard/account">
-              <CircleUserRound />
-              <span>{user.email}</span>
-            </Link>
+          <li className="accordion">
+            <Accordion type="single" collapsible className="w-full">
+              <AccordionItem className="no-border" value="item-1">
+                <AccordionTrigger className="accordion-trigger">
+                  <CircleUserRound className="no-transform" />
+                  <span className="me-auto">{user.email?.split('@')[0]}</span>
+                </AccordionTrigger>
+                <AccordionContent>
+                  <ul className="accordion-list">
+                    <li className={cn(pathname.includes('/dashboard/account') && 'selected')}>
+                      <Link href="/dashboard/account">
+                        <span>Account Details</span>
+                      </Link>
+                    </li>
+                    <li className={cn(pathname.includes('/dashboard/my-announcements') && 'selected')}>
+                      <Link href="/dashboard/my-announcements">
+                        <span>My announcements</span>
+                      </Link>
+                    </li>
+                  </ul>
+                </AccordionContent>
+              </AccordionItem>
+            </Accordion>
           </li>
           <li>
             <button onClick={handleSignOut}>

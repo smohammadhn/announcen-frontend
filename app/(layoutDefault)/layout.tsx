@@ -17,7 +17,7 @@ interface RootLayoutProps {
 
 export default function RootLayout({ children }: RootLayoutProps) {
   const cookies = new Cookies()
-  const [isNavExpanded, setisNavExpanded] = useState(false)
+  const [isNavExpanded, setIsNavExpanded] = useState(false)
   const { user, setUser } = useAuthStore()
   const router = useRouter()
 
@@ -41,8 +41,8 @@ export default function RootLayout({ children }: RootLayoutProps) {
 
   return (
     <div className="layout-default">
-      <AppBar isNavExpanded={isNavExpanded} setIsNavExpanded={setisNavExpanded} />
-      <NavDrawer isNavExpanded={isNavExpanded} setIsNavExpanded={setisNavExpanded} />
+      <AppBar isNavExpanded={isNavExpanded} setIsNavExpanded={setIsNavExpanded} />
+      <NavDrawer isNavExpanded={isNavExpanded} setIsNavExpanded={setIsNavExpanded} />
 
       <main className="layout-default-main">{children}</main>
     </div>

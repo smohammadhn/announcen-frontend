@@ -121,3 +121,8 @@ strong {
   overflow: hidden;
   text-overflow: ellipsis;
 }
+
+.no-transform {
+  transform: none !important;
+  rotate: none;
+}

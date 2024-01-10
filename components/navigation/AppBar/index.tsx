@@ -47,7 +47,7 @@ export default function AppBar({ isNavExpanded, setIsNavExpanded }: NavigationPr
 
       <div className="app-bar__profile">
         <CircleUserRound />
-        <h2>{user.name || user.email}</h2>
+        <h2>{user.email?.split('@')[0]}</h2>
       </div>
     </header>
   )

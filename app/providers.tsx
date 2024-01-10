@@ -5,6 +5,7 @@ import axiosInstance from '@/services/apiClient'
 import { QueryClient, QueryClientProvider } from '@tanstack/react-query'
 import { ReactQueryDevtools } from '@tanstack/react-query-devtools'
 import { AxiosError } from 'axios'
+import { useState } from 'react'
 
 const queryClient = new QueryClient({
   defaultOptions: {
@@ -41,6 +42,20 @@ axiosInstance.interceptors.response.use(
 )
 
 export default function ReactQueryProvider({ children }: { children: React.ReactNode }) {
+  const [queryClient] = useState(
+    () =>
+      new QueryClient({
+        defaultOptions: {
+          queries: {
+            retry: 0,
+            staleTime: 30 * 60 * 1000, // 30 mins
+            refetchOnReconnect: false,
+            refetchOnWindowFocus: false,
+          },
+        },
+      })
+  )
+
   return (
     <QueryClientProvider client={queryClient}>
       {children}
