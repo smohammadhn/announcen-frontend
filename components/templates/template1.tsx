@@ -86,8 +86,8 @@ export default function Template1({ data }: { data: AnnouncementFrontend }) {
       {data.nonProfits && data.nonProfits?.length > 0 && (
         <p>
           People willing to honour her, can do so by donating to{' '}
-          {data.nonProfits?.map((e) => `\"${e.name}\"`).join(', ')}, Account {user.bic} {user.iban} at the BCEE, with
-          the communication “Don {data.firstName} {data.lastName}”
+          {data.nonProfits?.map((e) => `\"${e.name}\" Account ${e.bic} ${e.iban}`).join(' or ')} at the BCEE, with the
+          communication “Don {data.firstName} {data.lastName}”
         </p>
       )}
     </>

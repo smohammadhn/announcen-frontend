@@ -4,7 +4,7 @@ import { IForm3 } from '@/components/forms/CreateAnnouncementForm3'
 import { IForm4 } from '@/components/forms/CreateAnnouncementForm4'
 import { IForm5 } from '@/components/forms/CreateAnnouncementForm5'
 
-import { FormDetails, FormOrganization, FormFinancial } from '@/app/(layoutDefault)/dashboard/account/page'
+import { FormDetails, FormOrganization, FormFinancial } from '@/app/(layoutBlank)/register/organization/page'
 
 type OmittedFrontendKeys = 'dateOfBirth' & 'dateOfDeath' & 'serviceDate' & 'city'
 
@@ -17,7 +17,7 @@ interface ICity {
 export {}
 
 declare global {
-  type User = { _id?: string; password?: string } & FormDetails & FormOrganization & FormFinancial
+  type User = { _id?: string; password?: string; email: string }
 
   interface ErrorMessage {
     message: string

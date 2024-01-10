@@ -13,24 +13,30 @@ import { zodResolver } from '@hookform/resolvers/zod'
 import { useForm } from 'react-hook-form'
 import * as z from 'zod'
 
-const formSchema = z.object({
+const formDetailsSchema = z.object({
   email: z.string().email().min(1, 'Required'),
-  password: z.string().min(6).max(255),
+})
 
-  iban: z.string().min(1, 'Required').min(5).max(30),
-  bic: z.string().min(1, 'Required').min(5).max(30),
-  name: z.string().min(1, 'Required').max(3),
-
+const formOrganizationSchema = z.object({
+  name: z.string().min(3).max(50).optional().or(z.literal('')),
   address: z.string().min(3).max(500).optional().or(z.literal('')),
   postalCode: z.string().min(3).max(20).optional().or(z.literal('')),
   city: z.number().optional().or(z.literal('')),
   homepage: z.string().min(5).max(50).optional().or(z.literal('')),
   description: z.string().min(10).max(150).optional().or(z.literal('')),
+})
 
+const formFinancialSchema = z.object({
+  iban: z.string().min(5).max(30).optional().or(z.literal('')),
+  bic: z.string().min(5).max(30).optional().or(z.literal('')),
   stripeAccount: z.string().min(5).max(30).optional().or(z.literal('')),
 })
 
-export type Organization = z.infer<typeof formSchema>
+export type FormDetails = z.infer<typeof formDetailsSchema>
+export type FormOrganization = z.infer<typeof formOrganizationSchema>
+export type FormFinancial = z.infer<typeof formFinancialSchema>
+
+export type IOrganizationPayload = FormDetails | FormOrganization | FormFinancial
 
 export default function Account() {
   const createOrganization = authService.createOrganization(() => {
@@ -39,18 +45,31 @@ export default function Account() {
     })
   })
 
-  const form = useForm<Organization>({
+  const formDetails = useForm<FormDetails>({
     mode: 'all',
-    resolver: zodResolver(formSchema),
+    resolver: zodResolver(formDetailsSchema),
     defaultValues: {
       email: '',
-      password: '',
+    },
+  })
+
+  const formOrganization = useForm<FormOrganization>({
+    mode: 'all',
+    resolver: zodResolver(formOrganizationSchema),
+    defaultValues: {
       name: '',
       address: '',
       postalCode: '',
       city: '',
       homepage: '',
       description: '',
+    },
+  })
+
+  const formFinancial = useForm<FormFinancial>({
+    mode: 'all',
+    resolver: zodResolver(formFinancialSchema),
+    defaultValues: {
       iban: '',
       bic: '',
       stripeAccount: '',
@@ -58,8 +77,10 @@ export default function Account() {
   })
 
   // methods
-  const onSubmitForm = (data: Organization) => {
-    createOrganization.mutate(data)
+  // Partial<FormDetails> adds email optionally
+  const onSubmitForm = (data: IOrganizationPayload) => {
+    console.log('data :>> ', data)
+    // createOrganization.mutate(data)
   }
 
   return (
@@ -75,11 +96,11 @@ export default function Account() {
           <h2>Account details</h2>
 
           {/* form */}
-          <Form {...form}>
+          <Form {...formDetails}>
             <form>
               {/* email */}
               <FormField
-                control={form.control}
+                control={formDetails.control}
                 name="email"
                 render={({ field }) => (
                   <FormItem>
@@ -90,23 +111,16 @@ export default function Account() {
                   </FormItem>
                 )}
               />
-
-              {/* password */}
-              <FormField
-                control={form.control}
-                name="password"
-                render={({ field }) => (
-                  <FormItem>
-                    <FormControl>
-                      <Input className="outlined-field" type="password" placeholder="Enter a Password" {...field} />
-                    </FormControl>
-                    <FormMessage>
-                      This password helps us identify you if you need to edit your data in the future.
-                    </FormMessage>
-                  </FormItem>
-                )}
-              />
             </form>
+
+            {/* action */}
+            <Button
+              loading={updateUser.isPending}
+              className="w-full rounded-full"
+              onClick={formDetails.handleSubmit(onSubmitForm)}
+            >
+              Change account details
+            </Button>
           </Form>
         </section>
 
@@ -115,12 +129,12 @@ export default function Account() {
           <h2>About your organization</h2>
 
           {/* form */}
-          <Form {...form}>
+          <Form {...formOrganization}>
             <form>
               <div className="grid-col-2">
                 {/* org name */}
                 <FormField
-                  control={form.control}
+                  control={formOrganization.control}
                   name="name"
                   render={({ field }) => (
                     <FormItem>
@@ -134,7 +148,7 @@ export default function Account() {
 
                 {/* postal code */}
                 <FormField
-                  control={form.control}
+                  control={formOrganization.control}
                   name="postalCode"
                   render={({ field }) => (
                     <FormItem>
@@ -147,18 +161,18 @@ export default function Account() {
                 />
 
                 {/* city */}
-                <CitySelectField<Organization>
-                  form={form}
+                <CitySelectField<FormOrganization>
+                  form={formOrganization}
                   formFieldName="city"
                   outlined
                   onSelect={(cityId) => {
-                    form.setValue('city', cityId)
+                    formOrganization.setValue('city', cityId)
                   }}
                 />
 
                 {/* homepage */}
                 <FormField
-                  control={form.control}
+                  control={formOrganization.control}
                   name="homepage"
                   render={({ field }) => (
                     <FormItem>
@@ -173,7 +187,7 @@ export default function Account() {
 
               {/* address */}
               <FormField
-                control={form.control}
+                control={formOrganization.control}
                 name="address"
                 render={({ field }) => (
                   <FormItem>
@@ -187,7 +201,7 @@ export default function Account() {
 
               {/* description */}
               <FormField
-                control={form.control}
+                control={formOrganization.control}
                 name="description"
                 render={({ field }) => (
                   <FormItem>
@@ -203,6 +217,15 @@ export default function Account() {
                 )}
               />
             </form>
+
+            {/* action */}
+            <Button
+              loading={updateUser.isPending}
+              className="w-full rounded-full"
+              onClick={formOrganization.handleSubmit(onSubmitForm)}
+            >
+              Change organization details
+            </Button>
           </Form>
         </section>
 
@@ -211,11 +234,11 @@ export default function Account() {
           <h2>Financial information</h2>
 
           {/* form */}
-          <Form {...form}>
+          <Form {...formFinancial}>
             <form>
               {/* email */}
               <FormField
-                control={form.control}
+                control={formFinancial.control}
                 name="iban"
                 render={({ field }) => (
                   <FormItem>
@@ -236,7 +259,7 @@ export default function Account() {
 
               {/* bic */}
               <FormField
-                control={form.control}
+                control={formFinancial.control}
                 name="bic"
                 render={({ field }) => (
                   <FormItem>
@@ -250,7 +273,7 @@ export default function Account() {
 
               {/* stripe account */}
               <FormField
-                control={form.control}
+                control={formFinancial.control}
                 name="stripeAccount"
                 render={({ field }) => (
                   <FormItem>
@@ -265,11 +288,11 @@ export default function Account() {
 
             {/* action */}
             <Button
-              loading={createOrganization.isPending}
+              loading={updateUser.isPending}
               className="w-full rounded-full"
-              onClick={form.handleSubmit(onSubmitForm)}
+              onClick={formFinancial.handleSubmit(onSubmitForm)}
             >
-              Register as a non-profit org.
+              Change financial details
             </Button>
           </Form>
         </section>
