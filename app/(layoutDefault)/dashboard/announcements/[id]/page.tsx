@@ -53,7 +53,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
         <Image src="/images/placeholder-avatar.jpg" width={100} height={100} alt="user image" />
 
         <div>
-          <span>Living in {item.city}</span>
+          <span>Living in {item.city?.name}</span>
           <span>
             Born in {item.placeOfBirth} on {formatToUiDate(item.dateOfBirth)}
           </span>

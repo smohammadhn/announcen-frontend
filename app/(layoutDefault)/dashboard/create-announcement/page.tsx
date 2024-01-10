@@ -40,6 +40,7 @@ export default function CreateAnnouncement() {
 
   useEffect(() => {
     resetCheckboxes()
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [])
 
   const annService = announcementService.create(() => {
@@ -79,7 +80,7 @@ export default function CreateAnnouncement() {
   }
 
   const onFormInvalid = (message: FieldErrors<AnnouncementFrontend> | string | undefined) => {
-    const title = typeof message === 'string' ? message : 'Please fill in the form correcly!'
+    const title = typeof message === 'string' ? message : 'Please fill in the form correctly!'
 
     toast({ title, variant: 'destructive' })
   }

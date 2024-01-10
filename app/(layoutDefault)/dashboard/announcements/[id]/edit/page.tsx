@@ -13,12 +13,11 @@ import CreateAnnouncementForm3 from '@/components/forms/CreateAnnouncementForm3'
 import CreateAnnouncementForm4 from '@/components/forms/CreateAnnouncementForm4'
 import CreateAnnouncementForm5 from '@/components/forms/CreateAnnouncementForm5'
 import { toast } from '@/components/ui/use-toast'
-import { useQueryClient } from '@tanstack/react-query'
-import { useRouter } from 'next/navigation'
-import { useRef, useState } from 'react'
-import moment from 'moment'
 import { DATE_FORMAT } from '@/constants/core'
-import { FieldErrors } from 'react-hook-form'
+import { useQueryClient } from '@tanstack/react-query'
+import moment from 'moment'
+import { useRouter } from 'next/navigation'
+import { useRef } from 'react'
 
 interface Props {
   params: { id: string }
@@ -26,6 +25,9 @@ interface Props {
 
 export default function AnnouncementDetails({ params }: Props) {
   const { data: item, isLoading } = announcementService.details(params.id)
+
+  // backend response is object but forms need it as a number
+  if (item?.city?.id) item.city = item.city.id as AnnouncementBackend['city']
 
   return (
     <div className="ann-details-edit">
@@ -99,7 +101,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
           },
           (message) => {
             // when form invalid
-            const title = typeof message === 'string' ? message : 'Please fill in the form correcly!'
+            const title = typeof message === 'string' ? message : 'Please fill in the form correctly!'
             toast({ title, variant: 'destructive' })
             isFormValid = false
           }

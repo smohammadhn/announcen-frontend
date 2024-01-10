@@ -1,8 +1,11 @@
 import { formatToUiDate } from '@/lib/utils'
+import generalService from '@/services/generalService'
 import useAuthStore from '@/store/auth'
 import _ from 'lodash'
 
 export default function Template1({ data }: { data: AnnouncementFrontend }) {
+  const { data: allCities } = generalService.read()
+
   const user = useAuthStore((s) => s.user)
 
   return (
@@ -30,9 +33,7 @@ export default function Template1({ data }: { data: AnnouncementFrontend }) {
           <p>
             {data.closestFamilyCircle
               ? 'The funeral will take place in the closest family circle'
-              : `The funeral takes place on ${formatToUiDate(data.serviceDate)} at ${
-                  data.funeralTime
-                } o&apos;clock at the
+              : `The funeral takes place on ${formatToUiDate(data.serviceDate)} at ${data.funeralTime} o'clock at the
             cemetery in ${data.funeralPlace}`}
             , {data.servicePlace && `followed by a ceremony in the ${data.servicePlace}`}
           </p>
@@ -64,7 +65,12 @@ export default function Template1({ data }: { data: AnnouncementFrontend }) {
       {data.relatives && data.relatives?.length > 0 && (
         <>
           <p>
-            {_.uniq(data.relatives?.map((e) => e.city).filter((e) => e != null)).join(', ')}{' '}
+            {_.uniq(
+              data.relatives
+                ?.map((current) => allCities?.find((other) => other.id === current.city))
+                .filter((e) => e != null)
+                .map((e) => e?.name)
+            ).join(', ')}{' '}
             {data.serviceDate && `on the ${formatToUiDate(data.serviceDate)}`}
           </p>
           <p></p>

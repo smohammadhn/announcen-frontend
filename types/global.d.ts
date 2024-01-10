@@ -6,7 +6,13 @@ import { IForm5 } from '@/components/forms/CreateAnnouncementForm5'
 
 import { FormDetails, FormOrganization, FormFinancial } from '@/app/(layoutDefault)/dashboard/account/page'
 
-type OmittedFrontendKeys = 'dateOfBirth' & 'dateOfDeath' & 'serviceDate'
+type OmittedFrontendKeys = 'dateOfBirth' & 'dateOfDeath' & 'serviceDate' & 'city'
+
+interface ICity {
+  name: string
+  id: number
+  municipality: string
+}
 
 export {}
 
@@ -23,11 +29,13 @@ declare global {
     sorting?: string
   }
 
-  type AnnouncementFrontend = Partial<IForm1 & IForm2 & IForm3 & IForm4 & IForm5 & { _id: string } & {}>
+  type AnnouncementFrontend = Partial<IForm1 & IForm2 & IForm3 & IForm4 & IForm5 & {}>
 
   type AnnouncementBackend = Omit<AnnouncementFrontend, OmittedFrontendKeys> & {
     dateOfBirth: string
     dateOfDeath: string
     serviceDate: string
+    _id: string
+    city: ICity
   }
 }
