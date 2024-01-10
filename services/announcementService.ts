@@ -7,11 +7,18 @@ import { AnnouncementListQueryParams } from '@/app/(layoutDefault)/dashboard/pag
 import { cleanObject } from '@/lib/utils'
 
 const announcementService = {
-  read(searchParams: AnnouncementListQueryParams | undefined) {
+  readAll(searchParams: AnnouncementListQueryParams | undefined) {
     return useQuery<AnnouncementBackend[], AxiosError<ErrorMessage>>({
       queryKey: ['announcements', searchParams?.type || 'all', searchParams?.sorting || 'all'],
       queryFn: () =>
         axios.get<AnnouncementBackend[]>('/announcements', { params: searchParams }).then((res) => res.data),
+    })
+  },
+
+  readOwn() {
+    return useQuery<AnnouncementBackend[], AxiosError<ErrorMessage>>({
+      queryKey: ['myAnnouncements'],
+      queryFn: () => axios.get<AnnouncementBackend[]>('/announcements/own').then((res) => res.data),
     })
   },
 

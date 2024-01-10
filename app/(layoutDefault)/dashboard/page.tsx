@@ -23,7 +23,7 @@ interface Props {
 export default function Dashboard({ searchParams }: Props) {
   const querySorting = searchParams.sorting
 
-  const { data: announcements, isLoading } = announcementService.read(searchParams)
+  const { data: announcements, isLoading } = announcementService.readAll(searchParams)
 
   // methods
   const getNewUrlQueryObject = (key: SortingKeys) => {
