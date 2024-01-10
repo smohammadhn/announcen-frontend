@@ -131,6 +131,8 @@ export default function CreateAnnouncement() {
 
   // forms
   const forms = [
+    <CreateAnnouncementForm3 ref={refForm3} announcementObject={announcementObject} key="detail-funeral" />,
+
     <CreateAnnouncementForm1 ref={refForm1} announcementObject={announcementObject} key="ann-type" />,
     <CreateAnnouncementFormTemplate
       onSelectTemplate={handleTemplateSelect}
@@ -138,7 +140,6 @@ export default function CreateAnnouncement() {
       key="ann-template"
     />,
     <CreateAnnouncementForm2 ref={refForm2} announcementObject={announcementObject} key="detail-defunct" />,
-    <CreateAnnouncementForm3 ref={refForm3} announcementObject={announcementObject} key="detail-funeral" />,
     <CreateAnnouncementForm4 ref={refForm4} announcementObject={announcementObject} key="detail-family" />,
     <CreateAnnouncementForm5
       ref={refForm5}

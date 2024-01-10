@@ -15,11 +15,11 @@ import * as z from 'zod'
 
 const formSchema = z.object({
   email: z.string().email().min(1, 'Required'),
-  password: z.string().min(6).max(255),
+  password: z.string().min(1, 'Required').min(6).max(255),
 
   iban: z.string().min(1, 'Required').min(5).max(30),
   bic: z.string().min(1, 'Required').min(5).max(30),
-  name: z.string().min(1, 'Required').max(3),
+  name: z.string().min(1, 'Required').min(3).max(30),
 
   address: z.string().min(3).max(500).optional().or(z.literal('')),
   postalCode: z.string().min(3).max(20).optional().or(z.literal('')),
@@ -30,7 +30,7 @@ const formSchema = z.object({
   stripeAccount: z.string().min(5).max(30).optional().or(z.literal('')),
 })
 
-export type Organization = z.infer<typeof formSchema>
+export type Organization = z.infer<typeof formSchema> & { _id: string }
 
 export default function Account() {
   const createOrganization = authService.createOrganization(() => {

@@ -1,18 +1,21 @@
 import { formatToUiDate } from '@/lib/utils'
 import generalService from '@/services/generalService'
-import useAuthStore from '@/store/auth'
 import _ from 'lodash'
 import moment from 'moment'
 
 export default function Template1({ data }: { data: AnnouncementFrontend }) {
   const { data: allCities } = generalService.read()
-  const user = useAuthStore((s) => s.user)
+  const { data: allOrg } = generalService.getAllOrganizations()
 
   const relativeCitiesList = _.uniq(
     data.relatives
       ?.map(({ city }) => allCities?.find((other) => other.id === city))
       .filter((e) => e != null)
       .map((e) => _.upperFirst(e?.name))
+  )
+
+  const nonProfitsList = _.uniq(
+    data.nonProfits?.map((itemId) => allOrg?.find(({ _id }) => _id === itemId)).filter((e) => e != null)
   )
 
   return (
@@ -83,11 +86,11 @@ export default function Template1({ data }: { data: AnnouncementFrontend }) {
         </>
       )}
 
-      {data.nonProfits && data.nonProfits?.length > 0 && (
+      {nonProfitsList.length > 0 && (
         <p>
           People willing to honour her, can do so by donating to{' '}
-          {data.nonProfits?.map((e) => `\"${e.name}\" Account ${e.bic} ${e.iban}`).join(' or ')} at the BCEE, with the
-          communication “Don {data.firstName} {data.lastName}”
+          {nonProfitsList?.map((e) => `\"${_.upperFirst(e?.name)}\" Account ${e?.bic} ${e?.iban}`).join(' or ')} at the
+          BCEE, with the communication “Don {data.firstName} {data.lastName}”
         </p>
       )}
     </>

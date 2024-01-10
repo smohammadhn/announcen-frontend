@@ -4,9 +4,14 @@ import { IForm3 } from '@/components/forms/CreateAnnouncementForm3'
 import { IForm4 } from '@/components/forms/CreateAnnouncementForm4'
 import { IForm5 } from '@/components/forms/CreateAnnouncementForm5'
 
-import { FormDetails, FormOrganization, FormFinancial } from '@/app/(layoutBlank)/register/organization/page'
+import {
+  FormDetails,
+  FormOrganization,
+  FormFinancial,
+  Organization,
+} from '@/app/(layoutBlank)/register/organization/page'
 
-type OmittedFrontendKeys = 'dateOfBirth' & 'dateOfDeath' & 'serviceDate' & 'city'
+type OmittedFrontendKeys = 'dateOfBirth' & 'dateOfDeath' & 'serviceDate' & 'city' & 'nonProfits'
 
 interface ICity {
   name: string
@@ -37,5 +42,6 @@ declare global {
     serviceDate: string
     _id: string
     city: ICity
+    nonProfits: Organization
   }
 }

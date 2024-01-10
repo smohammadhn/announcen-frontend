@@ -1,18 +1,21 @@
 import { formatToUiDate } from '@/lib/utils'
 import generalService from '@/services/generalService'
-import useAuthStore from '@/store/auth'
 import _ from 'lodash'
 import moment from 'moment'
 
 export default function Template1({ data }: { data: AnnouncementFrontend }) {
   const { data: allCities } = generalService.read()
-  const user = useAuthStore((s) => s.user)
+  const { data: allOrg } = generalService.getAllOrganizations()
 
   const relativeCitiesList = _.uniq(
     data.relatives
       ?.map(({ city }) => allCities?.find((other) => other.id === city))
       .filter((e) => e != null)
       .map((e) => _.upperFirst(e?.name))
+  )
+
+  const nonProfitsList = _.uniq(
+    data.nonProfits?.map((itemId) => allOrg?.find(({ _id }) => _id === itemId)).filter((e) => e != null)
   )
 
   return (
@@ -29,7 +32,7 @@ export default function Template1({ data }: { data: AnnouncementFrontend }) {
       </p>
       {data.maritalStatus && (
         <p>
-          {_.upperFirst(data.maritalStatus || undefined)} {data.partnerName && `of ${data.partnerName}`}
+          {_.upperFirst(data.maritalStatus)} {data.partnerName && `of ${data.partnerName}`}
         </p>
       )}
 
@@ -84,11 +87,11 @@ export default function Template1({ data }: { data: AnnouncementFrontend }) {
         </>
       )}
 
-      {data.nonProfits && data.nonProfits?.length > 0 && (
+      {nonProfitsList.length > 0 && (
         <p>
           Those who wish to honour the memory of our dearly departed are welcome to do so by making a donation to{' '}
-          {data.nonProfits?.map((e) => `\"${e.name}\" to the account ${e.bic} ${e.iban}`).join(' or ')}, with the
-          reference “Don {data.firstName} {data.lastName}”
+          {nonProfitsList.map((e) => `\"${_.upperFirst(e?.name)}\" to the account ${e?.bic} ${e?.iban}`).join(' or ')},
+          with the reference “Don {data.firstName} {data.lastName}”
         </p>
       )}
     </>

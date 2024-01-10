@@ -1,4 +1,5 @@
 'use client'
+import NonProfitSelectField from '@/components/ui/NonProfitSelectField'
 import './index.scss'
 
 import CitySelectField from '@/components/ui/CitySelectField'
@@ -24,12 +25,7 @@ const formSchema = z.object({
     })
   ),
 
-  nonProfits: z.array(
-    z.object({
-      name: z.string().min(1, 'Required').min(3),
-    })
-  ),
-
+  nonProfits: z.array(z.string()),
   specialThanks: z.string().min(1, 'Required').max(1000).nullable(),
 })
 
@@ -65,11 +61,7 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
           children: '',
         },
       ],
-      nonProfits: announcementObject?.nonProfits || [
-        {
-          name: '',
-        },
-      ],
+      nonProfits: announcementObject?.nonProfits || [''],
       specialThanks: includeSpecialThanks ? announcementObject?.specialThanks || '' : null,
     },
   })
@@ -107,12 +99,10 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
   }
 
   const handleAddNewNonProfit = () => {
-    form.setValue('nonProfits', [
-      ...form.getValues('nonProfits'),
-      {
-        name: '',
-      },
-    ])
+    let nonProfitsArray = form.getValues('nonProfits')
+    if (nonProfitsArray.length === 2) return
+
+    form.setValue('nonProfits', [...nonProfitsArray, ''])
   }
 
   return (
@@ -331,17 +321,13 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
             {form.watch('nonProfits').map((_, index) => (
               <div key={index} className="grid grid-col-1 my-4">
                 {/* non profits */}
-                <FormField
-                  control={form.control}
-                  name={`nonProfits.${index}.name`}
-                  render={({ field }) => (
-                    <FormItem>
-                      <FormControl>
-                        <Input placeholder="none-profit name 1" {...field} />
-                      </FormControl>
-                      <FormMessage />
-                    </FormItem>
-                  )}
+                <NonProfitSelectField<IForm4>
+                  form={form}
+                  formFieldName={`nonProfits.${index}`}
+                  onSelect={(itemId) => {
+                    form.setValue(`nonProfits.${index}`, itemId)
+                    form.clearErrors(`nonProfits.${index}`)
+                  }}
                 />
 
                 <Button
@@ -357,9 +343,11 @@ export default forwardRef(function CreateAnnouncementForm1({ announcementObject,
               </div>
             ))}
 
-            <Button variant={'secondary'} type="button" className="w-full mb-3" onClick={handleAddNewNonProfit}>
-              Add new
-            </Button>
+            {form.watch('nonProfits').length < 2 && (
+              <Button variant={'secondary'} type="button" className="w-full mb-3" onClick={handleAddNewNonProfit}>
+                Add new
+              </Button>
+            )}
           </>
         )}
       </form>
