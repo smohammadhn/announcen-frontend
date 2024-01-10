@@ -151,7 +151,12 @@ export default function CreateAnnouncement() {
 
   return (
     <section className="create-ann">
-      <Stepper value={stepperValue} />
+      <Stepper
+        value={stepperValue}
+        onSelect={(index) => {
+          if (index < stepperValue) setStepperValue(index)
+        }}
+      />
 
       <div className="create-ann__form">{forms[stepperValue - 1]}</div>
 

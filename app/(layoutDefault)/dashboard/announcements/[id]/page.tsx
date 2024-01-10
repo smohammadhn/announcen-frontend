@@ -103,7 +103,7 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
       <h2 className="heading">About</h2>
 
       <p className="section py-3">
-        Here should figure a little explanation given by the different organisations themselves (max 150 words)
+        Here should figure a little explanation given by the different organizations themselves (max 150 words)
         <br />
         Site web: www.lih.lu
       </p>
