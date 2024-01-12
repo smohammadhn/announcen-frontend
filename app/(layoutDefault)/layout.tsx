@@ -25,7 +25,7 @@ export default function RootLayout({ children }: RootLayoutProps) {
   // check to see if the token that is present inside browser cookie is valid
   // runs only once on page refresh
   useEffect(() => {
-    if (!user || !user._id) {
+    if (!user || !user?._id) {
       authService.verifyToken().then((res) => {
         if (res.isTokenVerified) setUser(res.user as User)
         else {

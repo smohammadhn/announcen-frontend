@@ -6,7 +6,10 @@ interface AuthStore {
 }
 
 const useAuthStore = create<AuthStore>((set) => ({
-  user: {} satisfies User,
+  user: {
+    _id: undefined,
+    email: 'UserName@gmail.com',
+  },
   setUser: (payload: User) => set((_) => ({ user: payload })),
 }))
 

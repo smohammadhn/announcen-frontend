@@ -38,7 +38,7 @@ export type FormFinancial = z.infer<typeof formFinancialSchema>
 
 export type IOrganizationPayload = FormDetails | FormOrganization | FormFinancial
 
-export default function Account() {
+export default function Organization() {
   const createOrganization = authService.createOrganization(() => {
     toast({
       title: 'Organization created Successfully',
@@ -115,7 +115,7 @@ export default function Account() {
 
             {/* action */}
             <Button
-              loading={updateUser.isPending}
+              loading={createOrganization.isPending}
               className="w-full rounded-full"
               onClick={formDetails.handleSubmit(onSubmitForm)}
             >
@@ -220,7 +220,7 @@ export default function Account() {
 
             {/* action */}
             <Button
-              loading={updateUser.isPending}
+              loading={createOrganization.isPending}
               className="w-full rounded-full"
               onClick={formOrganization.handleSubmit(onSubmitForm)}
             >
@@ -288,7 +288,7 @@ export default function Account() {
 
             {/* action */}
             <Button
-              loading={updateUser.isPending}
+              loading={createOrganization.isPending}
               className="w-full rounded-full"
               onClick={formFinancial.handleSubmit(onSubmitForm)}
             >
