@@ -17,7 +17,7 @@ const formSchema = z.object({
   email: z.string().email().min(1, 'Required'),
   password: z.string().min(1, 'Required').min(6).max(255),
 
-  iban: z.string().min(1, 'Required').min(5).max(30),
+  iban: z.string().min(1, 'Required').min(20).max(24),
   bic: z.string().min(1, 'Required').min(5).max(30),
   name: z.string().min(1, 'Required').min(3).max(30),
 
@@ -220,14 +220,7 @@ export default function Account() {
                 render={({ field }) => (
                   <FormItem>
                     <FormControl>
-                      <Input
-                        {...field}
-                        className="outlined-field"
-                        type="number"
-                        inputMode="numeric"
-                        pattern="\d*"
-                        placeholder="Bank account (IBAN)"
-                      />
+                      <Input {...field} className="outlined-field" type="text" placeholder="Bank account (IBAN)" />
                     </FormControl>
                     <FormMessage />
                   </FormItem>
