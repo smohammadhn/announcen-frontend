@@ -18,6 +18,7 @@ import { useQueryClient } from '@tanstack/react-query'
 import moment from 'moment'
 import { useRouter } from 'next/navigation'
 import { useRef } from 'react'
+import { Organization } from '@/app/(layoutBlank)/register/organization/page'
 
 interface Props {
   params: { id: string }
@@ -26,8 +27,10 @@ interface Props {
 export default function AnnouncementDetails({ params }: Props) {
   const { data: item, isLoading } = announcementService.details(params.id)
 
-  // backend response is object but forms need it as a number
+  // backend response is object but forms need it as ids
   if (item?.city?.id) item.city = item.city.id as AnnouncementBackend['city']
+  if (item?.nonProfits && item.nonProfits.length > 0 && item.nonProfits[0]._id)
+    item.nonProfits = item.nonProfits.map((n: Organization) => n._id) as AnnouncementBackend['nonProfits']
 
   return (
     <div className="ann-details-edit">

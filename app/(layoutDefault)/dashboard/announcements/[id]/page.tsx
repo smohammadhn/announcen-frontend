@@ -9,6 +9,7 @@ import Image from 'next/image'
 import Link from 'next/link'
 import './page.scss'
 import _ from 'lodash'
+import { Organization } from '@/app/(layoutBlank)/register/organization/page'
 
 interface Props {
   params: { id: string }
@@ -100,13 +101,17 @@ function DetailsSection({ item }: { item: AnnouncementBackend }) {
       </div>
       {/* --- */}
 
-      <h2 className="heading">About</h2>
+      {/* non-profits section */}
+      {item.nonProfits && item.nonProfits.length > 0 && <h2 className="heading">About</h2>}
 
-      <p className="section py-3">
-        Here should figure a little explanation given by the different organizations themselves (max 150 words)
-        <br />
-        Site web: www.lih.lu
-      </p>
+      {item.nonProfits.map((e: Organization) => (
+        <p key={e._id} className="section py-3">
+          {e.description}
+          <br />
+          {e.homepage && `Site web: ${e.homepage}`}
+        </p>
+      ))}
+      {/* --- */}
 
       {item.serviceTime && (
         <>

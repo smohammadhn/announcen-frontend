@@ -42,6 +42,6 @@ declare global {
     serviceDate: string
     _id: string
     city: ICity
-    nonProfits: Organization
+    nonProfits: Organization[]
   }
 }
