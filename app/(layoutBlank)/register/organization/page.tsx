@@ -19,10 +19,10 @@ const formSchema = z.object({
 
   iban: z.string().min(1, 'Required').min(20).max(24),
   bic: z.string().min(1, 'Required').min(5).max(30),
-  name: z.string().min(1, 'Required').min(3).max(30),
+  name: z.string().min(1, 'Required').min(3).max(500),
 
   address: z.string().min(3).max(500).optional().or(z.literal('')),
-  postalCode: z.string().min(3).max(20).optional().or(z.literal('')),
+  postalCode: z.string().length(4, 'Please enter exactly 4 digits').optional().or(z.literal('')),
   city: z.number().optional().or(z.literal('')),
   homepage: z.string().min(5).max(50).optional().or(z.literal('')),
   description: z.string().min(10).max(150).optional().or(z.literal('')),
@@ -139,7 +139,14 @@ export default function Account() {
                   render={({ field }) => (
                     <FormItem>
                       <FormControl>
-                        <Input {...field} className="outlined-field" placeholder="Postal Code" />
+                        <Input
+                          {...field}
+                          type="number"
+                          inputMode="numeric"
+                          pattern="\d*"
+                          className="outlined-field"
+                          placeholder="Postal Code"
+                        />
                       </FormControl>
                       <FormMessage />
                     </FormItem>
